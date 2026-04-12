@@ -320,8 +320,8 @@ body {
   position: absolute;
   left: auto;
   right: 40px;
-  /* Icon row: 24px-tall links → vertical center at 68px + 12px (see `.name` top calc) */
-  top: 68px;
+  /* Icon row vertical center = title line-box center (see `.name`) */
+  top: 104px;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -599,11 +599,13 @@ body {
 }
 
 /* Co-Op — right column */
+/* Co-Op — under icon row, right-aligned, shorter than before */
 .photo--9 {
-  left: 1384px;
-  top: 102px;
-  width: 400px;
-  height: 286px;
+  left: auto;
+  right: 40px;
+  top: 148px;
+  width: 292px;
+  height: 186px;
   border-radius: 46px;
 }
 
@@ -685,15 +687,18 @@ body {
 
 .name {
   position: absolute;
-  left: calc(50% - 390px);
-  /* Line-box center = icon row center (icons: 68px + half of 24px row) */
-  top: calc(68px + 12px - (1em * 1.4) / 2);
+  left: calc((2002px - 805px) / 2);
+  /* Line-box vertically centered with icon row (icons: top 104px, height 24px → center 116px; 85px×1.4 line) */
+  top: calc(104px + 12px - (85px * 1.4) / 2);
   width: 805px;
   margin: 0;
-  font-family: Pacifico, cursive;
-  font-size: 96px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  font-size: 85px;
   font-weight: 400;
   line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
   color: #fff;
   z-index: 12;
   pointer-events: none;
