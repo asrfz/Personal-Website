@@ -1,5 +1,37 @@
 /* Layout matches Figma node 111:88 — artboard 2002×1040px; scaled to fit viewport (no scroll) */
 
+/* Animated gradient blob centers (Chromium / Safari 16.4+; falls back to static stops elsewhere) */
+@property --blob1x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 72%;
+}
+@property --blob1y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 18%;
+}
+@property --blob2x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 22%;
+}
+@property --blob2y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 82%;
+}
+@property --blob3x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --blob3y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 48%;
+}
+
 html,
 body {
   height: 100%;
@@ -44,11 +76,30 @@ body {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  /* Deep blue-violet wash so color reads across the whole frame */
+  --blob1x: 72%;
+  --blob1y: 18%;
+  --blob2x: 22%;
+  --blob2y: 82%;
+  --blob3x: 50%;
+  --blob3y: 48%;
+  animation: gradient-blobs-drift 32s ease-in-out infinite alternate;
+  /* Deep blue-violet wash — radial centers follow --blob* */
   background:
-    radial-gradient(ellipse 130% 115% at 72% 18%, rgba(38, 42, 105, 0.32) 0%, transparent 52%),
-    radial-gradient(ellipse 100% 95% at 22% 82%, rgba(32, 38, 92, 0.26) 0%, transparent 48%),
-    radial-gradient(ellipse 90% 75% at 50% 48%, rgba(26, 30, 78, 0.14) 0%, transparent 58%),
+    radial-gradient(
+      ellipse 130% 115% at var(--blob1x) var(--blob1y),
+      rgba(38, 42, 105, 0.32) 0%,
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 100% 95% at var(--blob2x) var(--blob2y),
+      rgba(32, 38, 92, 0.26) 0%,
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse 90% 75% at var(--blob3x) var(--blob3y),
+      rgba(26, 30, 78, 0.14) 0%,
+      transparent 58%
+    ),
     linear-gradient(198deg, #020208 0%, #06051a 38%, #0c0a28 58%, #040312 100%);
 }
 
@@ -56,14 +107,16 @@ body {
 .viewport-fill::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -14%;
   z-index: 1;
   pointer-events: none;
+  will-change: transform;
   background:
     radial-gradient(ellipse 115% 100% at 88% 6%, rgba(52, 48, 130, 0.38) 0%, rgba(36, 34, 88, 0.12) 45%, transparent 68%),
     radial-gradient(ellipse 100% 95% at 12% 94%, rgba(42, 48, 118, 0.32) 0%, transparent 62%),
     radial-gradient(ellipse 95% 80% at 50% 45%, rgba(44, 52, 125, 0.1) 0%, transparent 70%);
   mix-blend-mode: soft-light;
+  animation: gradient-ambient-wander 38s ease-in-out infinite alternate;
 }
 
 /* Edge falloff into black — lighter hand in the middle so frame glow stays visible */
@@ -83,7 +136,9 @@ body {
     rgba(0, 0, 0, 0.45) 86%,
     rgba(0, 0, 0, 0.72) 100%
   );
-  animation: gradient-vignette-pulse 9s ease-in-out infinite;
+  animation:
+    gradient-vignette-pulse 9s ease-in-out infinite,
+    gradient-vignette-drift 44s ease-in-out infinite alternate;
 }
 
 .viewport-fill__backdrop {
@@ -96,7 +151,9 @@ body {
   background-position: 94% 6%;
   background-size: cover;
   transform-origin: 94% 6%;
-  animation: gradient-backdrop-pulse 6.5s ease-in-out infinite;
+  animation:
+    gradient-backdrop-pulse 6.5s ease-in-out infinite,
+    gradient-backdrop-wander 48s ease-in-out infinite alternate;
 }
 
 @keyframes gradient-backdrop-pulse {
@@ -133,7 +190,55 @@ body {
   }
 }
 
+@keyframes gradient-blobs-drift {
+  0% {
+    --blob1x: 72%;
+    --blob1y: 18%;
+    --blob2x: 22%;
+    --blob2y: 82%;
+    --blob3x: 50%;
+    --blob3y: 48%;
+  }
+  100% {
+    --blob1x: 62%;
+    --blob1y: 28%;
+    --blob2x: 34%;
+    --blob2y: 72%;
+    --blob3x: 58%;
+    --blob3y: 40%;
+  }
+}
+
+@keyframes gradient-ambient-wander {
+  0% {
+    transform: translate(0%, 0%) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translate(2.2%, -2.8%) rotate(0.55deg) scale(1.03);
+  }
+}
+
+@keyframes gradient-vignette-drift {
+  0% {
+    transform: translate(0%, 0%);
+  }
+  100% {
+    transform: translate(3.5%, -2.5%);
+  }
+}
+
+@keyframes gradient-backdrop-wander {
+  0% {
+    background-position: 94% 6%;
+  }
+  100% {
+    background-position: 76% 22%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .viewport-fill,
+  .viewport-fill::before,
   .viewport-fill__backdrop,
   .viewport-fill::after,
   .viewport-fill__accent--bl {
@@ -142,16 +247,29 @@ body {
 
   .viewport-fill__backdrop {
     opacity: 0.76;
+    background-position: 94% 6%;
     transform: scale(1.09);
     filter: blur(4.5px) saturate(0.6) brightness(0.78) hue-rotate(12deg);
   }
 
+  .viewport-fill::before {
+    transform: none;
+    inset: 0;
+  }
+
   .viewport-fill::after {
     opacity: 1;
+    transform: none;
   }
 
   .viewport-fill__accent--bl {
     opacity: 0.38;
+  }
+
+  .photo {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto;
   }
 }
 
@@ -251,6 +369,19 @@ body {
   object-fit: contain;
 }
 
+@keyframes photo-drift-pulse {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  35% {
+    transform: translate3d(4px, -5px, 0) scale(1.045);
+  }
+  70% {
+    transform: translate3d(-3px, 3px, 0) scale(1.018);
+  }
+}
+
 .photo {
   position: absolute;
   margin: 0;
@@ -260,6 +391,59 @@ body {
   cursor: default;
   background: #0a0a12;
   isolation: isolate;
+  transform: translate3d(0, 0, 0);
+  animation: photo-drift-pulse 5.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Desync pulses so tiles don’t move in lockstep */
+.photo--5 {
+  animation-duration: 4.9s;
+  animation-delay: -0.35s;
+}
+.photo--1 {
+  animation-duration: 6.1s;
+  animation-delay: -1.2s;
+}
+.photo--10 {
+  animation-duration: 5.2s;
+  animation-delay: -2.4s;
+}
+.photo--8 {
+  animation-duration: 5.7s;
+  animation-delay: -0.9s;
+}
+.photo--11 {
+  animation-duration: 6.4s;
+  animation-delay: -3.1s;
+}
+.photo--2 {
+  animation-duration: 5.5s;
+  animation-delay: -1.7s;
+}
+.photo--sickkids {
+  animation-duration: 5.1s;
+  animation-delay: -2.8s;
+}
+.photo--watai {
+  animation-duration: 6s;
+  animation-delay: -0.5s;
+}
+.photo--3 {
+  animation-duration: 5.35s;
+  animation-delay: -4s;
+}
+.photo--9 {
+  animation-duration: 5.85s;
+  animation-delay: -1.05s;
+}
+.photo--12 {
+  animation-duration: 6.25s;
+  animation-delay: -2.2s;
+}
+.photo--13 {
+  animation-duration: 4.75s;
+  animation-delay: -3.6s;
 }
 
 .photo:hover {
@@ -341,7 +525,7 @@ body {
 }
 
 .photo--10 {
-  left: 1025px;
+  left: 1062px;
   top: 624px;
   width: 468px;
   height: 324px;
@@ -373,14 +557,14 @@ body {
 }
 
 .photo--11 {
-  left: 478px;
+  left: 470px;
   top: 704px;
-  width: 338px;
-  height: 218px;
+  width: 326px;
+  height: 208px;
 }
 
 .photo--2 {
-  left: 52px;
+  left: 44px;
   top: 90px;
   width: 558px;
   height: 392px;
@@ -409,17 +593,17 @@ body {
 
 .photo--3 {
   left: 148px;
-  top: 728px;
+  top: 746px;
   width: 392px;
   height: 258px;
 }
 
-/* Co-Op — right column; larger tile */
+/* Co-Op — right column */
 .photo--9 {
-  left: 1368px;
-  top: 96px;
-  width: 432px;
-  height: 308px;
+  left: 1384px;
+  top: 102px;
+  width: 400px;
+  height: 286px;
   border-radius: 46px;
 }
 
@@ -441,10 +625,10 @@ body {
 }
 
 .photo--13 {
-  left: 1768px;
-  top: 694px;
-  width: 222px;
-  height: 196px;
+  left: 1754px;
+  top: 688px;
+  width: 240px;
+  height: 210px;
 }
 
 .bullets {
