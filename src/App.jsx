@@ -7,6 +7,16 @@ export default function App() {
 
   return (
     <div className="viewport">
+      <div className="viewport-fill" aria-hidden="true">
+        <div className="viewport-fill__blob viewport-fill__blob--upper">
+          <img src={img.gradient} alt="" />
+        </div>
+        <div className="viewport-fill__blob viewport-fill__blob--lower">
+          <div className="viewport-fill__spin">
+            <img src={img.gradient} alt="" />
+          </div>
+        </div>
+      </div>
       <div
         className="scale-shell"
         style={{
@@ -19,15 +29,6 @@ export default function App() {
           data-node-id="111:88"
           style={{ transform: `scale(${scale})` }}
         >
-        <div className="bg bg--gradient2" aria-hidden="true">
-          <img src={img.gradient} alt="" width={2002} height={1377} />
-        </div>
-        <div className="bg bg--gradient1" aria-hidden="true">
-          <div className="bg bg--gradient1-inner">
-            <img src={img.gradient} alt="" width={2002} height={566} />
-          </div>
-        </div>
-
         <nav className="socials" aria-label="Links">
           <a className="icon-link" href="#" aria-label="Resume">
             <img src={img.iconResume} alt="" width={24} height={24} />

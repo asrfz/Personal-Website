@@ -26,6 +26,7 @@ body {
 }
 
 .viewport {
+  position: relative;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
@@ -36,8 +37,102 @@ body {
   align-items: center;
 }
 
+/* Full-window gradients: oversized vs viewport so texture never “runs out” at any aspect ratio */
+.viewport-fill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+.viewport-fill__blob {
+  position: absolute;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  /* Square side ≫ viewport diagonal → corners stay inside soft part of the texture */
+  width: 260vmax;
+  height: 260vmax;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.viewport-fill__blob--upper {
+  top: 36%;
+  opacity: 0.93;
+}
+
+.viewport-fill__blob--lower {
+  top: 74%;
+  opacity: 0.88;
+}
+
+.viewport-fill__spin {
+  width: 100%;
+  height: 100%;
+  transform: rotate(180deg);
+}
+
+.viewport-fill__blob img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(2.75px);
+}
+
+.viewport-fill__blob--upper img {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 18%,
+    rgba(0, 0, 0, 0.88) 38%,
+    rgba(0, 0, 0, 0.4) 58%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 18%,
+    rgba(0, 0, 0, 0.88) 38%,
+    rgba(0, 0, 0, 0.4) 58%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-mode: alpha;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.viewport-fill__blob--lower .viewport-fill__spin img {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.45) 32%,
+    rgba(0, 0, 0, 0.9) 52%,
+    #000 72%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.45) 32%,
+    rgba(0, 0, 0, 0.9) 52%,
+    #000 72%,
+    #000 100%
+  );
+  mask-mode: alpha;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
 .scale-shell {
   position: relative;
+  z-index: 1;
   flex-shrink: 0;
 }
 
@@ -48,108 +143,7 @@ body {
   width: 2002px;
   height: 1040px;
   transform-origin: top left;
-  background: #000;
-}
-
-.bg {
-  position: absolute;
-  pointer-events: none;
-}
-
-.bg img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Shared scale keeps texture “frequency” similar so the seam disappears */
-:root {
-  --gradient-scale: 1.43;
-}
-
-/* Gradient2 — upper slab; origin slightly above center so glow reaches corners a bit more */
-.bg--gradient2 {
-  left: 0;
-  top: -422px;
-  width: 2002px;
-  height: 1377px;
-  transform: scale(var(--gradient-scale));
-  transform-origin: 50% 34%;
-  opacity: 0.94;
-  mix-blend-mode: screen;
-}
-
-.bg--gradient2 img {
-  filter: blur(1.25px);
-  /* Feather bottom edge into Gradient1 band */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 58%,
-    rgba(0, 0, 0, 0.82) 72%,
-    rgba(0, 0, 0, 0.35) 86%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    #000 0%,
-    #000 58%,
-    rgba(0, 0, 0, 0.82) 72%,
-    rgba(0, 0, 0, 0.35) 86%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  mask-mode: alpha;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-}
-
-/* Gradient1 — lower band, pulled up slightly for overlap; same scale as Gradient2 */
-.bg--gradient1 {
-  left: -487px;
-  top: 498px;
-  width: 2002px;
-  height: 566px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.9;
-  mix-blend-mode: screen;
-}
-
-.bg--gradient1-inner {
-  width: 2002px;
-  height: 566px;
-  transform: rotate(180deg) scale(var(--gradient-scale));
-  transform-origin: 50% 52%;
-}
-
-.bg--gradient1-inner img {
-  filter: blur(1.25px);
-  /* Feather top edge (after 180° rotate = toward Gradient2) */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.38) 14%,
-    rgba(0, 0, 0, 0.85) 28%,
-    #000 42%,
-    #000 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.38) 14%,
-    rgba(0, 0, 0, 0.85) 28%,
-    #000 42%,
-    #000 100%
-  );
-  mask-mode: alpha;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
+  background: transparent;
 }
 
 .socials {
