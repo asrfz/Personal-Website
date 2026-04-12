@@ -602,8 +602,8 @@ body {
 /* Co-Op — under icon row, right-aligned, shorter than before */
 .photo--9 {
   left: auto;
-  right: 40px;
-  top: 148px;
+  right: 168px;
+  top: 156px;
   width: 292px;
   height: 186px;
   border-radius: 46px;
@@ -696,7 +696,9 @@ body {
   font-size: 85px;
   font-weight: 400;
   line-height: 1.4;
-  letter-spacing: 0.02em;
+  /* Figma letter spacing 5% — % is font-size-relative; 0.05em matches where % unsupported */
+  letter-spacing: 0.05em;
+  letter-spacing: 5%;
   text-transform: uppercase;
   text-align: center;
   color: #fff;
