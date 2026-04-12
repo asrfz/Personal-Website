@@ -8,14 +8,8 @@ export default function App() {
   return (
     <div className="viewport">
       <div className="viewport-fill" aria-hidden="true">
-        <div className="viewport-fill__blob viewport-fill__blob--upper">
-          <img src={img.gradient} alt="" />
-        </div>
-        <div className="viewport-fill__blob viewport-fill__blob--lower">
-          <div className="viewport-fill__spin">
-            <img src={img.gradient} alt="" />
-          </div>
-        </div>
+        <div className="viewport-fill__backdrop" />
+        <div className="viewport-fill__accent viewport-fill__accent--bl" />
       </div>
       <div
         className="scale-shell"
