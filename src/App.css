@@ -313,10 +313,10 @@ body {
 }
 
 .photo--5 {
-  left: 995px;
-  top: 332px;
-  width: 279px;
-  height: 180px;
+  left: 1315px;
+  top: 292px;
+  width: 364px;
+  height: 236px;
 }
 
 .photo--5 img {
@@ -330,10 +330,10 @@ body {
 }
 
 .photo--1 {
-  left: 1165px;
-  top: 380px;
-  width: 258px;
-  height: 358px;
+  left: 1568px;
+  top: 312px;
+  width: 372px;
+  height: 482px;
 }
 
 .photo--1 img {
@@ -341,10 +341,10 @@ body {
 }
 
 .photo--10 {
-  left: 879px;
-  top: 660px;
-  width: 360px;
-  height: 259px;
+  left: 1025px;
+  top: 624px;
+  width: 468px;
+  height: 324px;
 }
 
 .photo--10 img {
@@ -357,10 +357,10 @@ body {
 }
 
 .photo--8 {
-  left: 1159px;
-  top: 786px;
-  width: 373px;
-  height: 265px;
+  left: 1488px;
+  top: 724px;
+  width: 508px;
+  height: 308px;
 }
 
 .photo--8 img {
@@ -373,17 +373,17 @@ body {
 }
 
 .photo--11 {
-  left: 373px;
-  top: 724px;
-  width: 292px;
-  height: 189px;
+  left: 478px;
+  top: 704px;
+  width: 338px;
+  height: 218px;
 }
 
 .photo--2 {
-  left: 24px;
-  top: 116px;
-  width: 448px;
-  height: 310px;
+  left: 52px;
+  top: 90px;
+  width: 558px;
+  height: 392px;
   opacity: 0.57;
 }
 
@@ -394,33 +394,32 @@ body {
 }
 
 .photo--sickkids {
-  left: 30px;
-  top: 396px;
-  width: 335px;
-  height: 252px;
+  left: 78px;
+  top: 380px;
+  width: 396px;
+  height: 294px;
 }
 
 .photo--watai {
-  left: 167px;
-  top: 580px;
-  width: 248px;
-  height: 248px;
+  left: 218px;
+  top: 558px;
+  width: 284px;
+  height: 284px;
 }
 
 .photo--3 {
-  left: 56px;
-  top: 760px;
-  width: 333px;
-  height: 221px;
+  left: 148px;
+  top: 728px;
+  width: 392px;
+  height: 258px;
 }
 
+/* Co-Op — right column; larger tile */
 .photo--9 {
-  left: 75.69%;
-  right: 3.61%;
-  top: 143px;
-  width: auto;
-  height: auto;
-  aspect-ratio: 964 / 689;
+  left: 1368px;
+  top: 96px;
+  width: 432px;
+  height: 308px;
   border-radius: 46px;
 }
 
@@ -433,18 +432,19 @@ body {
   height: 100%;
 }
 
+/* Birthday — horizontally centered on 2002px artboard */
 .photo--12 {
-  left: 443px;
-  top: 807px;
-  width: 582px;
-  height: 212px;
+  left: calc((2002px - 614px) / 2);
+  top: 788px;
+  width: 614px;
+  height: 232px;
 }
 
 .photo--13 {
-  left: 1090px;
-  top: 724px;
-  width: 164px;
-  height: 168px;
+  left: 1768px;
+  top: 694px;
+  width: 222px;
+  height: 196px;
 }
 
 .bullets {
