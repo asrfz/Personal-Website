@@ -1,0 +1,420 @@
+/* Layout matches Figma node 111:88 — artboard 2002×1040px; scaled to fit viewport (no scroll) */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.viewport {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scale-shell {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2002px;
+  height: 1040px;
+  transform-origin: top left;
+  background: #000;
+}
+
+.bg {
+  position: absolute;
+  pointer-events: none;
+}
+
+.bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Shared scale keeps texture “frequency” similar so the seam disappears */
+:root {
+  --gradient-scale: 1.43;
+}
+
+/* Gradient2 — upper slab; origin slightly above center so glow reaches corners a bit more */
+.bg--gradient2 {
+  left: 0;
+  top: -422px;
+  width: 2002px;
+  height: 1377px;
+  transform: scale(var(--gradient-scale));
+  transform-origin: 50% 34%;
+  opacity: 0.94;
+  mix-blend-mode: screen;
+}
+
+.bg--gradient2 img {
+  filter: blur(1.25px);
+  /* Feather bottom edge into Gradient1 band */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    rgba(0, 0, 0, 0.82) 72%,
+    rgba(0, 0, 0, 0.35) 86%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 58%,
+    rgba(0, 0, 0, 0.82) 72%,
+    rgba(0, 0, 0, 0.35) 86%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-mode: alpha;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Gradient1 — lower band, pulled up slightly for overlap; same scale as Gradient2 */
+.bg--gradient1 {
+  left: -487px;
+  top: 498px;
+  width: 2002px;
+  height: 566px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+.bg--gradient1-inner {
+  width: 2002px;
+  height: 566px;
+  transform: rotate(180deg) scale(var(--gradient-scale));
+  transform-origin: 50% 52%;
+}
+
+.bg--gradient1-inner img {
+  filter: blur(1.25px);
+  /* Feather top edge (after 180° rotate = toward Gradient2) */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.38) 14%,
+    rgba(0, 0, 0, 0.85) 28%,
+    #000 42%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.38) 14%,
+    rgba(0, 0, 0, 0.85) 28%,
+    #000 42%,
+    #000 100%
+  );
+  mask-mode: alpha;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.socials {
+  position: absolute;
+  left: 1250px;
+  top: 37px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 149px;
+  z-index: 20;
+}
+
+.icon-link {
+  display: flex;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
+  transition: opacity 0.15s ease;
+}
+
+.icon-link:hover {
+  opacity: 1;
+}
+
+.icon-link img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.icon-link--github {
+  padding: 3px;
+  width: auto;
+  height: auto;
+}
+
+.github-wrap {
+  display: block;
+  width: 16.5px;
+  height: 18px;
+  position: relative;
+}
+
+.github-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.photo {
+  position: absolute;
+  margin: 0;
+  border-radius: 49px;
+  overflow: hidden;
+  pointer-events: none;
+  background: #0a0a12;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo--5 {
+  left: 995px;
+  top: 332px;
+  width: 279px;
+  height: 180px;
+}
+
+.photo--5 img {
+  opacity: 0.78;
+  position: absolute;
+  height: 128.43%;
+  width: 100.02%;
+  left: -0.01%;
+  top: 0;
+  object-position: left top;
+}
+
+.photo--1 {
+  left: 1165px;
+  top: 380px;
+  width: 258px;
+  height: 358px;
+}
+
+.photo--1 img {
+  opacity: 0.64;
+}
+
+.photo--10 {
+  left: 879px;
+  top: 660px;
+  width: 360px;
+  height: 259px;
+}
+
+.photo--10 img {
+  position: absolute;
+  height: 111.5%;
+  width: 100%;
+  left: 0;
+  top: -0.04%;
+  object-position: center top;
+}
+
+.photo--8 {
+  left: 1159px;
+  top: 786px;
+  width: 373px;
+  height: 265px;
+}
+
+.photo--8 img {
+  position: absolute;
+  height: 144.08%;
+  width: 100.23%;
+  left: -0.11%;
+  top: 0;
+  object-position: left top;
+}
+
+.photo--11 {
+  left: 373px;
+  top: 724px;
+  width: 292px;
+  height: 189px;
+}
+
+.photo--2 {
+  left: 24px;
+  top: 116px;
+  width: 448px;
+  height: 310px;
+  opacity: 0.68;
+}
+
+.photo--2 img {
+  opacity: 0.93;
+}
+
+.photo--sickkids {
+  left: 30px;
+  top: 396px;
+  width: 335px;
+  height: 252px;
+}
+
+.photo--watai {
+  left: 167px;
+  top: 580px;
+  width: 248px;
+  height: 248px;
+}
+
+.photo--3 {
+  left: 56px;
+  top: 760px;
+  width: 333px;
+  height: 221px;
+}
+
+.photo--9 {
+  left: 75.69%;
+  right: 3.61%;
+  top: 143px;
+  width: auto;
+  height: auto;
+  aspect-ratio: 964 / 689;
+  border-radius: 46px;
+}
+
+.photo--9 img {
+  opacity: 0.87;
+  border-radius: 46px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.photo--12 {
+  left: 443px;
+  top: 807px;
+  width: 582px;
+  height: 212px;
+}
+
+.photo--13 {
+  left: 1090px;
+  top: 724px;
+  width: 164px;
+  height: 168px;
+}
+
+.bullets {
+  position: absolute;
+  left: 442px;
+  top: 491.5px;
+  transform: translateY(-50%);
+  width: 823px;
+  z-index: 10;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.99;
+}
+
+.bullets ul {
+  margin: 0;
+  padding-left: 36px;
+}
+
+.bullets li {
+  margin-bottom: 0;
+}
+
+.lang-switch {
+  position: absolute;
+  left: 142px;
+  top: 913px;
+  width: 318px;
+  height: 90px;
+  border: 2px solid #101010;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.lang-switch__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.lang-switch__icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.name {
+  position: absolute;
+  left: calc(50% - 390px);
+  top: 110px;
+  width: 805px;
+  margin: 0;
+  font-family: Pacifico, cursive;
+  font-size: 96px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #fff;
+  z-index: 12;
+  pointer-events: none;
+}
