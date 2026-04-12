@@ -1,5 +1,6 @@
 import "./App.css";
 import { bulletPoints, img } from "./assets.js";
+import { CursorGlow } from "./CursorGlow.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 
 export default function App() {
@@ -117,6 +118,7 @@ export default function App() {
         </h1>
         </main>
       </div>
+      <CursorGlow />
     </div>
   );
 }

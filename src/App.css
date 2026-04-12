@@ -237,6 +237,27 @@ body {
   overflow: hidden;
   pointer-events: none;
   background: #0a0a12;
+  isolation: isolate;
+}
+
+/* Strong grade: images sit well behind white type (Figma-style dim collage) */
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      185deg,
+      rgba(5, 1, 16, 0.72) 0%,
+      rgba(4, 1, 12, 0.48) 38%,
+      rgba(3, 0, 10, 0.62) 100%
+    ),
+    rgba(2, 0, 8, 0.45);
+  mix-blend-mode: multiply;
+  box-shadow: inset 0 0 72px 28px rgba(0, 0, 0, 0.35);
 }
 
 .photo img {
@@ -244,6 +265,9 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  opacity: 0.8;
+  /* Low brightness + lower contrast = crushed highlights, subdued exposure */
+  filter: brightness(0.54) contrast(0.74) saturate(0.86);
 }
 
 .photo--5 {
@@ -254,7 +278,7 @@ body {
 }
 
 .photo--5 img {
-  opacity: 0.78;
+  opacity: 0.58;
   position: absolute;
   height: 128.43%;
   width: 100.02%;
@@ -271,7 +295,7 @@ body {
 }
 
 .photo--1 img {
-  opacity: 0.64;
+  opacity: 0.48;
 }
 
 .photo--10 {
@@ -318,11 +342,13 @@ body {
   top: 116px;
   width: 448px;
   height: 310px;
-  opacity: 0.68;
+  opacity: 0.57;
 }
 
+/* Waterloo — slightly brighter than other collage tiles */
 .photo--2 img {
-  opacity: 0.93;
+  opacity: 0.8;
+  filter: brightness(0.62) contrast(0.76) saturate(0.88);
 }
 
 .photo--sickkids {
@@ -357,7 +383,7 @@ body {
 }
 
 .photo--9 img {
-  opacity: 0.87;
+  opacity: 0.62;
   border-radius: 46px;
   position: absolute;
   inset: 0;
@@ -445,4 +471,34 @@ body {
   color: #fff;
   z-index: 12;
   pointer-events: none;
+}
+
+/* Cursor-following glow — lighter lilac / violet than backdrop, layered gradients */
+.cursor-glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 80;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  transition: opacity 0.35s ease;
+  filter: blur(0.6px);
+  background:
+    radial-gradient(ellipse 58% 52% at 38% 36%, rgba(218, 185, 255, 0.32) 0%, transparent 58%),
+    radial-gradient(ellipse 52% 56% at 64% 62%, rgba(198, 155, 255, 0.26) 0%, transparent 55%),
+    radial-gradient(circle at 50% 48%, rgba(205, 165, 255, 0.2) 0%, rgba(150, 100, 220, 0.08) 45%, transparent 72%);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor-glow {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow {
+    display: none !important;
+  }
 }
