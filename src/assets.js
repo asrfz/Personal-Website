@@ -1,6 +1,6 @@
 /** Figma MCP asset URLs — replace with local `/public` files before deploy. */
 export const img = {
-  /** Figma exports one texture for both gradient layers */
+  /** Full-viewport background — sync URL when “gradient” changes in Figma (MCP export) */
   gradient: "https://www.figma.com/api/mcp/asset/50f9b6be-4080-43d9-b9d9-6a6602581faa",
   wsp: "https://www.figma.com/api/mcp/asset/351e1d32-89c3-4179-ad4d-731fc44c0425",
   mAndR: "https://www.figma.com/api/mcp/asset/fdcf69cb-de6c-4fca-8d94-c5585b6c4270",

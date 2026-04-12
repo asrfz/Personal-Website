@@ -9,7 +9,10 @@ export default function App() {
   return (
     <div className="viewport">
       <div className="viewport-fill" aria-hidden="true">
-        <div className="viewport-fill__backdrop" />
+        <div
+          className="viewport-fill__backdrop"
+          style={{ backgroundImage: `url(${img.gradient})` }}
+        />
         <div className="viewport-fill__accent viewport-fill__accent--bl" />
       </div>
       <div
