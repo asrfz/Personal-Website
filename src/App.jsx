@@ -9,12 +9,28 @@ export default function App() {
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   const wheelAccumulatorRef = useRef(0);
   const lastStepAtRef = useRef(0);
+  const highlightByBullet = [
+    ["waterloo"],
+    ["sickkids"],
+    ["watai"],
+    ["cfes"],
+    ["coop"],
+    ["asme"],
+    ["cxc"],
+    ["wsp", "womens"],
+    ["basketballRight"],
+    ["greece"],
+    ["physio"],
+  ];
+  const activeHighlights = new Set(highlightByBullet[activeBulletIndex] ?? []);
+  const isHighlighted = (key) => activeHighlights.has(key);
 
   const onViewportWheel = useCallback((event) => {
     wheelAccumulatorRef.current += event.deltaY;
     const now = performance.now();
-    const deltaThreshold = 150;
-    const stepCooldownMs = 170;
+    const progress = activeBulletIndex / (bulletPoints.length - 1 || 1);
+    const deltaThreshold = 150 + progress * 220;
+    const stepCooldownMs = 170 + progress * 90;
 
     if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
       return;
@@ -31,7 +47,7 @@ export default function App() {
       Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
     );
     event.preventDefault();
-  }, []);
+  }, [activeBulletIndex]);
 
   return (
     <div className="viewport" onWheel={onViewportWheel}>
@@ -81,40 +97,40 @@ export default function App() {
           </a>
         </nav>
 
-        <figure className="photo photo--5">
+        <figure className={`photo photo--5${isHighlighted("wsp") ? " is-highlighted" : ""}`}>
           <img src={img.wsp} alt="WSP" />
         </figure>
-        <figure className="photo photo--1">
+        <figure className={`photo photo--1${isHighlighted("basketballRight") ? " is-highlighted" : ""}`}>
           <img src={img.mAndR} alt="M&amp;R" />
         </figure>
-        <figure className="photo photo--10">
+        <figure className={`photo photo--10${isHighlighted("cxc") ? " is-highlighted" : ""}`}>
           <img src={img.cxc} alt="CXC" />
         </figure>
-        <figure className="photo photo--8">
+        <figure className={`photo photo--8${isHighlighted("physio") ? " is-highlighted" : ""}`}>
           <img src={img.physio} alt="Physio" />
         </figure>
-        <figure className="photo photo--11">
+        <figure className={`photo photo--11${isHighlighted("womens") ? " is-highlighted" : ""}`}>
           <img src={img.womens} alt="Women's College Hospital" />
         </figure>
-        <figure className="photo photo--2">
+        <figure className={`photo photo--2${isHighlighted("waterloo") ? " is-highlighted" : ""}`}>
           <img src={img.waterloo} alt="Waterloo Engineering" />
         </figure>
-        <figure className="photo photo--sickkids">
+        <figure className={`photo photo--sickkids${isHighlighted("sickkids") ? " is-highlighted" : ""}`}>
           <img src={img.sickKids} alt="SickKids" />
         </figure>
-        <figure className="photo photo--watai">
+        <figure className={`photo photo--watai${isHighlighted("watai") ? " is-highlighted" : ""}`}>
           <img src={img.watAi} alt="WAT.ai" />
         </figure>
-        <figure className="photo photo--3">
+        <figure className={`photo photo--3${isHighlighted("asme") ? " is-highlighted" : ""}`}>
           <img src={img.asme} alt="ASME" />
         </figure>
-        <figure className="photo photo--9">
+        <figure className={`photo photo--9${isHighlighted("coop") ? " is-highlighted" : ""}`}>
           <img src={img.coOp} alt="Co-Op" />
         </figure>
         <figure className="photo photo--12">
           <img src={img.birthdayParty} alt="Birthday party" />
         </figure>
-        <figure className="photo photo--13">
+        <figure className={`photo photo--13${isHighlighted("cfes") ? " is-highlighted" : ""}`}>
           <img src={img.cfes} alt="CFES" />
         </figure>
 
@@ -126,7 +142,11 @@ export default function App() {
           </ul>
         </div>
 
-        <figure className="lang-switch" data-node-id="111:204" aria-label="Language photo">
+        <figure
+          className={`lang-switch${isHighlighted("greece") ? " is-highlighted" : ""}`}
+          data-node-id="111:204"
+          aria-label="Language photo"
+        >
           <img className="lang-switch__photo" src={img.languagesPhoto} alt="Street in Greece at dusk" />
         </figure>
 
