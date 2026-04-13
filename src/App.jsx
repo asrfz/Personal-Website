@@ -99,20 +99,9 @@ export default function App() {
           </ul>
         </div>
 
-        <div className="lang-switch" data-node-id="111:204" role="group" aria-label="Language">
-          <span className="lang-switch__icon">
-            <img src={img.langFr} alt="" width={24} height={24} />
-          </span>
-          <span className="lang-switch__icon">
-            <img src={img.langEn} alt="" width={24} height={24} />
-          </span>
-          <span className="lang-switch__icon">
-            <img src={img.langEs} alt="" width={24} height={24} />
-          </span>
-          <span className="lang-switch__icon">
-            <img src={img.langAr} alt="" width={24} height={24} />
-          </span>
-        </div>
+        <figure className="lang-switch" data-node-id="111:204" aria-label="Language photo">
+          <img className="lang-switch__photo" src={img.languagesPhoto} alt="Street in Greece at dusk" />
+        </figure>
 
         <h1 className="name" data-node-id="111:89">
           Aiden Sarrafzadeh
