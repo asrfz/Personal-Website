@@ -434,6 +434,21 @@ body {
   margin-bottom: 0;
 }
 
+.bullets .bullet-line {
+  animation: bullet-reveal 260ms ease-out;
+}
+
+@keyframes bullet-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Language strip — photo-style tile (radius, pulse, hover ring, dimmed icons) */
 .lang-switch {
   position: absolute;

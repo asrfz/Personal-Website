@@ -1,13 +1,40 @@
 import "./App.css";
+import { useCallback, useRef, useState } from "react";
 import { bulletPoints, img } from "./assets.js";
 import { CursorGlow } from "./CursorGlow.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 
 export default function App() {
   const scale = useViewportScale();
+  const [visibleBulletCount, setVisibleBulletCount] = useState(1);
+  const wheelAccumulatorRef = useRef(0);
+  const lastStepAtRef = useRef(0);
+
+  const onViewportWheel = useCallback((event) => {
+    wheelAccumulatorRef.current += event.deltaY;
+    const now = performance.now();
+    const deltaThreshold = 65;
+    const stepCooldownMs = 130;
+
+    if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
+      return;
+    }
+    if (now - lastStepAtRef.current < stepCooldownMs) {
+      return;
+    }
+
+    const direction = wheelAccumulatorRef.current > 0 ? 1 : -1;
+    wheelAccumulatorRef.current = 0;
+    lastStepAtRef.current = now;
+
+    setVisibleBulletCount((current) =>
+      Math.min(bulletPoints.length, Math.max(1, current + direction)),
+    );
+    event.preventDefault();
+  }, []);
 
   return (
-    <div className="viewport">
+    <div className="viewport" onWheel={onViewportWheel}>
       <div
         className="viewport-fill"
         style={{ backgroundImage: `url(${img.gradient})` }}
@@ -93,8 +120,10 @@ export default function App() {
 
         <div className="bullets" data-node-id="113:39">
           <ul>
-            {bulletPoints.map((text) => (
-              <li key={text}>{text}</li>
+            {bulletPoints.slice(0, visibleBulletCount).map((text) => (
+              <li key={text} className="bullet-line">
+                {text}
+              </li>
             ))}
           </ul>
         </div>
