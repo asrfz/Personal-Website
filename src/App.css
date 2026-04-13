@@ -428,6 +428,7 @@ body {
 .bullets ul {
   margin: 0;
   padding-left: 36px;
+  list-style: none;
 }
 
 .bullets li {

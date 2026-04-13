@@ -13,8 +13,8 @@ export default function App() {
   const onViewportWheel = useCallback((event) => {
     wheelAccumulatorRef.current += event.deltaY;
     const now = performance.now();
-    const deltaThreshold = 65;
-    const stepCooldownMs = 130;
+    const deltaThreshold = 150;
+    const stepCooldownMs = 170;
 
     if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
       return;
