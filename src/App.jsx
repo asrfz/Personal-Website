@@ -9,6 +9,9 @@ export default function App() {
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   const wheelAccumulatorRef = useRef(0);
   const lastStepAtRef = useRef(0);
+  const gestureDirectionRef = useRef(0);
+  const gestureSteppedRef = useRef(false);
+  const lastWheelEventAtRef = useRef(0);
   const highlightByBullet = [
     ["waterloo"],
     ["sickkids"],
@@ -22,15 +25,56 @@ export default function App() {
     ["greece"],
     ["physio"],
   ];
+  const bulletGradients = [
+    ["#ffffff", "#9dd6ff", "#9af4ff", "#b6a2ff"],
+    ["#ffffff", "#7fd8ff", "#6bf0d2", "#8aa4ff"],
+    ["#ffffff", "#8fc2ff", "#78a3ff", "#9e8cff"],
+    ["#ffffff", "#d7a6ff", "#a3b4ff", "#96f0ff"],
+    ["#ffffff", "#95d3ff", "#7eb8ff", "#8f96ff"],
+    ["#ffffff", "#ffb8d6", "#c6b1ff", "#8dc2ff"],
+    ["#ffffff", "#ffc189", "#ff9ec2", "#9cc2ff"],
+    ["#ffffff", "#8be4ff", "#98cfff", "#afb0ff"],
+    ["#ffffff", "#86eab7", "#87d9ff", "#b7c0ff"],
+    ["#ffffff", "#ffd997", "#a8c9ff", "#87f0ff"],
+    ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
+  ];
   const activeHighlights = new Set(highlightByBullet[activeBulletIndex] ?? []);
   const isHighlighted = (key) => activeHighlights.has(key);
+  const activeGradient = bulletGradients[activeBulletIndex] ?? bulletGradients[0];
 
   const onViewportWheel = useCallback((event) => {
-    wheelAccumulatorRef.current += event.deltaY;
     const now = performance.now();
+    const motionDirection = Math.sign(event.deltaY);
+    if (motionDirection === 0) {
+      return;
+    }
+
+    const idleGapMs = 240;
+    if (now - lastWheelEventAtRef.current > idleGapMs) {
+      gestureDirectionRef.current = 0;
+      gestureSteppedRef.current = false;
+      wheelAccumulatorRef.current = 0;
+    }
+    lastWheelEventAtRef.current = now;
+
+    if (gestureDirectionRef.current === 0) {
+      gestureDirectionRef.current = motionDirection;
+    } else if (gestureDirectionRef.current !== motionDirection) {
+      /* Direction flip = new gesture */
+      gestureDirectionRef.current = motionDirection;
+      gestureSteppedRef.current = false;
+      wheelAccumulatorRef.current = 0;
+    }
+
+    if (gestureSteppedRef.current) {
+      event.preventDefault();
+      return;
+    }
+
+    wheelAccumulatorRef.current += event.deltaY;
     const progress = activeBulletIndex / (bulletPoints.length - 1 || 1);
     const deltaThreshold = 150 + progress * 220;
-    const stepCooldownMs = 170 + progress * 90;
+    const stepCooldownMs = 120;
 
     if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
       return;
@@ -42,6 +86,7 @@ export default function App() {
     const direction = wheelAccumulatorRef.current > 0 ? 1 : -1;
     wheelAccumulatorRef.current = 0;
     lastStepAtRef.current = now;
+    gestureSteppedRef.current = true;
 
     setActiveBulletIndex((current) =>
       Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
@@ -137,7 +182,16 @@ export default function App() {
         <div className="bullets" data-node-id="113:39">
           <ul>
             <li key={bulletPoints[activeBulletIndex]} className="bullet-line">
-              {bulletPoints[activeBulletIndex]}
+              <span
+                style={{
+                  "--bullet-grad-1": activeGradient[0],
+                  "--bullet-grad-2": activeGradient[1],
+                  "--bullet-grad-3": activeGradient[2],
+                  "--bullet-grad-4": activeGradient[3],
+                }}
+              >
+                {bulletPoints[activeBulletIndex]}
+              </span>
             </li>
           </ul>
         </div>
