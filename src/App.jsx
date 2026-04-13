@@ -8,13 +8,11 @@ export default function App() {
 
   return (
     <div className="viewport">
-      <div className="viewport-fill" aria-hidden="true">
-        <div
-          className="viewport-fill__backdrop"
-          style={{ backgroundImage: `url(${img.gradient})` }}
-        />
-        <div className="viewport-fill__accent viewport-fill__accent--bl" />
-      </div>
+      <div
+        className="viewport-fill"
+        style={{ backgroundImage: `url(${img.gradient})` }}
+        aria-hidden="true"
+      />
       <div
         className="scale-shell"
         style={{

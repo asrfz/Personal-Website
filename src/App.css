@@ -1,36 +1,5 @@
 /* Layout matches Figma node 111:88 — artboard 2002×1040px; scaled to fit viewport (no scroll) */
 
-@property --blob1x {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 72%;
-}
-@property --blob1y {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 18%;
-}
-@property --blob2x {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 22%;
-}
-@property --blob2y {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 82%;
-}
-@property --blob3x {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 50%;
-}
-@property --blob3y {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 48%;
-}
-
 html,
 body {
   height: 100%;
@@ -68,201 +37,37 @@ body {
   align-items: center;
 }
 
-/* Full-window backdrop — purple PNG + CSS wash (original stack) */
+/* Full-window backdrop: `img.gradient` + top-right turquoise → black falloff */
 .viewport-fill {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  --blob1x: 72%;
-  --blob1y: 18%;
-  --blob2x: 22%;
-  --blob2y: 82%;
-  --blob3x: 50%;
-  --blob3y: 48%;
-  animation: gradient-blobs-drift 32s ease-in-out infinite alternate;
-  background:
-    radial-gradient(
-      ellipse 130% 115% at var(--blob1x) var(--blob1y),
-      rgba(38, 42, 105, 0.32) 0%,
-      transparent 52%
-    ),
-    radial-gradient(
-      ellipse 100% 95% at var(--blob2x) var(--blob2y),
-      rgba(32, 38, 92, 0.26) 0%,
-      transparent 48%
-    ),
-    radial-gradient(
-      ellipse 90% 75% at var(--blob3x) var(--blob3y),
-      rgba(26, 30, 78, 0.14) 0%,
-      transparent 58%
-    ),
-    linear-gradient(198deg, #020208 0%, #06051a 38%, #0c0a28 58%, #040312 100%);
-}
-
-/* Extra ambient: bluer indigo, mid-field + corners */
-.viewport-fill::before {
-  content: "";
-  position: absolute;
-  inset: -14%;
-  z-index: 1;
-  pointer-events: none;
-  will-change: transform;
-  background:
-    radial-gradient(ellipse 115% 100% at 88% 6%, rgba(52, 48, 130, 0.38) 0%, rgba(36, 34, 88, 0.12) 45%, transparent 68%),
-    radial-gradient(ellipse 100% 95% at 12% 94%, rgba(42, 48, 118, 0.32) 0%, transparent 62%),
-    radial-gradient(ellipse 95% 80% at 50% 45%, rgba(44, 52, 125, 0.1) 0%, transparent 70%);
-  mix-blend-mode: soft-light;
-  animation: gradient-ambient-wander 38s ease-in-out infinite alternate;
-}
-
-/* Edge falloff into black */
-.viewport-fill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 135% 118% at 76% 10%,
-    transparent 0%,
-    transparent 22%,
-    rgba(0, 0, 0, 0.03) 36%,
-    rgba(0, 0, 0, 0.1) 52%,
-    rgba(0, 0, 0, 0.22) 68%,
-    rgba(0, 0, 0, 0.45) 86%,
-    rgba(0, 0, 0, 0.72) 100%
-  );
-  animation:
-    gradient-vignette-pulse 9s ease-in-out infinite,
-    gradient-vignette-drift 44s ease-in-out infinite alternate;
-}
-
-/* background-image: Figma “gradient” asset from `img.gradient` (inline on element) */
-.viewport-fill__backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-color: #030212;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
-  transform-origin: center center;
-  animation:
-    gradient-backdrop-pulse 6.5s ease-in-out infinite,
-    gradient-backdrop-wander 48s ease-in-out infinite alternate;
 }
 
-/* Tiny counter-weight glow — bottom-left */
-.viewport-fill__accent {
+.viewport-fill::before {
+  content: "";
   position: absolute;
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-}
-
-.viewport-fill__accent--bl {
-  position: absolute;
-  width: min(38vmin, 300px);
-  height: min(38vmin, 300px);
-  left: clamp(10px, 1.8vw, 22px);
-  bottom: clamp(12px, 2vh, 26px);
-  transform: translate(-3%, 3%);
-  opacity: 0.44;
-  animation: gradient-accent-pulse 5.2s ease-in-out infinite;
-  animation-delay: -1.4s;
   background: radial-gradient(
-    circle at 35% 65%,
-    rgba(88, 95, 195, 0.22) 0%,
-    rgba(58, 62, 145, 0.11) 38%,
-    rgba(28, 32, 88, 0.04) 62%,
+    ellipse 118% 105% at 98% 0%,
+    rgba(148, 252, 255, 0.42) 0%,
+    rgba(110, 232, 242, 0.28) 12%,
+    rgba(78, 200, 218, 0.16) 28%,
+    rgba(56, 150, 175, 0.08) 44%,
+    rgba(20, 45, 62, 0.22) 62%,
+    rgba(0, 0, 0, 0.52) 80%,
     transparent 96%
   );
-  filter: blur(8px);
-}
-
-@keyframes gradient-backdrop-pulse {
-  0%,
-  100% {
-    opacity: 0.72;
-    transform: scale(1.08);
-    filter: blur(4.5px) saturate(0.58) brightness(0.76) hue-rotate(14deg);
-  }
-  50% {
-    opacity: 0.82;
-    transform: scale(1.1);
-    filter: blur(5px) saturate(0.64) brightness(0.82) hue-rotate(12deg);
-  }
-}
-
-@keyframes gradient-vignette-pulse {
-  0%,
-  100% {
-    opacity: 0.92;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes gradient-ambient-wander {
-  0% {
-    transform: translate(0%, 0%) rotate(0deg) scale(1);
-  }
-  100% {
-    transform: translate(2.2%, -2.8%) rotate(0.55deg) scale(1.03);
-  }
-}
-
-@keyframes gradient-vignette-drift {
-  0% {
-    transform: translate(0%, 0%);
-  }
-  100% {
-    transform: translate(3.5%, -2.5%);
-  }
-}
-
-@keyframes gradient-backdrop-wander {
-  0% {
-    background-position: 50% 48%;
-  }
-  100% {
-    background-position: 48% 52%;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .viewport-fill,
-  .viewport-fill::before,
-  .viewport-fill__backdrop,
-  .viewport-fill::after,
-  .viewport-fill__accent--bl {
-    animation: none !important;
-  }
-
-  .viewport-fill__backdrop {
-    opacity: 0.76;
-    background-position: center center;
-    transform: scale(1.09);
-    filter: blur(4.5px) saturate(0.6) brightness(0.78) hue-rotate(12deg);
-  }
-
-  .viewport-fill::before {
-    transform: none;
-    inset: 0;
-  }
-
-  .viewport-fill::after {
-    opacity: 1;
-    transform: none;
-  }
-
-  .viewport-fill__accent--bl {
-    opacity: 0.38;
-  }
-
   .photo,
   .lang-switch {
     animation: none !important;
