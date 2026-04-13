@@ -6,7 +6,7 @@ import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 
 export default function App() {
   const scale = useViewportScale();
-  const [visibleBulletCount, setVisibleBulletCount] = useState(1);
+  const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   const wheelAccumulatorRef = useRef(0);
   const lastStepAtRef = useRef(0);
 
@@ -27,8 +27,8 @@ export default function App() {
     wheelAccumulatorRef.current = 0;
     lastStepAtRef.current = now;
 
-    setVisibleBulletCount((current) =>
-      Math.min(bulletPoints.length, Math.max(1, current + direction)),
+    setActiveBulletIndex((current) =>
+      Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
     );
     event.preventDefault();
   }, []);
@@ -120,11 +120,9 @@ export default function App() {
 
         <div className="bullets" data-node-id="113:39">
           <ul>
-            {bulletPoints.slice(0, visibleBulletCount).map((text) => (
-              <li key={text} className="bullet-line">
-                {text}
-              </li>
-            ))}
+            <li key={bulletPoints[activeBulletIndex]} className="bullet-line">
+              {bulletPoints[activeBulletIndex]}
+            </li>
           </ul>
         </div>
 
