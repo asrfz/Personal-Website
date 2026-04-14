@@ -22,7 +22,10 @@ const HOVER_PHOTO_TO_BULLET = {
 export default function App() {
   const scale = useViewportScale();
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
-  const [hoveredPhotoKey, setHoveredPhotoKey] = useState(null);
+  /** Which photo tile the pointer is currently over (transient). */
+  const [hoverFocusKey, setHoverFocusKey] = useState(null);
+  /** Last photo tile "selected" by hover — persists until a different tile is hovered. */
+  const [stickyPhotoKey, setStickyPhotoKey] = useState(null);
   const wheelAccumulatorRef = useRef(0);
   const lastStepAtRef = useRef(0);
   const gestureDirectionRef = useRef(0);
@@ -54,11 +57,20 @@ export default function App() {
     ["#ffffff", "#ffd997", "#a8c9ff", "#87f0ff"],
     ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
   ];
-  const isBirthdayHover = hoveredPhotoKey === "birthday";
+  const isBirthdayActive =
+    hoverFocusKey === "birthday" ||
+    (stickyPhotoKey === "birthday" && hoverFocusKey == null);
   const displayBulletIndex = (() => {
-    if (hoveredPhotoKey == null) return activeBulletIndex;
-    if (isBirthdayHover) return null;
-    return HOVER_PHOTO_TO_BULLET[hoveredPhotoKey] ?? activeBulletIndex;
+    const transient = hoverFocusKey;
+    if (transient === "birthday") return null;
+    if (transient != null) {
+      return HOVER_PHOTO_TO_BULLET[transient] ?? activeBulletIndex;
+    }
+    if (stickyPhotoKey === "birthday") return null;
+    if (stickyPhotoKey != null) {
+      return HOVER_PHOTO_TO_BULLET[stickyPhotoKey] ?? activeBulletIndex;
+    }
+    return activeBulletIndex;
   })();
   const activeHighlights = new Set(
     displayBulletIndex == null
@@ -120,6 +132,8 @@ export default function App() {
     setActiveBulletIndex((current) =>
       Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
     );
+    setStickyPhotoKey(null);
+    setHoverFocusKey(null);
     event.preventDefault();
   }, [activeBulletIndex]);
 
@@ -141,6 +155,7 @@ export default function App() {
           className="canvas"
           data-node-id="111:88"
           style={{ transform: `scale(${scale})` }}
+          onMouseLeave={() => setHoverFocusKey(null)}
         >
         <nav className="socials" aria-label="Links">
           <a className="icon-link" href="#" aria-label="Resume">
@@ -177,85 +192,109 @@ export default function App() {
 
         <figure
           className={`photo photo--5${isHighlighted("wsp") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("wsp")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("wsp");
+            setStickyPhotoKey("wsp");
+          }}
         >
           <img src={img.wsp} alt="WSP" />
         </figure>
         <figure
           className={`photo photo--1${isHighlighted("basketballRight") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("basketballRight")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("basketballRight");
+            setStickyPhotoKey("basketballRight");
+          }}
         >
           <img src={img.mAndR} alt="M&amp;R" />
         </figure>
         <figure
           className={`photo photo--10${isHighlighted("cxc") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("cxc")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("cxc");
+            setStickyPhotoKey("cxc");
+          }}
         >
           <img src={img.cxc} alt="CXC" />
         </figure>
         <figure
           className={`photo photo--8${isHighlighted("physio") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("physio")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("physio");
+            setStickyPhotoKey("physio");
+          }}
         >
           <img src={img.physio} alt="Physio" />
         </figure>
         <figure
           className={`photo photo--11${isHighlighted("womens") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("womens")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("womens");
+            setStickyPhotoKey("womens");
+          }}
         >
           <img src={img.womens} alt="Women's College Hospital" />
         </figure>
         <figure
           className={`photo photo--2${isHighlighted("waterloo") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("waterloo")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("waterloo");
+            setStickyPhotoKey("waterloo");
+          }}
         >
           <img src={img.waterloo} alt="Waterloo Engineering" />
         </figure>
         <figure
           className={`photo photo--sickkids${isHighlighted("sickkids") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("sickkids")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("sickkids");
+            setStickyPhotoKey("sickkids");
+          }}
         >
           <img src={img.sickKids} alt="SickKids" />
         </figure>
         <figure
           className={`photo photo--watai${isHighlighted("watai") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("watai")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("watai");
+            setStickyPhotoKey("watai");
+          }}
         >
           <img src={img.watAi} alt="WAT.ai" />
         </figure>
         <figure
           className={`photo photo--3${isHighlighted("asme") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("asme")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("asme");
+            setStickyPhotoKey("asme");
+          }}
         >
           <img src={img.asme} alt="ASME" />
         </figure>
         <figure
           className={`photo photo--9${isHighlighted("coop") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("coop")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("coop");
+            setStickyPhotoKey("coop");
+          }}
         >
           <img src={img.coOp} alt="Co-Op" />
         </figure>
         <figure
           className="photo photo--12"
-          onMouseEnter={() => setHoveredPhotoKey("birthday")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("birthday");
+            setStickyPhotoKey("birthday");
+          }}
         >
           <img src={img.birthdayParty} alt="Birthday party" />
         </figure>
         <figure
           className={`photo photo--13${isHighlighted("cfes") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => setHoveredPhotoKey("cfes")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("cfes");
+            setStickyPhotoKey("cfes");
+          }}
         >
           <img src={img.cfes} alt="CFES" />
         </figure>
@@ -264,13 +303,13 @@ export default function App() {
           <ul>
             <li
               key={
-                isBirthdayHover
+                isBirthdayActive
                   ? "birthday-hover"
                   : bulletPoints[displayBulletIndex ?? 0]
               }
               className="bullet-line"
             >
-              {!isBirthdayHover && displayBulletIndex != null ? (
+              {!isBirthdayActive && displayBulletIndex != null ? (
                 <span
                   style={{
                     "--bullet-grad-1": activeGradient[0],
@@ -290,8 +329,10 @@ export default function App() {
           className={`lang-switch${isHighlighted("greece") ? " is-highlighted" : ""}`}
           data-node-id="111:204"
           aria-label="Language photo"
-          onMouseEnter={() => setHoveredPhotoKey("greece")}
-          onMouseLeave={() => setHoveredPhotoKey(null)}
+          onMouseEnter={() => {
+            setHoverFocusKey("greece");
+            setStickyPhotoKey("greece");
+          }}
         >
           <img className="lang-switch__photo" src={img.languagesPhoto} alt="Street in Greece at dusk" />
         </figure>

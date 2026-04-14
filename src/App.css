@@ -100,14 +100,13 @@ body {
 
 .socials {
   position: absolute;
-  left: auto;
-  right: 40px;
-  /* Icon row vertical center = title line-box center (see `.name`) */
-  top: 104px;
+  left: calc((2002px - 805px) / 2);
+  top: calc(104px + 12px + (85px * 1.4) / 2 + 14px);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 18px;
-  width: auto;
+  width: 805px;
   z-index: 20;
 }
 
@@ -404,7 +403,7 @@ body {
 .photo--9 {
   left: auto;
   right: 168px;
-  top: 156px;
+  top: 182px;
   width: 292px;
   height: 186px;
   border-radius: 46px;
@@ -588,7 +587,7 @@ body {
 .name {
   position: absolute;
   left: calc((2002px - 805px) / 2);
-  /* Line-box vertically centered with icon row (icons: top 104px, height 24px → center 116px; 85px×1.4 line) */
+  /* Vertically centered with the top icon row baseline (104px row, 24px icons) */
   top: calc(104px + 12px - (85px * 1.4) / 2);
   width: 805px;
   margin: 0;
