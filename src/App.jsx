@@ -21,6 +21,7 @@ const HOVER_PHOTO_TO_BULLET = {
 
 export default function App() {
   const scale = useViewportScale();
+  const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   /** Which photo tile the pointer is currently over (transient). */
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
@@ -57,6 +58,7 @@ export default function App() {
     ["#ffffff", "#ffd997", "#a8c9ff", "#87f0ff"],
     ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
   ];
+  const baseBulletIndex = hasStarted ? activeBulletIndex : null;
   const isBirthdayActive =
     hoverFocusKey === "birthday" ||
     (stickyPhotoKey === "birthday" && hoverFocusKey == null);
@@ -64,13 +66,13 @@ export default function App() {
     const transient = hoverFocusKey;
     if (transient === "birthday") return null;
     if (transient != null) {
-      return HOVER_PHOTO_TO_BULLET[transient] ?? activeBulletIndex;
+      return HOVER_PHOTO_TO_BULLET[transient] ?? baseBulletIndex;
     }
     if (stickyPhotoKey === "birthday") return null;
     if (stickyPhotoKey != null) {
-      return HOVER_PHOTO_TO_BULLET[stickyPhotoKey] ?? activeBulletIndex;
+      return HOVER_PHOTO_TO_BULLET[stickyPhotoKey] ?? baseBulletIndex;
     }
-    return activeBulletIndex;
+    return baseBulletIndex;
   })();
   const activeHighlights = new Set(
     displayBulletIndex == null
@@ -82,8 +84,20 @@ export default function App() {
     displayBulletIndex == null
       ? bulletGradients[activeBulletIndex]
       : (bulletGradients[displayBulletIndex] ?? bulletGradients[0]);
+  const showIntroHint =
+    !hasStarted && hoverFocusKey == null && stickyPhotoKey == null;
 
   const onViewportWheel = useCallback((event) => {
+    if (hoverFocusKey != null || stickyPhotoKey != null) {
+      setHoverFocusKey(null);
+      setStickyPhotoKey(null);
+      wheelAccumulatorRef.current = 0;
+      gestureDirectionRef.current = 0;
+      gestureSteppedRef.current = false;
+      event.preventDefault();
+      return;
+    }
+
     const now = performance.now();
     const motionDirection = Math.sign(event.deltaY);
     if (motionDirection === 0) {
@@ -129,13 +143,19 @@ export default function App() {
     lastStepAtRef.current = now;
     gestureSteppedRef.current = true;
 
+    if (!hasStarted) {
+      setHasStarted(true);
+      event.preventDefault();
+      return;
+    }
+
     setActiveBulletIndex((current) =>
       Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
     );
     setStickyPhotoKey(null);
     setHoverFocusKey(null);
     event.preventDefault();
-  }, [activeBulletIndex]);
+  }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey]);
 
   return (
     <div className="viewport" onWheel={onViewportWheel}>
@@ -305,11 +325,19 @@ export default function App() {
               key={
                 isBirthdayActive
                   ? "birthday-hover"
-                  : bulletPoints[displayBulletIndex ?? 0]
+                  : displayBulletIndex == null
+                    ? "initial-hint"
+                    : bulletPoints[displayBulletIndex]
               }
               className="bullet-line"
             >
-              {!isBirthdayActive && displayBulletIndex != null ? (
+              {showIntroHint ? (
+                <span className="interaction-hint-text">
+                  <span>Scroll to explore</span>
+                  <span>Click images for more details</span>
+                </span>
+              ) : null}
+              {!showIntroHint && !isBirthdayActive && displayBulletIndex != null ? (
                 <span
                   style={{
                     "--bullet-grad-1": activeGradient[0],

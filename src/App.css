@@ -292,6 +292,12 @@ body {
   filter: brightness(0.98) contrast(0.98) saturate(0.98) !important;
 }
 
+/* Waterloo: slightly brighter than default highlight state */
+.photo--2.is-highlighted img {
+  opacity: 1 !important;
+  filter: brightness(1.1) contrast(1.06) saturate(1.22) hue-rotate(10deg) !important;
+}
+
 .photo--5 {
   left: 1375px;
   top: 292px;
@@ -459,10 +465,28 @@ body {
 
 .bullets li {
   margin-bottom: 0;
+  min-height: 48px;
 }
 
 .bullets .bullet-line {
   animation: bullet-reveal 260ms ease-out;
+}
+
+.interaction-hint-text {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 48px;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: 0.014em;
+  color: rgba(224, 233, 255, 0.88);
+  text-shadow: 0 0 14px rgba(120, 178, 255, 0.16);
+}
+
+.interaction-hint-text > span {
+  display: block;
 }
 
 .bullets .bullet-line > span {
@@ -502,8 +526,8 @@ body {
 /* Language strip — photo-style tile (radius, pulse, hover ring, dimmed icons) */
 .lang-switch {
   position: absolute;
-  left: 128px;
-  top: 948px;
+  left: 118px;
+  top: 938px;
   width: 318px;
   height: 112px;
   margin: 0;
