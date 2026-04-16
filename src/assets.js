@@ -9,7 +9,6 @@ export const img = {
   womens: "https://www.figma.com/api/mcp/asset/a2ae4f81-d01d-440f-b9d3-165b0596a6b8",
   waterloo: "https://www.figma.com/api/mcp/asset/560efb0f-ce94-4df2-8441-2e863572764e",
   sickKids: "/sickkids-replacement.png",
-  watAi: "https://www.figma.com/api/mcp/asset/029f5a44-20af-48aa-bd24-aa11f6cd0f71",
   asme: "https://www.figma.com/api/mcp/asset/3f64ad0e-78c5-4696-8714-391f5074b4fb",
   coOp: "https://www.figma.com/api/mcp/asset/d088ad18-1152-449b-8eb3-f4844b82877e",
   birthdayParty: "https://www.figma.com/api/mcp/asset/97583f86-c955-4a5a-86ee-7f0d0ac2d7d5",
@@ -28,9 +27,8 @@ export const img = {
 export const bulletPoints = [
   "Biomedical Engineering student @ uWaterloo",
   "Machine Learning Research Intern @ SickKids",
-  "Technical Project Manager @ WAT.ai",
-  "CFES Corporate Relations Commissioner",
   "uWaterloo Engineering Co-Op Student of the Year",
+  "CFES Corporate Relations Commissioner",
   "Published Author + Conference Presenter",
   "3x Hackathon Winner",
   "Previous Intern @ WSP & Women's College Hospital",

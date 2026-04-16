@@ -7,22 +7,24 @@ import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 const HOVER_PHOTO_TO_BULLET = {
   waterloo: 0,
   sickkids: 1,
-  watai: 2,
+  coop: 2,
   cfes: 3,
-  coop: 4,
-  asme: 5,
-  cxc: 6,
-  wsp: 7,
-  womens: 7,
-  basketballRight: 8,
-  greece: 9,
-  physio: 10,
+  asme: 4,
+  cxc: 5,
+  wsp: 6,
+  womens: 6,
+  basketballRight: 7,
+  greece: 8,
+  physio: 9,
 };
 
 export default function App() {
   const scale = useViewportScale();
+  const heroSectionRef = useRef(null);
+  const detailsSectionRef = useRef(null);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
+  const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
   /** Which photo tile the pointer is currently over (transient). */
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
   /** Last photo tile "selected" by hover — persists until a different tile is hovered. */
@@ -32,12 +34,15 @@ export default function App() {
   const gestureDirectionRef = useRef(0);
   const gestureSteppedRef = useRef(false);
   const lastWheelEventAtRef = useRef(0);
+  /** Row index in highlightByBullet / bulletGradients; slot 2 is unused (removed WAT.ai). */
+  const bulletToHighlightRow = (bulletIdx) =>
+    bulletIdx < 2 ? bulletIdx : bulletIdx + 1;
   const highlightByBullet = [
     ["waterloo"],
     ["sickkids"],
-    ["watai"],
-    ["cfes"],
+    [],
     ["coop"],
+    ["cfes"],
     ["asme"],
     ["cxc"],
     ["wsp", "womens"],
@@ -49,8 +54,8 @@ export default function App() {
     ["#ffffff", "#9dd6ff", "#9af4ff", "#b6a2ff"],
     ["#ffffff", "#7fd8ff", "#6bf0d2", "#8aa4ff"],
     ["#ffffff", "#8fc2ff", "#78a3ff", "#9e8cff"],
-    ["#ffffff", "#d7a6ff", "#a3b4ff", "#96f0ff"],
     ["#ffffff", "#95d3ff", "#7eb8ff", "#8f96ff"],
+    ["#ffffff", "#d7a6ff", "#a3b4ff", "#96f0ff"],
     ["#ffffff", "#ffb8d6", "#c6b1ff", "#8dc2ff"],
     ["#ffffff", "#ffc189", "#ff9ec2", "#9cc2ff"],
     ["#ffffff", "#8be4ff", "#98cfff", "#afb0ff"],
@@ -77,15 +82,118 @@ export default function App() {
   const activeHighlights = new Set(
     displayBulletIndex == null
       ? []
-      : (highlightByBullet[displayBulletIndex] ?? []),
+      : (highlightByBullet[bulletToHighlightRow(displayBulletIndex)] ?? []),
   );
   const isHighlighted = (key) => activeHighlights.has(key);
-  const activeGradient =
+  const activeGradientRow =
     displayBulletIndex == null
-      ? bulletGradients[activeBulletIndex]
-      : (bulletGradients[displayBulletIndex] ?? bulletGradients[0]);
+      ? hasStarted
+        ? bulletToHighlightRow(activeBulletIndex)
+        : 0
+      : bulletToHighlightRow(displayBulletIndex);
+  const activeGradient = bulletGradients[activeGradientRow] ?? bulletGradients[0];
   const showIntroHint =
     !hasStarted && hoverFocusKey == null && stickyPhotoKey == null;
+  const detailCopyByKey = {
+    waterloo: {
+      title: "Biomedical Engineering @ Waterloo",
+      body: "Coursework, design projects, and systems-level problem solving that shaped my engineering foundation.",
+    },
+    sickkids: {
+      title: "Machine Learning Research @ SickKids",
+      body: "Research-focused work applying ML methods to clinically relevant questions in pediatric healthcare.",
+    },
+    cfes: {
+      title: "CFES Corporate Relations",
+      body: "Built partnerships and coordinated initiatives connecting students with external organizations.",
+    },
+    coop: {
+      title: "Co-Op Recognition",
+      body: "Work and impact recognized through Waterloo Engineering Co-Op Student of the Year.",
+    },
+    asme: {
+      title: "Publishing + Conference Work",
+      body: "Technical communication through authored work and conference presentations.",
+    },
+    cxc: {
+      title: "Hackathon / Innovation Projects",
+      body: "Fast-moving build cycles, problem framing, and shipping working prototypes under time constraints.",
+    },
+    wsp: {
+      title: "Internship @ WSP",
+      body: "Hands-on engineering internship experience across real-world projects and collaborative teams.",
+    },
+    womens: {
+      title: "Internship @ Women's College Hospital",
+      body: "Applied technical and operational thinking in a healthcare environment.",
+    },
+    basketballRight: {
+      title: "Athlete",
+      body: "Discipline, consistency, and competitive mindset carried into academic and technical work.",
+    },
+    greece: {
+      title: "Polyglot",
+      body: "Self-taught language learning across cultures, with a focus on practical communication.",
+    },
+    physio: {
+      title: "Clinical Volunteer & Shadower",
+      body: "Direct exposure to patient-centered environments and clinical workflows.",
+    },
+    birthday: {
+      title: "Personal Moments",
+      body: "A reminder to stay grounded, celebrate milestones, and enjoy the journey.",
+    },
+  };
+  const selectedDetail = detailCopyByKey[selectedDetailKey] ?? detailCopyByKey.waterloo;
+  const isWaterlooDetail = selectedDetailKey === "waterloo";
+  const isSickkidsDetail = selectedDetailKey === "sickkids";
+  const waterlooCoursework = [
+    "Circuits + Lab",
+    "Systems & Signals",
+    "Materials Science",
+    "Data Structs & Algorithms",
+    "Physiology + Lab",
+    "Prototyping & Design",
+    "Probability & Stats",
+    "Solid Mechanics",
+  ];
+  const waterlooExtracurriculars = [
+    "Engineering Society",
+    "CFES",
+    "Pre-Medical Society",
+    "Venture Group Fellow",
+  ];
+  const sickkidsSummaryLines = [
+    "During my second co-op term, I worked as a Machine Learning Research Assistant at SickKids.",
+    "I worked on a project using Boltz-2, MIT's protein-ligand affinity-predicting AI model.",
+    "My job was to create a new affinity head for predicting these affinities.",
+    "I gained experience creating large datasets (millions of protein-peptide pairs),",
+    "creating & training & evaluating ML models, using high-performance computing, and many more.",
+  ];
+  const sickkidsTools = [
+    "Python",
+    "PyTorch",
+    "Pandas",
+    "PyTorch Lightning",
+    "Slurm",
+    "Linux",
+    "Conda",
+    "Bash",
+    "Git",
+    "Matplotlib",
+    "RDkit",
+    "NumPy",
+  ];
+  const handleImageClick = useCallback((key) => {
+    setSelectedDetailKey(key);
+    detailsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+  const onDetailsWheel = useCallback((event) => {
+    if (event.deltaY < 0) {
+      event.preventDefault();
+      heroSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   const onViewportWheel = useCallback((event) => {
     if (hoverFocusKey != null || stickyPhotoKey != null) {
@@ -158,7 +266,8 @@ export default function App() {
   }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey]);
 
   return (
-    <div className="viewport" onWheel={onViewportWheel}>
+    <div className="page-shell">
+      <div ref={heroSectionRef} className="viewport" onWheel={onViewportWheel}>
       <div
         className="viewport-fill"
         style={{ backgroundImage: `url(${img.gradient})` }}
@@ -216,6 +325,7 @@ export default function App() {
             setHoverFocusKey("wsp");
             setStickyPhotoKey("wsp");
           }}
+          onClick={() => handleImageClick("wsp")}
         >
           <img src={img.wsp} alt="WSP" />
         </figure>
@@ -225,6 +335,7 @@ export default function App() {
             setHoverFocusKey("basketballRight");
             setStickyPhotoKey("basketballRight");
           }}
+          onClick={() => handleImageClick("basketballRight")}
         >
           <img src={img.mAndR} alt="M&amp;R" />
         </figure>
@@ -234,6 +345,7 @@ export default function App() {
             setHoverFocusKey("cxc");
             setStickyPhotoKey("cxc");
           }}
+          onClick={() => handleImageClick("cxc")}
         >
           <img src={img.cxc} alt="CXC" />
         </figure>
@@ -243,6 +355,7 @@ export default function App() {
             setHoverFocusKey("physio");
             setStickyPhotoKey("physio");
           }}
+          onClick={() => handleImageClick("physio")}
         >
           <img src={img.physio} alt="Physio" />
         </figure>
@@ -252,6 +365,7 @@ export default function App() {
             setHoverFocusKey("womens");
             setStickyPhotoKey("womens");
           }}
+          onClick={() => handleImageClick("womens")}
         >
           <img src={img.womens} alt="Women's College Hospital" />
         </figure>
@@ -261,6 +375,7 @@ export default function App() {
             setHoverFocusKey("waterloo");
             setStickyPhotoKey("waterloo");
           }}
+          onClick={() => handleImageClick("waterloo")}
         >
           <img src={img.waterloo} alt="Waterloo Engineering" />
         </figure>
@@ -270,24 +385,17 @@ export default function App() {
             setHoverFocusKey("sickkids");
             setStickyPhotoKey("sickkids");
           }}
+          onClick={() => handleImageClick("sickkids")}
         >
           <img src={img.sickKids} alt="SickKids" />
         </figure>
         <figure
-          className={`photo photo--watai${isHighlighted("watai") ? " is-highlighted" : ""}`}
-          onMouseEnter={() => {
-            setHoverFocusKey("watai");
-            setStickyPhotoKey("watai");
-          }}
-        >
-          <img src={img.watAi} alt="WAT.ai" />
-        </figure>
-        <figure
-          className={`photo photo--3${isHighlighted("asme") ? " is-highlighted" : ""}`}
+          className={`photo photo--asme${isHighlighted("asme") ? " is-highlighted" : ""}`}
           onMouseEnter={() => {
             setHoverFocusKey("asme");
             setStickyPhotoKey("asme");
           }}
+          onClick={() => handleImageClick("asme")}
         >
           <img src={img.asme} alt="ASME" />
         </figure>
@@ -297,6 +405,7 @@ export default function App() {
             setHoverFocusKey("coop");
             setStickyPhotoKey("coop");
           }}
+          onClick={() => handleImageClick("coop")}
         >
           <img src={img.coOp} alt="Co-Op" />
         </figure>
@@ -306,6 +415,7 @@ export default function App() {
             setHoverFocusKey("birthday");
             setStickyPhotoKey("birthday");
           }}
+          onClick={() => handleImageClick("birthday")}
         >
           <img src={img.birthdayParty} alt="Birthday party" />
         </figure>
@@ -315,6 +425,7 @@ export default function App() {
             setHoverFocusKey("cfes");
             setStickyPhotoKey("cfes");
           }}
+          onClick={() => handleImageClick("cfes")}
         >
           <img src={img.cfes} alt="CFES" />
         </figure>
@@ -361,6 +472,7 @@ export default function App() {
             setHoverFocusKey("greece");
             setStickyPhotoKey("greece");
           }}
+          onClick={() => handleImageClick("greece")}
         >
           <img className="lang-switch__photo" src={img.languagesPhoto} alt="Street in Greece at dusk" />
         </figure>
@@ -371,6 +483,74 @@ export default function App() {
         </main>
       </div>
       <CursorGlow />
+      </div>
+      <section
+        ref={detailsSectionRef}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}`}
+        style={{ "--details-bg": `url(${img.gradient})` }}
+        onWheel={onDetailsWheel}
+      >
+        <div className="details-section__inner">
+          {isWaterlooDetail ? (
+            <div className="education-panel" aria-label="Waterloo education details">
+              <h2 className="education-panel__title">Education</h2>
+              <p className="education-panel__line">
+                University of Waterloo - Bachelor of Applied Science
+              </p>
+              <p className="education-panel__line education-panel__line--program">
+                Biomedical Engineering
+              </p>
+              <p className="education-panel__year">2024-2029</p>
+              <p className="education-panel__line education-panel__line--avg">
+                Cumulative Average: 90%
+              </p>
+
+              <p className="education-panel__tag">Relevant Coursework</p>
+              <div className="education-panel__pill-grid" role="list" aria-label="Relevant coursework">
+                {waterlooCoursework.map((course) => (
+                  <span key={course} className="education-panel__pill" role="listitem">
+                    {course}
+                  </span>
+                ))}
+              </div>
+
+              <p className="education-panel__tag education-panel__tag--secondary">Extracurriculars</p>
+              <div className="education-panel__pill-grid" role="list" aria-label="Extracurriculars">
+                {waterlooExtracurriculars.map((item) => (
+                  <span key={item} className="education-panel__pill" role="listitem">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : isSickkidsDetail ? (
+            <div className="sickkids-panel" aria-label="SickKids details">
+              <h2 className="sickkids-panel__title">SICKKIDS</h2>
+              <div className="sickkids-panel__copy" aria-label="SickKids summary">
+                {sickkidsSummaryLines.map((line) => (
+                  <p key={line} className="sickkids-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <p className="sickkids-panel__tag">Stack &amp; Tools</p>
+              <div className="sickkids-panel__pill-grid" role="list" aria-label="SickKids stack and tools">
+                {sickkidsTools.map((tool) => (
+                  <span key={tool} className="sickkids-panel__pill" role="listitem">
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className="details-section__kicker">See More</p>
+              <h2>{selectedDetail.title}</h2>
+              <p>{selectedDetail.body}</p>
+            </>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
