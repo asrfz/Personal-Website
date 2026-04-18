@@ -625,6 +625,10 @@ body {
   max-width: 1120px;
 }
 
+.details-section--sickkids .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
 .details-section--waterloo {
   min-height: 100vh;
   padding: 34px 30px 32px;
@@ -637,31 +641,35 @@ body {
 }
 
 .sickkids-panel {
-  max-width: 1120px;
+  max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
 }
 
-.sickkids-panel__title {
-  margin: 0 0 54px;
+/* Beat `.details-section h2` — SickKids title is an <h2> */
+.details-section--sickkids h2.sickkids-panel__title {
+  margin: 0 0 56px;
   font-family: "Bebas Neue", Impact, system-ui, sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   font-weight: 400;
-  font-size: clamp(64px, 7.5vw, 110px);
+  font-size: clamp(80px, 8.5vw, 128px);
   line-height: 1;
   color: #fff;
+  text-wrap: unset;
 }
 
 .sickkids-panel__copy {
-  width: min(100%, 1120px);
-  max-width: 1120px;
+  width: 100%;
+  max-width: min(1580px, 100%);
   margin: 0 auto;
-  text-align: center;
 }
 
-.sickkids-panel__line {
+/* Must beat `.details-section p` (max-width: 720px) — SickKids lines are <p> tags */
+.details-section--sickkids .sickkids-panel__line {
   margin: 0;
+  width: 100%;
+  max-width: none;
   font-family: Manrope, Inter, system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -669,14 +677,15 @@ body {
   line-height: 1.48;
   color: rgba(230, 236, 255, 0.95);
   text-align: center;
+  white-space: normal;
 }
 
-.sickkids-panel__line + .sickkids-panel__line {
-  margin-top: 4px;
+.details-section--sickkids .sickkids-panel__line + .sickkids-panel__line {
+  margin-top: 8px;
 }
 
 .sickkids-panel__tag {
-  margin: 88px auto 34px;
+  margin: 72px auto 34px;
   width: fit-content;
   min-width: clamp(220px, 20vw, 360px);
   padding: 12px 38px;
@@ -692,10 +701,11 @@ body {
 
 .sickkids-panel__pill-grid {
   width: 100%;
+  max-width: 1120px;
+  margin: 26px auto 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px 20px;
-  margin-top: 26px;
 }
 
 .sickkids-panel__pill {
