@@ -27,6 +27,8 @@ body::-webkit-scrollbar {
 
 #root {
   min-height: 100%;
+  width: 100%;
+  max-width: 100%;
 }
 
 *,
@@ -47,9 +49,13 @@ body {
 
 .viewport {
   position: relative;
-  width: 100vw;
-  /* One viewport tall — use vh on wide screens so hero height matches `innerHeight`-based scale (see useViewportScale). */
+  /* Avoid `100vw` scrollbar overflow on Windows; width tracks the layout viewport like `innerWidth`. */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Layer dvh/svh so deployed height matches visualViewport-based scale (see useViewportScale). */
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background: #000;
   display: flex;

@@ -10,13 +10,10 @@ const MOBILE_LAYOUT_MAX_WIDTH = 896;
 const MOBILE_MIN_SCALE = 0.26;
 
 function readViewportSize() {
+  const vv = window.visualViewport;
   const wInner = window.innerWidth;
   const hInner = window.innerHeight;
-  const isNarrow = wInner <= MOBILE_LAYOUT_MAX_WIDTH;
-  if (!isNarrow) {
-    return { w: Math.max(1, wInner), h: Math.max(1, hInner) };
-  }
-  const vv = window.visualViewport;
+  /* Prefer visual viewport everywhere: mobile URL bar, desktop zoom, and layout vs paint mismatches on deploy. */
   const w = Math.max(1, vv?.width ?? wInner);
   const h = Math.max(1, vv?.height ?? hInner);
   return { w, h };
@@ -30,7 +27,15 @@ export function useViewportScale() {
       const { w, h } = readViewportSize();
       const raw = Math.min(w / DESIGN_W, h / DESIGN_H);
       const isMobileLayout = w <= MOBILE_LAYOUT_MAX_WIDTH;
-      setScale(isMobileLayout ? Math.max(raw, MOBILE_MIN_SCALE) : raw);
+      let next = raw;
+      /* Floor scale for tap targets only if the artboard still fits — otherwise it clips past the screen. */
+      if (isMobileLayout && raw < MOBILE_MIN_SCALE) {
+        const floored = MOBILE_MIN_SCALE;
+        if (DESIGN_W * floored <= w && DESIGN_H * floored <= h) {
+          next = floored;
+        }
+      }
+      setScale(next);
     }
 
     update();
