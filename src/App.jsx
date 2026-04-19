@@ -37,11 +37,29 @@ const HOVER_PHOTO_TO_BULLET = {
   physio: 9,
 };
 
+/** One slide per `bulletPoints` entry — narrow / mobile hero carousel only. */
+const MOBILE_HERO_SLIDES = [
+  { detailKey: "waterloo", src: img.waterloo, alt: "Waterloo Engineering" },
+  { detailKey: "sickkids", src: img.sickKids, alt: "SickKids" },
+  { detailKey: "coop", src: img.coOp, alt: "Co-operative education" },
+  { detailKey: "cfes", src: img.cfes, alt: "CFES" },
+  { detailKey: "asme", src: img.asme, alt: "ASME" },
+  { detailKey: "cxc", src: img.cxc, alt: "Hackathons" },
+  { detailKey: "wsp", src: img.wsp, alt: "WSP" },
+  { detailKey: "basketballRight", src: img.mAndR, alt: "Athletics" },
+  { detailKey: "greece", src: img.languagesPhoto, alt: "Languages and travel" },
+  { detailKey: "physio", src: img.physio, alt: "Clinical volunteering" },
+];
+
 export default function App() {
   const scale = useViewportScale();
   const heroSectionRef = useRef(null);
   const detailsSectionRef = useRef(null);
   const [showMobileWarning, setShowMobileWarning] = useState(false);
+  const [isNarrowForMobileHero, setIsNarrowForMobileHero] = useState(false);
+  const [mobileHeroInView, setMobileHeroInView] = useState(true);
+  /** When true, unmount the unscaled hero overlay so it cannot paint over detail slides after navigation. */
+  const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
@@ -87,6 +105,9 @@ export default function App() {
   const baseBulletIndex = hasStarted ? activeBulletIndex : null;
   const isBirthdayActive = hoverFocusKey === "birthday";
   const displayBulletIndex = (() => {
+    if (isNarrowForMobileHero) {
+      return activeBulletIndex;
+    }
     const transient = hoverFocusKey;
     if (transient === "birthday") return null;
     if (transient != null) {
@@ -111,7 +132,10 @@ export default function App() {
       : bulletToHighlightRow(displayBulletIndex);
   const activeGradient = bulletGradients[activeGradientRow] ?? bulletGradients[0];
   const showIntroHint =
-    !hasStarted && hoverFocusKey == null && stickyPhotoKey == null;
+    !isNarrowForMobileHero &&
+    !hasStarted &&
+    hoverFocusKey == null &&
+    stickyPhotoKey == null;
   const detailCopyByKey = {
     waterloo: {
       title: "Biomedical Engineering @ Waterloo",
@@ -292,18 +316,36 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
 
   const handleImageClick = useCallback((key) => {
     setSelectedDetailKey(key);
+    const narrow =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia(MOBILE_WARNING_MQ).matches;
     const coarse =
       typeof window !== "undefined" &&
       window.matchMedia &&
       window.matchMedia("(pointer: coarse)").matches;
+    if (narrow) {
+      setMobileHeroOverlayDismissed(true);
+      if (heroSectionRef.current) {
+        heroSectionRef.current.scrollTop = 0;
+      }
+    }
     detailsSectionRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: coarse ? "nearest" : "start",
+      /* Narrow: align details to top so the hero fully leaves the viewport (nearest often leaves it peeking). */
+      block: narrow ? "start" : coarse ? "nearest" : "start",
     });
   }, []);
   const onDetailsWheel = useCallback((event) => {
     if (event.deltaY < 0) {
       event.preventDefault();
+      const narrow =
+        typeof window !== "undefined" &&
+        window.matchMedia &&
+        window.matchMedia(MOBILE_WARNING_MQ).matches;
+      if (narrow) {
+        setMobileHeroOverlayDismissed(false);
+      }
       heroSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, []);
@@ -413,6 +455,9 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     const onKeyDown = (event) => {
       if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
       if (!heroKeyboardNavActiveRef.current) return;
+      if (typeof window !== "undefined" && window.matchMedia(MOBILE_WARNING_MQ).matches) {
+        return;
+      }
       const target = event.target;
       if (target instanceof Element) {
         if (target.closest("input, textarea, select, [contenteditable='true']")) {
@@ -430,7 +475,9 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_WARNING_MQ);
     const sync = () => {
-      if (!mq.matches) {
+      const narrow = mq.matches;
+      setIsNarrowForMobileHero(narrow);
+      if (!narrow) {
         setShowMobileWarning(false);
         return;
       }
@@ -445,6 +492,81 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  useEffect(() => {
+    if (!isNarrowForMobileHero) return;
+    setHasStarted(true);
+    setHoverFocusKey(null);
+    setStickyPhotoKey(null);
+  }, [isNarrowForMobileHero]);
+
+  useEffect(() => {
+    if (!isNarrowForMobileHero) {
+      setMobileHeroInView(true);
+      setMobileHeroOverlayDismissed(false);
+      return;
+    }
+    const root = heroSectionRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const ratio = entry?.intersectionRatio ?? 0;
+        setMobileHeroInView(Boolean(entry?.isIntersecting && ratio >= 0.12));
+      },
+      { threshold: [0, 0.05, 0.1, 0.12, 0.18, 0.22, 0.35, 0.5, 1] },
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, [isNarrowForMobileHero]);
+
+  /** Narrow: hide hero overlay + collage while details dominate the screen; restore when user scrolls back to hero. */
+  useEffect(() => {
+    if (!isNarrowForMobileHero) return;
+    const sync = () => {
+      const hero = heroSectionRef.current;
+      const details = detailsSectionRef.current;
+      if (!hero || !details) return;
+      const vh = window.visualViewport?.height ?? window.innerHeight;
+      const hr = hero.getBoundingClientRect();
+      const dr = details.getBoundingClientRect();
+      const detailsDominant = dr.top < vh * 0.9 && dr.bottom > 80;
+      if (detailsDominant) {
+        setMobileHeroOverlayDismissed(true);
+        return;
+      }
+      const detailsMostlyBelow = dr.top > vh * 0.88 || dr.bottom < 64;
+      if (!detailsMostlyBelow) return;
+      /* Hero viewport collapses to 0 when details are open — rect height is ~0, so do not require hr.bottom > 110 */
+      const heroCollapsed = hr.height < 48;
+      if (heroCollapsed) {
+        if (dr.top > vh * 0.78) setMobileHeroOverlayDismissed(false);
+      } else if (hr.top < vh * 0.62 && hr.bottom > 110) {
+        setMobileHeroOverlayDismissed(false);
+      }
+    };
+    sync();
+    window.addEventListener("scroll", sync, { passive: true });
+    window.visualViewport?.addEventListener("scroll", sync, { passive: true });
+    window.visualViewport?.addEventListener("resize", sync);
+    return () => {
+      window.removeEventListener("scroll", sync);
+      window.visualViewport?.removeEventListener("scroll", sync);
+      window.visualViewport?.removeEventListener("resize", sync);
+    };
+  }, [isNarrowForMobileHero]);
+
+  useEffect(() => {
+    if (!isNarrowForMobileHero || !mobileHeroInView) return;
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const intervalMs = reduce ? 8000 : 2000;
+    const id = window.setInterval(() => {
+      setActiveBulletIndex((i) => (i + 1) % bulletPoints.length);
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [isNarrowForMobileHero, mobileHeroInView]);
+
   const dismissMobileWarning = useCallback(() => {
     try {
       sessionStorage.setItem(MOBILE_WARNING_DISMISS_KEY, "1");
@@ -453,6 +575,11 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     }
     setShowMobileWarning(false);
   }, []);
+
+  const mobileHeroSlide =
+    MOBILE_HERO_SLIDES[
+      Math.max(0, Math.min(activeBulletIndex, MOBILE_HERO_SLIDES.length - 1))
+    ] ?? MOBILE_HERO_SLIDES[0];
 
   return (
     <div className="page-shell">
@@ -476,7 +603,11 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           </button>
         </div>
       ) : null}
-      <div ref={heroSectionRef} className="viewport" onWheel={onViewportWheel}>
+      <div
+        ref={heroSectionRef}
+        className={`viewport${isNarrowForMobileHero && mobileHeroOverlayDismissed ? " viewport--mobile-details-open" : ""}`}
+        onWheel={isNarrowForMobileHero ? undefined : onViewportWheel}
+      >
       <div
         className="viewport-fill"
         style={{ backgroundImage: `url(${img.gradient})` }}
@@ -491,12 +622,12 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       >
         <div className="canvas-hero-nudge">
           <main
-            className="canvas"
+            className={`canvas${isNarrowForMobileHero ? " canvas--mobile-hero" : ""}`}
             data-node-id="111:88"
             style={{ transform: `scale(${scale})` }}
             onMouseLeave={() => setHoverFocusKey(null)}
           >
-          <nav className="socials" aria-label="Links">
+          <nav className="socials" aria-label="Links" aria-hidden={isNarrowForMobileHero || undefined}>
             <span
               className="socials__resume-dodge-wrap"
               onMouseLeave={resetResumeIconOffset}
@@ -655,7 +786,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           <img src={img.cfes} alt="CFES" />
         </figure>
 
-        <div className="bullets" data-node-id="113:39">
+        <div className="bullets" data-node-id="113:39" aria-hidden={isNarrowForMobileHero || undefined}>
           <ul>
             <li
               key={
@@ -713,7 +844,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           <img className="lang-switch__photo" src={img.languagesPhoto} alt="Street in Greece at dusk" />
         </figure>
 
-        <h1 className="name" data-node-id="111:89">
+        <h1 className="name" data-node-id="111:89" aria-hidden={isNarrowForMobileHero || undefined}>
           Aiden Sarrafzadeh
         </h1>
         <a
@@ -729,6 +860,92 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           </main>
         </div>
       </div>
+      {isNarrowForMobileHero && !mobileHeroOverlayDismissed ? (
+        <div className="mobile-hero-viewport-layer">
+          <div className="mobile-hero-viewport-layer__stack">
+            <h1 className="mobile-hero-viewport-layer__name">Aiden Sarrafzadeh</h1>
+            <nav className="mobile-hero-viewport-layer__socials" aria-label="Links">
+              <span
+                className="socials__resume-dodge-wrap"
+                onMouseLeave={resetResumeIconOffset}
+              >
+                <a
+                  className="icon-link icon-link--resume"
+                  href="#"
+                  aria-label="Resume"
+                  style={{
+                    transform: `translate(${resumeIconOffset.x}px, ${resumeIconOffset.y}px)`,
+                  }}
+                  onMouseEnter={dodgeResumeIcon}
+                  tabIndex={-1}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <IconResume />
+                </a>
+              </span>
+              <a
+                className="icon-link"
+                href="mailto:asarrafz@uwaterloo.ca"
+                aria-label="Email"
+              >
+                <IconEmail />
+              </a>
+              <a
+                className="icon-link"
+                href="https://www.linkedin.com/in/aiden-sarrafzadeh"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+              >
+                <IconLinkedin />
+              </a>
+              <a
+                className="icon-link icon-link--github"
+                href="https://github.com/asrfz"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+              >
+                <span className="github-wrap">
+                  <IconGithub />
+                </span>
+              </a>
+            </nav>
+            <button
+              type="button"
+              className="mobile-hero-viewport-layer__spotlight"
+              onClick={() => handleImageClick(mobileHeroSlide.detailKey)}
+              aria-label={`Open details: ${detailCopyByKey[mobileHeroSlide.detailKey]?.title ?? "Details"}`}
+            >
+              <img
+                key={activeBulletIndex}
+                src={mobileHeroSlide.src}
+                alt={mobileHeroSlide.alt}
+                decoding="async"
+              />
+            </button>
+            <div
+              className="mobile-hero-viewport-layer__caption"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span
+                key={activeBulletIndex}
+                className="mobile-hero-viewport-layer__caption-text"
+                style={{
+                  "--bullet-grad-1": activeGradient[0],
+                  "--bullet-grad-2": activeGradient[1],
+                  "--bullet-grad-3": activeGradient[2],
+                  "--bullet-grad-4": activeGradient[3],
+                }}
+              >
+                {bulletPoints[activeBulletIndex]}
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <CursorGlow />
       </div>
       <section

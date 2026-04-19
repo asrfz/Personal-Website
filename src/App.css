@@ -179,6 +179,11 @@ body {
     transform: none !important;
     will-change: auto;
   }
+
+  .mobile-hero-viewport-layer__caption-text,
+  .mobile-hero-viewport-layer__spotlight img {
+    animation: none !important;
+  }
 }
 
 .scale-shell {
@@ -650,6 +655,47 @@ body {
   }
 }
 
+/* Mobile hero carousel only — desktop bullets keep `bullet-reveal` above */
+@keyframes mobile-hero-caption-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(22px) scale(0.93);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+  48% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.03);
+    filter: drop-shadow(0 0 26px rgba(132, 228, 255, 0.48));
+  }
+  74% {
+    transform: translateY(2px) scale(0.995);
+    filter: drop-shadow(0 0 14px rgba(132, 228, 255, 0.28));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 1px 14px rgba(120, 190, 255, 0.28));
+  }
+}
+
+@keyframes mobile-hero-spotlight-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: brightness(1.15) saturate(1.1);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.985);
+    filter: brightness(0.92) saturate(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(0.98) contrast(0.98) saturate(0.98);
+  }
+}
+
 /* Language strip — photo-style tile (radius, pulse, hover ring, dimmed icons) */
 .lang-switch {
   position: absolute;
@@ -683,7 +729,8 @@ body {
   padding: 90px 28px 96px;
   /* One band for all slide titles (Bebas + fallback h2) */
   --detail-title-band-top: clamp(32px, 4.6vh, 58px);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   isolation: isolate;
   color: #eef3ff;
 }
@@ -793,7 +840,8 @@ body {
 .details-section--waterloo {
   min-height: 100vh;
   padding: 10px 28px 56px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .details-section--sickkids {
@@ -1656,18 +1704,18 @@ body {
   transform: none;
 }
 
+/* Use margins instead of translateY so scrollable height includes extracurriculars (overflow was clipping). */
 .education-panel__tag:not(.education-panel__tag--secondary) + .education-panel__pill-grid {
-  transform: translateY(14px);
+  margin-top: 14px;
 }
 
 .education-panel__tag--secondary {
-  margin-top: 44px;
+  margin-top: calc(44px + 72px);
   margin-bottom: 28px;
-  transform: translateY(72px);
 }
 
 .education-panel__tag--secondary + .education-panel__pill-grid {
-  transform: translateY(94px);
+  margin-top: 94px;
 }
 
 .education-panel__pill-grid {
@@ -1922,10 +1970,12 @@ a.figma-made-badge:focus-visible {
     height: auto;
     min-height: 100dvh;
     min-height: 100svh;
-    overflow-x: auto;
+    overflow-x: hidden;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
+    overscroll-behavior-y: auto;
     align-items: flex-start;
     padding-top: env(safe-area-inset-top, 0px);
     padding-left: env(safe-area-inset-left, 0px);
@@ -1933,8 +1983,48 @@ a.figma-made-badge:focus-visible {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
+  .viewport::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  /* While a detail slide is on screen, remove the hero band from layout so detail gradients fill the screen (no black strip). */
+  .viewport.viewport--mobile-details-open {
+    background: transparent !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .viewport.viewport--mobile-details-open .viewport-fill,
+  .viewport.viewport--mobile-details-open .scale-shell {
+    display: none !important;
+  }
+
+  .viewport.viewport--mobile-details-open .cursor-glow {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   .page-shell {
+    /* Fill the dynamic viewport so no black band shows under short detail slides (iOS URL bar). */
+    min-height: 100dvh;
+    min-height: 100lvh;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  #root {
+    overflow-x: hidden;
+    overflow-y: visible;
+    min-height: auto;
+  }
+
+  .details-section .details-section__inner {
+    overflow: visible !important;
+    max-height: none !important;
   }
 
   .photo,
@@ -1946,7 +2036,26 @@ a.figma-made-badge:focus-visible {
 
   .details-section {
     touch-action: pan-y;
-    min-height: auto;
+    /* At least one full viewport of gradient; content defines taller height (no flex shrink clipping). */
+    min-height: 100dvh;
+    min-height: 100lvh;
+    position: relative;
+    z-index: 6;
+    /* `overflow-x: hidden` pairs with visible-y and forces y to compute to `auto`, which clips tall slides. */
+    overflow-x: clip;
+    overflow-y: visible;
+    box-sizing: border-box;
+    padding-top: max(12px, calc(6px + env(safe-area-inset-top, 0px)));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    padding-bottom: max(48px, calc(36px + env(safe-area-inset-bottom, 0px)));
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+  }
+
+  /* Gradient layers follow the (possibly tall) section box — stretch with content, not a fixed band */
+  .details-section::before,
+  .details-section::after {
+    bottom: 0;
+    top: max(-6px, calc(-1 * env(safe-area-inset-top, 0px)));
   }
 
   .details-section--waterloo,
@@ -1959,10 +2068,75 @@ a.figma-made-badge:focus-visible {
   .details-section--athlete,
   .details-section--coop,
   .details-section--volunteering {
-    min-height: auto;
-    padding-left: max(20px, env(safe-area-inset-left, 0px));
-    padding-right: max(20px, env(safe-area-inset-right, 0px));
-    padding-bottom: max(48px, calc(40px + env(safe-area-inset-bottom, 0px)));
+    overflow: visible;
+  }
+
+  /* Education + SickKids: shorter title band, tighter tag spacing = more pill rows above the fold; overflow-y stays scrollable */
+  .details-section--waterloo,
+  .details-section--sickkids {
+    --detail-title-band-top: clamp(14px, 2.8vh, 32px);
+  }
+
+  .details-section--waterloo {
+    padding-bottom: max(80px, calc(56px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  .details-section--sickkids {
+    padding-bottom: max(100px, calc(72px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  .details-section--waterloo .education-panel,
+  .details-section--sickkids .sickkids-panel {
+    flex-shrink: 0;
+    min-height: min-content;
+    width: 100%;
+  }
+
+  .details-section--waterloo .education-panel__pill-grid,
+  .details-section--sickkids .sickkids-panel__pill-grid {
+    flex-shrink: 0;
+    gap: 10px;
+  }
+
+  .details-section--waterloo .education-panel__line--avg {
+    margin-top: 24px;
+  }
+
+  .details-section--waterloo .education-panel__school-block {
+    margin-top: -6px;
+  }
+
+  .details-section--waterloo .education-panel__tag:not(.education-panel__tag--secondary) {
+    margin-top: 22px;
+    margin-bottom: 16px;
+  }
+
+  .details-section--waterloo .education-panel__tag--secondary {
+    margin-top: 22px;
+    margin-bottom: 14px;
+  }
+
+  .details-section--waterloo .education-panel__tag--secondary + .education-panel__pill-grid {
+    margin-top: 12px;
+  }
+
+  .details-section--sickkids .sickkids-panel__tag {
+    margin-top: 24px;
+    margin-bottom: 14px;
+  }
+
+  .details-section--sickkids .sickkids-panel__copy {
+    padding-bottom: 10px;
+  }
+
+  .details-section--waterloo .education-panel__title,
+  .details-section--sickkids .sickkids-panel__title {
+    font-size: clamp(36px, 10vw, 54px);
+    min-height: 0;
+  }
+
+  .details-section--sickkids .sickkids-panel__pill-grid {
+    padding-bottom: max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
   }
 
   /* Hero — social links in a vertical column, shifted up the artboard */
@@ -2026,6 +2200,10 @@ a.figma-made-badge:focus-visible {
     max-width: 100%;
   }
 
+  .hackathons-panel__photo img {
+    max-height: min(30vh, 260px);
+  }
+
   .athlete-panel__photos {
     flex-direction: column;
     align-items: center;
@@ -2041,6 +2219,10 @@ a.figma-made-badge:focus-visible {
   .athlete-panel__photo--left,
   .athlete-panel__photo--right {
     margin-top: 0;
+  }
+
+  .athlete-panel__photo img {
+    max-height: min(30vh, 260px);
   }
 
   .internship-panel {
@@ -2092,7 +2274,7 @@ a.figma-made-badge:focus-visible {
   .cfes-panel__photo img {
     width: 100%;
     max-width: min(360px, 100%);
-    max-height: min(38vh, 320px);
+    max-height: min(30vh, 260px);
     height: auto;
     margin: 0 auto;
     display: block;
@@ -2114,6 +2296,7 @@ a.figma-made-badge:focus-visible {
 
   .details-section__inner {
     max-width: 100%;
+    width: 100%;
   }
 
   .details-section--coop .details-section__inner {
@@ -2253,5 +2436,185 @@ a.figma-made-badge:focus-visible {
 
   .coop-panel__pill--honour {
     margin-top: clamp(24px, 5vh, 56px);
+  }
+
+  /* Detail slides — undo tight desktop negative margins that overlap titles with body on small screens */
+  .details-section--internship .internship-panel h2.internship-panel__title {
+    margin-bottom: 14px;
+  }
+
+  .internship-panel__copy {
+    margin-top: 0;
+  }
+
+  .publications-panel__copy {
+    margin-top: 12px;
+  }
+
+  .polyglot-panel__copy {
+    margin-top: 10px;
+  }
+
+  .athlete-panel__copy {
+    margin-top: 12px;
+  }
+
+  .athlete-panel p.athlete-panel__line {
+    margin: 0;
+  }
+
+  .hackathons-panel,
+  .polyglot-panel,
+  .publications-panel,
+  .cfes-panel,
+  .athlete-panel,
+  .coop-panel {
+    transform: none;
+  }
+
+  /* Mobile hero — scaled collage hidden; name / icons / photo / caption are unscaled viewport layer */
+  .canvas--mobile-hero .photo,
+  .canvas--mobile-hero .lang-switch {
+    visibility: hidden !important;
+    pointer-events: none !important;
+    animation: none !important;
+  }
+
+  .canvas--mobile-hero .name,
+  .canvas--mobile-hero .socials,
+  .canvas--mobile-hero .bullets {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .mobile-hero-viewport-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 24;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+    padding-bottom: 8px;
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  .mobile-hero-viewport-layer__stack {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: min(100%, 720px);
+  }
+
+  .mobile-hero-viewport-layer__name {
+    margin: 0;
+    padding: 4px 12px 0;
+    font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(3.35rem, 17.5vw, 5.85rem);
+    line-height: 1.02;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 2px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .mobile-hero-viewport-layer__socials {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(24px, 7.5vw, 40px);
+    margin-top: 16px;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .mobile-hero-viewport-layer__socials .icon-link {
+    width: 34px;
+    height: 34px;
+    opacity: 0.96;
+  }
+
+  .mobile-hero-viewport-layer__socials .icon-link svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mobile-hero-viewport-layer__socials .icon-link--github {
+    min-width: 34px;
+    min-height: 34px;
+    padding: 5px;
+  }
+
+  .mobile-hero-viewport-layer__spotlight {
+    margin-top: 20px;
+    width: min(94vw, 700px);
+    height: min(50dvh, 540px);
+    max-height: 78vw;
+    border: none;
+    padding: 0;
+    border-radius: clamp(22px, 5.5vw, 40px);
+    overflow: hidden;
+    background: #0a0a12;
+    cursor: pointer;
+    box-shadow: 0 14px 48px rgba(0, 0, 0, 0.52);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-hero-viewport-layer__spotlight img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 1;
+    filter: brightness(0.98) contrast(0.98) saturate(0.98);
+    animation: mobile-hero-spotlight-reveal 0.68s cubic-bezier(0.22, 1, 0.32, 1) both;
+  }
+
+  .mobile-hero-viewport-layer__spotlight:focus-visible {
+    outline: 3px solid rgba(180, 210, 255, 0.95);
+    outline-offset: 4px;
+  }
+
+  .mobile-hero-viewport-layer__caption {
+    margin-top: 24px;
+    width: min(96vw, 700px);
+    min-height: 7.25rem;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  .mobile-hero-viewport-layer__caption-text {
+    animation: mobile-hero-caption-reveal 0.68s cubic-bezier(0.22, 1, 0.32, 1) both;
+    font-family: Manrope, Inter, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.28rem, 5.9vw, 1.95rem);
+    line-height: 1.36;
+    letter-spacing: 0.016em;
+    background: linear-gradient(
+      102deg,
+      var(--bullet-grad-1, #eef3ff) 0%,
+      var(--bullet-grad-2, #d5e6ff) 34%,
+      var(--bullet-grad-3, #a6f3ff) 62%,
+      var(--bullet-grad-4, #c7b9ff) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 14px rgba(120, 190, 255, 0.28));
   }
 }
