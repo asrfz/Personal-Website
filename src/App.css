@@ -839,7 +839,9 @@ body {
 
 .details-section--waterloo {
   min-height: 100vh;
-  padding: 10px 28px 56px;
+  /* Tighter band than other detail slides so Education fits on one screen */
+  --detail-title-band-top: clamp(22px, 3.2vh, 44px);
+  padding: 6px 28px 44px;
   overflow-x: hidden;
   overflow-y: visible;
 }
@@ -1633,7 +1635,7 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: -14px;
+  margin-top: -8px;
 }
 
 .education-panel__school-block > p.education-panel__line:first-child {
@@ -1680,7 +1682,7 @@ body {
 
 .education-panel__line--avg {
   /* Extra top margin offsets `.education-panel__school-block` pull-up so this line stays aligned with coursework */
-  margin-top: 46px;
+  margin-top: 32px;
   transform: none;
 }
 
@@ -1700,22 +1702,27 @@ body {
 }
 
 .education-panel__tag:not(.education-panel__tag--secondary) {
-  margin: 36px 0 24px;
+  margin: 26px 0 18px;
   transform: none;
 }
 
 /* Use margins instead of translateY so scrollable height includes extracurriculars (overflow was clipping). */
 .education-panel__tag:not(.education-panel__tag--secondary) + .education-panel__pill-grid {
+  margin-top: 12px;
+}
+
+/* Must beat `.details-section p` (1 class + `p`) — use `p` + classes in selector. */
+p.education-panel__tag.education-panel__tag--secondary {
+  /* Space below coursework grid only — keep modest so the block stays on one desktop screen */
+  margin-top: clamp(36px, 4.5vh, 56px);
+  margin-bottom: 12px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+p.education-panel__tag.education-panel__tag--secondary + .education-panel__pill-grid {
+  /* Match coursework: tag sits close to its pills (old 94px pushed extracurriculars off the fold) */
   margin-top: 14px;
-}
-
-.education-panel__tag--secondary {
-  margin-top: calc(44px + 72px);
-  margin-bottom: 28px;
-}
-
-.education-panel__tag--secondary + .education-panel__pill-grid {
-  margin-top: 94px;
 }
 
 .education-panel__pill-grid {
