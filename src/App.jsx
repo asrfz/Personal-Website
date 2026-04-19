@@ -4,6 +4,9 @@ import { bulletPoints, img } from "./assets.js";
 import { CursorGlow } from "./CursorGlow.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 
+const DEVPOST_PORTFOLIO_URL =
+  "https://devpost.com/asarrafz?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav";
+
 const HOVER_PHOTO_TO_BULLET = {
   waterloo: 0,
   sickkids: 1,
@@ -147,7 +150,9 @@ export default function App() {
   const selectedDetail = detailCopyByKey[selectedDetailKey] ?? detailCopyByKey.waterloo;
   const isWaterlooDetail = selectedDetailKey === "waterloo";
   const isSickkidsDetail = selectedDetailKey === "sickkids";
+  const isHackathonsDetail = selectedDetailKey === "cxc";
   const isInternshipDetail = selectedDetailKey === "wsp" || selectedDetailKey === "womens";
+  const isPolyglotDetail = selectedDetailKey === "greece";
   /** Line breaks match reference layout */
   const wspInternshipLines = [
     "Before entering university, I spent my last summer break working as an intern at WSP.",
@@ -185,6 +190,20 @@ export default function App() {
     "My job was to create a new affinity head for predicting these affinities.",
     "I gained experience creating large datasets (millions of protein-peptide pairs),",
     "creating & training & evaluating ML models, using high-performance computing, and many more.",
+  ];
+  const hackathonsSummaryLines = [
+    "I did my first hackathon in the summer of 2025, and it was so fun that I just kept doing them.",
+    "To this day, I've won at three hackathons.",
+    "I'm also flying out to Los Angeles for a hackathon this April.",
+  ];
+  const polyglotSummaryLines = [
+    "At age 6 I was trilingual, speaking English, Persian, and French.",
+    "At age 9, I realized learning Spanish was my calling. So I taught myself Spanish.",
+    "My best tips for learning a language are:",
+    "Learn the 1000 most common words first.",
+    "The best practice is speaking. If you have nobody to practice with...talk to yourself!",
+    "Travel to the countries where you can fully immerse yourself in the language you're learning.",
+    "That last tip helped me a lot. I love travelling. Here's a map of the 19 countries (and US states) I've been to:",
   ];
   const sickkidsTools = [
     "Python",
@@ -502,7 +521,7 @@ export default function App() {
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isInternshipDetail ? " details-section--internship" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -558,6 +577,34 @@ export default function App() {
                 ))}
               </div>
             </div>
+          ) : isHackathonsDetail ? (
+            <div className="hackathons-panel" aria-label="Hackathons">
+              <h2 className="hackathons-panel__title">HACKATHONS</h2>
+              <div className="hackathons-panel__copy" aria-label="Hackathons summary">
+                {hackathonsSummaryLines.map((line, i) => (
+                  <p key={`hack-${i}`} className="hackathons-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <a
+                className="hackathons-panel__cta"
+                href={DEVPOST_PORTFOLIO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="My Hackathon Projects on Devpost (opens in new tab)"
+              >
+                My Hackathon Projects
+              </a>
+              <div className="hackathons-panel__photos" aria-label="Hackathon photos">
+                <figure className="hackathons-panel__photo hackathons-panel__photo--left">
+                  <img src={img.hackathonPhotoLeft} alt="Hackathon team with prizes" />
+                </figure>
+                <figure className="hackathons-panel__photo hackathons-panel__photo--right">
+                  <img src={img.hackathonPhotoRight} alt="At a hackathon workshop" />
+                </figure>
+              </div>
+            </div>
           ) : isInternshipDetail ? (
             <div className="internship-panel" aria-label="WSP and Women's College Hospital">
               <section className="internship-panel__block" aria-labelledby="internship-wsp-heading">
@@ -584,6 +631,20 @@ export default function App() {
                   ))}
                 </div>
               </section>
+            </div>
+          ) : isPolyglotDetail ? (
+            <div className="polyglot-panel" aria-label="Polyglot">
+              <h2 className="polyglot-panel__title">POLYGLOT</h2>
+              <div className="polyglot-panel__copy" aria-label="Polyglot summary">
+                {polyglotSummaryLines.map((line, i) => (
+                  <p key={`polyglot-${i}`} className="polyglot-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <figure className="polyglot-panel__map" aria-label="Countries and regions visited">
+                <img src={img.polyglotMap} alt="World map highlighting countries and US states visited" />
+              </figure>
             </div>
           ) : (
             <>

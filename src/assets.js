@@ -5,6 +5,11 @@ export const img = {
   wsp: "https://www.figma.com/api/mcp/asset/351e1d32-89c3-4179-ad4d-731fc44c0425",
   mAndR: "https://www.figma.com/api/mcp/asset/fdcf69cb-de6c-4fca-8d94-c5585b6c4270",
   cxc: "https://www.figma.com/api/mcp/asset/1ed0bf15-eafb-477b-b88e-af73ca597106",
+  /** Hackathons slide — `public/hackathon-team.png`, `public/hackathon-workshop.png` */
+  hackathonPhotoLeft: "/hackathon-team.png",
+  hackathonPhotoRight: "/hackathon-workshop.png",
+  /** Polyglot slide — travelled map (`public/polyglot-map.png`) */
+  polyglotMap: "/polyglot-map.png",
   physio: "https://www.figma.com/api/mcp/asset/cf60cce6-8167-4018-9390-2d0aaeafb766",
   womens: "https://www.figma.com/api/mcp/asset/a2ae4f81-d01d-440f-b9d3-165b0596a6b8",
   waterloo: "https://www.figma.com/api/mcp/asset/560efb0f-ce94-4df2-8441-2e863572764e",
