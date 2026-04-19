@@ -54,6 +54,7 @@ export default function App() {
   const wheelLatchedRef = useRef(false);
   const wheelReadyForNewInputRef = useRef(true);
   const wheelLastAbsDeltaRef = useRef(0);
+  const wheelReleaseTimerRef = useRef(null);
   /** Row index in highlightByBullet / bulletGradients; slot 2 is unused (removed WAT.ai). */
   const bulletToHighlightRow = (bulletIdx) =>
     bulletIdx < 2 ? bulletIdx : bulletIdx + 1;
@@ -342,6 +343,15 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     const triggerThreshold = 55;
     const settleThreshold = 10;
     const reflickThreshold = 38;
+    const releaseDelayMs = 85;
+
+    if (wheelReleaseTimerRef.current) {
+      clearTimeout(wheelReleaseTimerRef.current);
+    }
+    wheelReleaseTimerRef.current = setTimeout(() => {
+      wheelLatchedRef.current = false;
+      wheelReadyForNewInputRef.current = true;
+    }, releaseDelayMs);
 
     if (wheelLatchedRef.current) {
       if (absDelta <= settleThreshold) {
@@ -373,6 +383,14 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
 
     wheelLastAbsDeltaRef.current = absDelta;
   }, [stepHeroBullet]);
+
+  useEffect(() => {
+    return () => {
+      if (wheelReleaseTimerRef.current) {
+        clearTimeout(wheelReleaseTimerRef.current);
+      }
+    };
+  }, []);
 
   const heroKeyboardNavActiveRef = useRef(true);
   useEffect(() => {
