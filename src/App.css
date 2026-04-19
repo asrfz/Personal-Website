@@ -629,6 +629,10 @@ body {
   max-width: min(1720px, 96vw);
 }
 
+.details-section--internship .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
 .details-section--waterloo {
   min-height: 100vh;
   padding: 34px 30px 32px;
@@ -640,33 +644,42 @@ body {
   padding: 34px 28px 56px;
 }
 
-.sickkids-panel {
+.details-section--internship {
+  min-height: 100vh;
+  padding: 48px 28px 72px;
+}
+
+.internship-panel {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
 }
 
-/* Beat `.details-section h2` — SickKids title is an <h2> */
-.details-section--sickkids h2.sickkids-panel__title {
-  margin: 0 0 56px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 400;
-  font-size: clamp(80px, 8.5vw, 128px);
-  line-height: 1;
-  color: #fff;
-  text-wrap: unset;
+.internship-panel__block + .internship-panel__block {
+  margin-top: 72px;
 }
 
-.sickkids-panel__copy {
+/* Match SickKids section title */
+.internship-panel h2.internship-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.internship-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
   margin: 0 auto;
 }
 
-/* Must beat `.details-section p` (max-width: 720px) — SickKids lines are <p> tags */
-.details-section--sickkids .sickkids-panel__line {
+/* Match SickKids body lines — beats `.details-section p` */
+.internship-panel p.internship-panel__line {
   margin: 0;
   width: 100%;
   max-width: none;
@@ -675,12 +688,56 @@ body {
   letter-spacing: 0.01em;
   font-size: clamp(18px, 1.72vw, 28px);
   line-height: 1.48;
-  color: rgba(230, 236, 255, 0.95);
   text-align: center;
   white-space: normal;
 }
 
-.details-section--sickkids .sickkids-panel__line + .sickkids-panel__line {
+.internship-panel p.internship-panel__line + p.internship-panel__line {
+  margin-top: 8px;
+}
+
+.sickkids-panel {
+  max-width: min(1680px, 94vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Match Education title scale (Bebas) — beats `.details-section h2` via parent + element */
+.sickkids-panel h2.sickkids-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.sickkids-panel__copy {
+  width: 100%;
+  max-width: min(1580px, 100%);
+  margin: 0 auto;
+  /* Space after paragraph only — does not change gap between purple pill and pills below */
+  padding-bottom: 36px;
+}
+
+/* Beat `.details-section p` — SickKids lines are <p> tags */
+.sickkids-panel p.sickkids-panel__line {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.48;
+  text-align: center;
+  white-space: normal;
+}
+
+.sickkids-panel p.sickkids-panel__line + p.sickkids-panel__line {
   margin-top: 8px;
 }
 
@@ -733,7 +790,8 @@ body {
   text-align: center;
 }
 
-.education-panel__title {
+/* Beat `.details-section h2` — scoped to panel, not section modifier */
+.education-panel h2.education-panel__title {
   margin: 0 0 8px;
   font-family: "Bebas Neue", Impact, system-ui, sans-serif;
   text-transform: uppercase;
@@ -744,42 +802,43 @@ body {
   line-height: 1;
 }
 
-.education-panel__line {
+/* Beat `.details-section p` */
+.education-panel p.education-panel__line {
   margin: 2px 0 0;
   font-family: Manrope, Inter, system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0.02em;
-  font-size: clamp(21px, 2.35vw, 34px);
-  line-height: 1.17;
+  font-size: clamp(15px, 1.72vw, 28px);
+  line-height: 1.48;
 }
 
-.education-panel__line + .education-panel__line {
+.education-panel p.education-panel__line + p.education-panel__line {
   margin-top: 0;
 }
 
 .education-panel__line--program {
-  margin-bottom: -18px;
+  margin-bottom: 0;
 }
 
-.education-panel__year {
-  margin: 0;
-  display: inline-block;
+.education-panel p.education-panel__year {
+  margin: 6px 0 0;
+  max-width: none;
+  display: block;
   font-family: Manrope, Inter, system-ui, sans-serif;
   font-weight: 400;
   letter-spacing: 0.01em;
-  font-size: 4px;
-  line-height: 1.08;
+  font-size: clamp(9px, 0.72vw, 11px);
+  line-height: 1.25;
   color: rgba(166, 173, 190, 0.96);
-  transform: translateY(-24px) scale(0.55);
-  transform-origin: center top;
+  transform: none;
   -webkit-text-fill-color: initial;
   background: none;
   filter: none;
 }
 
 .education-panel__line--avg {
-  margin-top: -98px;
-  transform: translateY(-40px);
+  margin-top: 32px;
+  transform: none;
 }
 
 .education-panel__tag {
@@ -798,7 +857,8 @@ body {
 }
 
 .education-panel__tag:not(.education-panel__tag--secondary) {
-  transform: translateY(-8px);
+  margin: 48px 0 30px;
+  transform: none;
 }
 
 .education-panel__tag:not(.education-panel__tag--secondary) + .education-panel__pill-grid {
@@ -841,8 +901,12 @@ body {
 }
 
 /* Gradient text like hero bullets, but only for non-bubble Waterloo text. */
-.education-panel__title,
-.education-panel__line {
+.education-panel h2.education-panel__title,
+.education-panel p.education-panel__line,
+.sickkids-panel h2.sickkids-panel__title,
+.sickkids-panel p.sickkids-panel__line,
+.internship-panel h2.internship-panel__title,
+.internship-panel p.internship-panel__line {
   background: linear-gradient(
     102deg,
     #eef3ff 0%,

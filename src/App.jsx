@@ -147,6 +147,22 @@ export default function App() {
   const selectedDetail = detailCopyByKey[selectedDetailKey] ?? detailCopyByKey.waterloo;
   const isWaterlooDetail = selectedDetailKey === "waterloo";
   const isSickkidsDetail = selectedDetailKey === "sickkids";
+  const isInternshipDetail = selectedDetailKey === "wsp" || selectedDetailKey === "womens";
+  /** Line breaks match reference layout */
+  const wspInternshipLines = [
+    "Before entering university, I spent my last summer break working as an intern at WSP.",
+    "Here, I wrote a full paper on the implementation of 5G communications into Canadian and global rail networks.",
+    "I learned about various 5G optimization techniques, including:",
+    "mmWave technology, Edge Computing, Cloud-based virtualization, and Predictive Maintenance.",
+    "The paper was published in the 2025 ASME ICEF Rail Symposium Proceedings.",
+  ];
+  const womensInternshipLines = [
+    "During my first official co-op term at the University of Waterloo, I worked as a Research Assistant at WCH.",
+    "I worked on quite a few projects. The main one involved evaluating different AI CDS tools for clinical use.",
+    "Another was to create an AI tool to bridge the gap between medical research and actual clinical translation.",
+    "I learned about clinical knowledge translation, AI CDS development and evaluation, patient-oriented research, etc.",
+    "I was awarded Co-Op Student of the Year out of my entire faculty (1/9000 students) after this experience.",
+  ];
   const waterlooCoursework = [
     "Circuits + Lab",
     "Systems & Signals",
@@ -486,7 +502,7 @@ export default function App() {
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isInternshipDetail ? " details-section--internship" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -541,6 +557,33 @@ export default function App() {
                   </span>
                 ))}
               </div>
+            </div>
+          ) : isInternshipDetail ? (
+            <div className="internship-panel" aria-label="WSP and Women's College Hospital">
+              <section className="internship-panel__block" aria-labelledby="internship-wsp-heading">
+                <h2 id="internship-wsp-heading" className="internship-panel__title">
+                  WSP
+                </h2>
+                <div className="internship-panel__copy" aria-label="WSP summary">
+                  {wspInternshipLines.map((line, i) => (
+                    <p key={`wsp-${i}`} className="internship-panel__line">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </section>
+              <section className="internship-panel__block" aria-labelledby="internship-wch-heading">
+                <h2 id="internship-wch-heading" className="internship-panel__title">
+                  {"Women's College Hospital"}
+                </h2>
+                <div className="internship-panel__copy" aria-label="Women's College Hospital summary">
+                  {womensInternshipLines.map((line, i) => (
+                    <p key={`wch-${i}`} className="internship-panel__line">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </section>
             </div>
           ) : (
             <>
