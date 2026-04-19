@@ -1580,6 +1580,22 @@ body {
   text-align: center;
 }
 
+.education-panel__school-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: -14px;
+}
+
+.education-panel__school-block > p.education-panel__line:first-child {
+  margin-top: 0;
+}
+
+.education-panel__school-block p.education-panel__year {
+  margin-top: 4px;
+}
+
 /* Beat `.details-section p` */
 .education-panel p.education-panel__line {
   margin: 2px 0 0;
@@ -1615,7 +1631,8 @@ body {
 }
 
 .education-panel__line--avg {
-  margin-top: 32px;
+  /* Extra top margin offsets `.education-panel__school-block` pull-up so this line stays aligned with coursework */
+  margin-top: 46px;
   transform: none;
 }
 

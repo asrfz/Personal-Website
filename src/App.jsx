@@ -723,13 +723,15 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           {isWaterlooDetail ? (
             <div className="education-panel" aria-label="Waterloo education details">
               <h2 className="education-panel__title">Education</h2>
-              <p className="education-panel__line">
-                University of Waterloo - Bachelor of Applied Science
-              </p>
-              <p className="education-panel__line education-panel__line--program">
-                Biomedical Engineering
-              </p>
-              <p className="education-panel__year">2024-2029</p>
+              <div className="education-panel__school-block">
+                <p className="education-panel__line">
+                  University of Waterloo - Bachelor of Applied Science
+                </p>
+                <p className="education-panel__line education-panel__line--program">
+                  Biomedical Engineering
+                </p>
+                <p className="education-panel__year">2024-2029</p>
+              </div>
               <p className="education-panel__line education-panel__line--avg">
                 Cumulative Average: 90%
               </p>
