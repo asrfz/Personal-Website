@@ -291,6 +291,42 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     }
   }, []);
 
+  /** Shared with wheel + ArrowUp/ArrowDown: one index step, same rules as trackpad. */
+  const stepHeroBullet = useCallback(
+    (direction, { fromWheel = false } = {}) => {
+      if (direction !== 1 && direction !== -1) return;
+
+      if (hoverFocusKey != null || stickyPhotoKey != null) {
+        setHoverFocusKey(null);
+        setStickyPhotoKey(null);
+        wheelAccumulatorRef.current = 0;
+        gestureDirectionRef.current = 0;
+        gestureSteppedRef.current = false;
+        return;
+      }
+
+      if (!fromWheel) {
+        const now = performance.now();
+        lastWheelEventAtRef.current = now;
+        wheelAccumulatorRef.current = 0;
+        gestureDirectionRef.current = 0;
+        gestureSteppedRef.current = false;
+      }
+
+      if (!hasStarted) {
+        setHasStarted(true);
+        return;
+      }
+
+      setActiveBulletIndex((current) =>
+        Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
+      );
+      setStickyPhotoKey(null);
+      setHoverFocusKey(null);
+    },
+    [hasStarted, hoverFocusKey, stickyPhotoKey],
+  );
+
   const onViewportWheel = useCallback((event) => {
     if (hoverFocusKey != null || stickyPhotoKey != null) {
       setHoverFocusKey(null);
@@ -308,7 +344,8 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       return;
     }
 
-    const idleGapMs = 240;
+    /* Shorter idle = quicker re-arm for the next “one bullet” swipe (still one step per gesture). */
+    const idleGapMs = 165;
     if (now - lastWheelEventAtRef.current > idleGapMs) {
       gestureDirectionRef.current = 0;
       gestureSteppedRef.current = false;
@@ -330,10 +367,18 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       return;
     }
 
-    wheelAccumulatorRef.current += event.deltaY;
+    /* Normalize wheel deltas: touchpads are usually pixels; some mice report lines. */
+    let delta = event.deltaY;
+    if (event.deltaMode === 1) {
+      delta *= 22;
+    } else if (event.deltaMode === 2) {
+      delta *= 480;
+    }
+    wheelAccumulatorRef.current += delta;
     const progress = activeBulletIndex / (bulletPoints.length - 1 || 1);
-    const deltaThreshold = 150 + progress * 220;
-    const stepCooldownMs = 120;
+    /* Lower threshold than before so trackpads need less travel; still one index per gesture. */
+    const deltaThreshold = 48 + progress * 72;
+    const stepCooldownMs = 72;
 
     if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
       return;
@@ -347,19 +392,44 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     lastStepAtRef.current = now;
     gestureSteppedRef.current = true;
 
-    if (!hasStarted) {
-      setHasStarted(true);
-      event.preventDefault();
-      return;
-    }
-
-    setActiveBulletIndex((current) =>
-      Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
-    );
-    setStickyPhotoKey(null);
-    setHoverFocusKey(null);
+    stepHeroBullet(direction, { fromWheel: true });
     event.preventDefault();
-  }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey]);
+  }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey, stepHeroBullet]);
+
+  const heroKeyboardNavActiveRef = useRef(true);
+  useEffect(() => {
+    const root = heroSectionRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        heroKeyboardNavActiveRef.current = Boolean(
+          entry?.isIntersecting && (entry.intersectionRatio ?? 0) >= 0.12,
+        );
+      },
+      { threshold: [0, 0.05, 0.1, 0.12, 0.2, 0.35, 0.5, 1] },
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      if (!heroKeyboardNavActiveRef.current) return;
+      const target = event.target;
+      if (target instanceof Element) {
+        if (target.closest("input, textarea, select, [contenteditable='true']")) {
+          return;
+        }
+      }
+      event.preventDefault();
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      stepHeroBullet(direction, { fromWheel: false });
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [stepHeroBullet]);
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_WARNING_MQ);
