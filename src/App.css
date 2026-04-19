@@ -48,8 +48,8 @@ body {
 .viewport {
   position: relative;
   width: 100vw;
+  /* One viewport tall — use vh on wide screens so hero height matches `innerHeight`-based scale (see useViewportScale). */
   height: 100vh;
-  height: 100dvh;
   overflow: hidden;
   background: #000;
   display: flex;
@@ -61,6 +61,77 @@ body {
   position: relative;
   min-height: 100vh;
   background: #000;
+}
+
+.mobile-view-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px
+    max(16px, env(safe-area-inset-left, 0px));
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid rgba(120, 170, 255, 0.28);
+  background: rgba(6, 8, 18, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+
+.mobile-view-warning__text {
+  margin: 0;
+  flex: 1 1 220px;
+  max-width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: rgba(228, 235, 255, 0.95);
+}
+
+.mobile-view-warning__text strong {
+  font-weight: 600;
+  color: #f2f6ff;
+}
+
+.mobile-view-warning__dismiss {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 8px 16px;
+  border: 1px solid rgba(160, 200, 255, 0.45);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #eef3ff;
+  background: rgba(60, 50, 140, 0.55);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.mobile-view-warning__dismiss:hover {
+  background: rgba(80, 70, 170, 0.65);
+  border-color: rgba(190, 220, 255, 0.55);
+}
+
+.mobile-view-warning__dismiss:active {
+  transform: scale(0.98);
+}
+
+.mobile-view-warning__dismiss:focus-visible {
+  outline: 2px solid rgba(160, 210, 255, 0.95);
+  outline-offset: 3px;
 }
 
 /* Full-window backdrop: `img.gradient` + top-right turquoise → black falloff */
@@ -95,7 +166,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .photo,
-  .lang-switch {
+  .lang-switch,
+  .hackathons-panel__photo {
     animation: none !important;
     transform: none !important;
     will-change: auto;
@@ -106,6 +178,21 @@ body {
   position: relative;
   z-index: 1;
   flex-shrink: 0;
+}
+
+/* Slight upward shift of the whole hero artboard (name, icons, collage, bullets) */
+.canvas-hero-nudge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2002px;
+  height: 1040px;
+  transform: translateY(-22px);
+  pointer-events: none;
+}
+
+.canvas-hero-nudge > .canvas {
+  pointer-events: auto;
 }
 
 .canvas {
@@ -137,6 +224,7 @@ body {
   height: 24px;
   align-items: center;
   justify-content: center;
+  color: rgba(240, 243, 255, 0.92);
   opacity: 0.92;
   transition: opacity 0.15s ease;
 }
@@ -145,10 +233,11 @@ body {
   opacity: 1;
 }
 
-.icon-link img {
+.icon-link svg {
+  display: block;
   width: 24px;
   height: 24px;
-  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .icon-link--github {
@@ -158,16 +247,17 @@ body {
 }
 
 .github-wrap {
-  display: block;
-  width: 16.5px;
-  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   position: relative;
 }
 
-.github-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.github-wrap svg {
+  width: 20px;
+  height: 20px;
 }
 
 @keyframes photo-drift-pulse {
@@ -441,6 +531,11 @@ body {
   height: 232px;
 }
 
+/* Hover-only tile — no detail slide; default .photo cursor is pointer */
+.photo--12--hover-only {
+  cursor: default;
+}
+
 .photo--13 {
   left: 1754px;
   top: 688px;
@@ -632,7 +727,8 @@ body {
 .athlete-panel h2.athlete-panel__title,
 .coop-panel h2.coop-panel__title,
 .volunteering-panel h2.volunteering-panel__title {
-  margin: clamp(14px, 2.2vh, 32px) 0 12px;
+  /* Tight band under title; body / pills / photos sit closer without shrinking the title */
+  margin: clamp(10px, 1.6vh, 24px) 0 4px;
   padding: 0;
   width: 100%;
   min-height: 2em;
@@ -662,18 +758,18 @@ body {
 
 .details-section--waterloo {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
   overflow: hidden;
 }
 
 .details-section--sickkids {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .details-section--internship {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .internship-panel {
@@ -683,7 +779,7 @@ body {
 }
 
 .internship-panel__block + .internship-panel__block {
-  margin-top: 72px;
+  margin-top: 52px;
 }
 
 .internship-panel__copy {
@@ -717,7 +813,7 @@ body {
 .details-section--hackathons {
   min-height: 100vh;
   /* Match SickKids / Education so the Bebas title sits on the same vertical band */
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .hackathons-panel {
@@ -753,7 +849,7 @@ body {
 /* Same pill as SickKids “Stack & Tools” / Education section tags */
 .hackathons-panel__cta {
   display: inline-block;
-  margin: 40px auto 0;
+  margin: 28px auto 0;
   width: fit-content;
   min-width: clamp(220px, 20vw, 360px);
   padding: 12px 38px;
@@ -803,7 +899,7 @@ body {
   align-items: flex-start;
   column-gap: clamp(40px, 8vw, 96px);
   row-gap: 20px;
-  margin-top: 40px;
+  margin-top: 28px;
 }
 
 .hackathons-panel__photo {
@@ -814,15 +910,22 @@ body {
   overflow: hidden;
   border: none;
   box-shadow: none;
+  transform: translate3d(0, 0, 0);
+  animation: photo-drift-pulse 5.35s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Left sits a bit lower; right sits a bit higher */
 .hackathons-panel__photo--left {
   margin-top: 36px;
+  animation-duration: 5.65s;
+  animation-delay: -0.9s;
 }
 
 .hackathons-panel__photo--right {
   margin-top: 8px;
+  animation-duration: 5.05s;
+  animation-delay: -2.3s;
 }
 
 .hackathons-panel__photo img {
@@ -839,7 +942,7 @@ body {
 .details-section--polyglot {
   min-height: 100vh;
   /* Same title band as Hackathons / SickKids / Education */
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .polyglot-panel {
@@ -900,7 +1003,7 @@ body {
 
 .details-section--publications {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .publications-panel {
@@ -960,7 +1063,7 @@ body {
 
 .details-section--cfes {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 .cfes-panel {
@@ -1021,7 +1124,7 @@ body {
   /* Taller than viewport — avoid clipping photos at the bottom */
   min-height: 100vh;
   overflow: visible;
-  padding: 34px 28px clamp(72px, 12vh, 120px);
+  padding: 18px 28px clamp(64px, 10vh, 108px);
 }
 
 .athlete-panel {
@@ -1034,7 +1137,7 @@ body {
   width: 100%;
   max-width: min(1580px, 100%);
   margin: 0 auto;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
 }
 
 .athlete-panel p.athlete-panel__line {
@@ -1062,7 +1165,7 @@ body {
   align-items: center;
   column-gap: clamp(28px, 6vw, 72px);
   row-gap: 20px;
-  margin-top: clamp(6px, 1.8vw, 16px);
+  margin-top: clamp(0px, 0.8vw, 8px);
 }
 
 .athlete-panel__photo {
@@ -1099,7 +1202,7 @@ body {
 
 .details-section--coop {
   min-height: 100vh;
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
   overflow: visible;
 }
 
@@ -1149,7 +1252,7 @@ body {
   row-gap: clamp(18px, 2.8vh, 32px);
   width: 100%;
   max-width: min(1420px, calc(100% - 8px));
-  margin-top: clamp(24px, 3.8vh, 44px);
+  margin-top: clamp(14px, 2.2vh, 32px);
   margin-left: auto;
   margin-right: auto;
   padding-bottom: clamp(48px, 8vh, 100px);
@@ -1291,62 +1394,6 @@ body {
   animation-delay: -2.95s;
 }
 
-@media (max-width: 720px) {
-  .coop-panel__grid {
-    grid-template-columns: 1fr;
-    row-gap: clamp(14px, 2.2vh, 24px);
-    padding-bottom: clamp(32px, 6vh, 64px);
-    max-width: 100%;
-  }
-
-  .coop-panel__pill--bme,
-  .coop-panel__pill--research,
-  .coop-panel__feature,
-  .coop-panel__pill--honour {
-    grid-column: 1;
-    grid-row: auto;
-    justify-self: stretch;
-    width: 100%;
-    max-width: none;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    transform: scale(1.06);
-    transform-origin: center top;
-  }
-
-  .coop-panel__pill {
-    width: 100%;
-  }
-
-  .coop-panel__pill:hover {
-    transform: scale(1.06) translateY(-2px);
-  }
-
-  .coop-panel__feature:hover {
-    transform: scale(1.06) translateY(-2px);
-  }
-
-  .coop-panel__pill img,
-  .coop-panel__feature img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-  }
-
-  .coop-panel__pill--research {
-    margin-top: clamp(8px, 1.2vh, 16px);
-  }
-
-  .coop-panel__feature {
-    margin-top: clamp(28px, 6vh, 72px);
-  }
-
-  .coop-panel__pill--honour {
-    margin-top: clamp(24px, 5vh, 56px);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .coop-panel__pill img,
   .coop-panel__feature img {
@@ -1365,7 +1412,7 @@ body {
 .details-section--volunteering {
   min-height: 100vh;
   /* Same vertical band as Hackathons / SickKids / Polyglot */
-  padding: 34px 28px 56px;
+  padding: 24px 28px 56px;
 }
 
 /* Extra top-left magenta glow (reference slide) — layers over default details overlay */
@@ -1423,7 +1470,7 @@ body {
   max-width: min(1580px, 100%);
   margin: 0 auto;
   /* Space after paragraph only — does not change gap between purple pill and pills below */
-  padding-bottom: 36px;
+  padding-bottom: 22px;
 }
 
 /* Beat `.details-section p` — SickKids lines are <p> tags */
@@ -1445,7 +1492,7 @@ body {
 }
 
 .sickkids-panel__tag {
-  margin: 72px auto 34px;
+  margin: 48px auto 28px;
   width: fit-content;
   min-width: clamp(220px, 20vw, 360px);
   padding: 12px 38px;
@@ -1548,7 +1595,7 @@ body {
 }
 
 .education-panel__tag:not(.education-panel__tag--secondary) {
-  margin: 48px 0 30px;
+  margin: 36px 0 24px;
   transform: none;
 }
 
@@ -1557,8 +1604,8 @@ body {
 }
 
 .education-panel__tag--secondary {
-  margin-top: 56px;
-  margin-bottom: 34px;
+  margin-top: 44px;
+  margin-bottom: 28px;
   transform: translateY(72px);
 }
 
@@ -1776,5 +1823,345 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .cursor-glow {
     display: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Mobile / narrow viewports — desktop rules above stay default from 897px+ */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 896px) {
+  .canvas-hero-nudge {
+    transform: translateY(-28px);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  .viewport {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 100dvh;
+    min-height: 100svh;
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    align-items: flex-start;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .page-shell {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .photo,
+  .lang-switch,
+  .icon-link {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .details-section {
+    touch-action: pan-y;
+    min-height: auto;
+  }
+
+  .details-section--waterloo,
+  .details-section--sickkids,
+  .details-section--internship,
+  .details-section--hackathons,
+  .details-section--polyglot,
+  .details-section--publications,
+  .details-section--cfes,
+  .details-section--athlete,
+  .details-section--coop,
+  .details-section--volunteering {
+    min-height: auto;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    padding-bottom: max(48px, calc(40px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  /* Hero — social links in a vertical column, shifted up the artboard */
+  .socials {
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    left: auto;
+    right: clamp(28px, 8vw, 100px);
+    top: 72px;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .icon-link {
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon-link svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .icon-link--github {
+    width: auto;
+    height: auto;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 4px;
+  }
+
+  .bullets {
+    top: 438px;
+  }
+
+  .lang-switch {
+    top: 800px;
+  }
+
+  /* Hackathon + athlete photo rows — single column */
+  .hackathons-panel__photos {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 22px;
+    margin-top: 22px;
+    column-gap: 0;
+  }
+
+  .hackathons-panel__photo,
+  .hackathons-panel__photo--left,
+  .hackathons-panel__photo--right {
+    margin-top: 0;
+    width: min(100%, 380px);
+    max-width: 100%;
+  }
+
+  .athlete-panel__photos {
+    flex-direction: column;
+    align-items: center;
+    row-gap: 18px;
+    margin-top: 12px;
+  }
+
+  .athlete-panel__photo {
+    width: min(100%, 340px);
+    max-width: 100%;
+  }
+
+  .athlete-panel__photo--left,
+  .athlete-panel__photo--right {
+    margin-top: 0;
+  }
+
+  .internship-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .internship-panel__block {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .internship-panel__block + .internship-panel__block {
+    margin-top: 40px;
+  }
+
+  .polyglot-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .polyglot-panel__map {
+    width: 100%;
+    max-width: min(560px, 100%);
+    margin-top: clamp(4px, 1.2vw, 14px);
+  }
+
+  .polyglot-panel__map img {
+    width: 100%;
+    height: auto;
+  }
+
+  .publications-panel,
+  .cfes-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .publications-panel__badge,
+  .cfes-panel__photo {
+    margin-top: clamp(8px, 2vw, 20px);
+    max-width: 100%;
+  }
+
+  .publications-panel__badge img,
+  .cfes-panel__photo img {
+    width: 100%;
+    max-width: min(420px, 100%);
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .hackathons-panel,
+  .sickkids-panel,
+  .education-panel,
+  .volunteering-panel,
+  .coop-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .coop-panel__grid {
+    width: 100%;
+  }
+
+  .details-section__inner {
+    max-width: 100%;
+  }
+
+  .details-section--coop .details-section__inner {
+    max-width: 100%;
+  }
+
+  /* Slide panels — purple tags, course/tool pills, Hackathons CTA */
+  .hackathons-panel,
+  .education-panel,
+  .sickkids-panel {
+    max-width: 100%;
+  }
+
+  .hackathons-panel__cta,
+  .education-panel__tag,
+  .sickkids-panel__tag {
+    display: block;
+    width: 100%;
+    max-width: min(100%, 320px);
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: normal;
+    text-align: center;
+    padding: 14px 18px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sickkids-panel__tag {
+    margin: 40px auto 22px;
+  }
+
+  .education-panel__tag {
+    margin-left: auto;
+    margin-right: auto;
+    transform: none !important;
+  }
+
+  .education-panel__tag:not(.education-panel__tag--secondary) {
+    margin-top: 36px;
+    margin-bottom: 22px;
+  }
+
+  .education-panel__tag--secondary {
+    margin-top: 28px;
+    margin-bottom: 22px;
+  }
+
+  .education-panel__tag:not(.education-panel__tag--secondary) + .education-panel__pill-grid,
+  .education-panel__tag--secondary + .education-panel__pill-grid {
+    transform: none !important;
+  }
+
+  .education-panel__pill-grid,
+  .sickkids-panel__pill-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 100%;
+  }
+
+  .education-panel__pill,
+  .sickkids-panel__pill {
+    height: auto;
+    min-height: 48px;
+    white-space: normal;
+    padding: 12px 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hackathons-panel__cta {
+    margin-top: 28px;
+  }
+
+  .coop-panel__grid {
+    grid-template-columns: 1fr;
+    row-gap: clamp(14px, 2.2vh, 24px);
+    padding-bottom: clamp(32px, 6vh, 64px);
+    max-width: 100%;
+  }
+
+  .coop-panel__pill--bme,
+  .coop-panel__pill--research,
+  .coop-panel__feature,
+  .coop-panel__pill--honour {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    transform: scale(1.06);
+    transform-origin: center top;
+  }
+
+  .coop-panel__pill {
+    width: 100%;
+  }
+
+  .coop-panel__pill:hover {
+    transform: scale(1.06) translateY(-2px);
+  }
+
+  .coop-panel__feature:hover {
+    transform: scale(1.06) translateY(-2px);
+  }
+
+  .coop-panel__pill img,
+  .coop-panel__feature img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .coop-panel__pill--research {
+    margin-top: clamp(8px, 1.2vh, 16px);
+  }
+
+  .coop-panel__feature {
+    margin-top: clamp(28px, 6vh, 72px);
+  }
+
+  .coop-panel__pill--honour {
+    margin-top: clamp(24px, 5vh, 56px);
   }
 }

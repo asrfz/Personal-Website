@@ -1,7 +1,8 @@
 import "./App.css";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { bulletPoints, img } from "./assets.js";
 import { CursorGlow } from "./CursorGlow.jsx";
+import { IconEmail, IconGithub, IconLinkedin, IconResume } from "./SocialNavIcons.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 
 const DEVPOST_PORTFOLIO_URL =
@@ -14,6 +15,9 @@ const COOP_LINK_RESEARCH =
 const COOP_LINK_ENGINEERING =
   "https://uwaterloo.ca/engineering/news/biomedical-engineering-student-earns-top-co-op-honour";
 const COOP_LINK_VIDEO = "https://www.youtube.com/watch?v=VItdp3Ayr1Y";
+
+const MOBILE_WARNING_MQ = "(max-width: 896px)";
+const MOBILE_WARNING_DISMISS_KEY = "personal-site-mobile-banner-dismiss";
 
 const HOVER_PHOTO_TO_BULLET = {
   waterloo: 0,
@@ -33,6 +37,7 @@ export default function App() {
   const scale = useViewportScale();
   const heroSectionRef = useRef(null);
   const detailsSectionRef = useRef(null);
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
@@ -75,16 +80,13 @@ export default function App() {
     ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
   ];
   const baseBulletIndex = hasStarted ? activeBulletIndex : null;
-  const isBirthdayActive =
-    hoverFocusKey === "birthday" ||
-    (stickyPhotoKey === "birthday" && hoverFocusKey == null);
+  const isBirthdayActive = hoverFocusKey === "birthday";
   const displayBulletIndex = (() => {
     const transient = hoverFocusKey;
     if (transient === "birthday") return null;
     if (transient != null) {
       return HOVER_PHOTO_TO_BULLET[transient] ?? baseBulletIndex;
     }
-    if (stickyPhotoKey === "birthday") return null;
     if (stickyPhotoKey != null) {
       return HOVER_PHOTO_TO_BULLET[stickyPhotoKey] ?? baseBulletIndex;
     }
@@ -270,7 +272,14 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   ];
   const handleImageClick = useCallback((key) => {
     setSelectedDetailKey(key);
-    detailsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const coarse =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(pointer: coarse)").matches;
+    detailsSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: coarse ? "nearest" : "start",
+    });
   }, []);
   const onDetailsWheel = useCallback((event) => {
     if (event.deltaY < 0) {
@@ -349,8 +358,55 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     event.preventDefault();
   }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey]);
 
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_WARNING_MQ);
+    const sync = () => {
+      if (!mq.matches) {
+        setShowMobileWarning(false);
+        return;
+      }
+      if (sessionStorage.getItem(MOBILE_WARNING_DISMISS_KEY) === "1") {
+        setShowMobileWarning(false);
+        return;
+      }
+      setShowMobileWarning(true);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const dismissMobileWarning = useCallback(() => {
+    try {
+      sessionStorage.setItem(MOBILE_WARNING_DISMISS_KEY, "1");
+    } catch {
+      /* private mode / quota */
+    }
+    setShowMobileWarning(false);
+  }, []);
+
   return (
     <div className="page-shell">
+      {showMobileWarning ? (
+        <div
+          className="mobile-view-warning"
+          role="region"
+          aria-label="Screen size notice"
+        >
+          <p className="mobile-view-warning__text">
+            This portfolio is laid out for <strong>larger screens</strong>. You can still
+            explore on mobile, but for the intended layout try a desktop or tablet in
+            landscape.
+          </p>
+          <button
+            type="button"
+            className="mobile-view-warning__dismiss"
+            onClick={dismissMobileWarning}
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
       <div ref={heroSectionRef} className="viewport" onWheel={onViewportWheel}>
       <div
         className="viewport-fill"
@@ -364,44 +420,45 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           height: DESIGN_H * scale,
         }}
       >
-        <main
-          className="canvas"
-          data-node-id="111:88"
-          style={{ transform: `scale(${scale})` }}
-          onMouseLeave={() => setHoverFocusKey(null)}
-        >
-        <nav className="socials" aria-label="Links">
-          <a className="icon-link" href="#" aria-label="Resume">
-            <img src={img.iconResume} alt="" width={24} height={24} />
-          </a>
-          <a
-            className="icon-link"
-            href="mailto:asarrafz@uwaterloo.ca"
-            aria-label="Email"
+        <div className="canvas-hero-nudge">
+          <main
+            className="canvas"
+            data-node-id="111:88"
+            style={{ transform: `scale(${scale})` }}
+            onMouseLeave={() => setHoverFocusKey(null)}
           >
-            <img src={img.iconEmail} alt="" width={24} height={24} />
-          </a>
-          <a
-            className="icon-link"
-            href="https://www.linkedin.com/in/aiden-sarrafzadeh"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <img src={img.iconLinkedin} alt="" width={24} height={24} />
-          </a>
-          <a
-            className="icon-link icon-link--github"
-            href="https://github.com/asrfz"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-          >
-            <span className="github-wrap">
-              <img src={img.iconGithub} alt="" width={17} height={18} />
-            </span>
-          </a>
-        </nav>
+          <nav className="socials" aria-label="Links">
+            <a className="icon-link" href="#" aria-label="Resume">
+              <IconResume />
+            </a>
+            <a
+              className="icon-link"
+              href="mailto:asarrafz@uwaterloo.ca"
+              aria-label="Email"
+            >
+              <IconEmail />
+            </a>
+            <a
+              className="icon-link"
+              href="https://www.linkedin.com/in/aiden-sarrafzadeh"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <IconLinkedin />
+            </a>
+            <a
+              className="icon-link icon-link--github"
+              href="https://github.com/asrfz"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <span className="github-wrap">
+                <IconGithub />
+              </span>
+            </a>
+          </nav>
 
         <figure
           className={`photo photo--5${isHighlighted("wsp") ? " is-highlighted" : ""}`}
@@ -494,12 +551,12 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           <img src={img.coOp} alt="Co-Op" />
         </figure>
         <figure
-          className="photo photo--12"
-          onMouseEnter={() => {
-            setHoverFocusKey("birthday");
-            setStickyPhotoKey("birthday");
-          }}
-          onClick={() => handleImageClick("birthday")}
+          className="photo photo--12 photo--12--hover-only"
+          aria-label="Birthday — hover to read message"
+          onMouseEnter={() => setHoverFocusKey("birthday")}
+          onMouseLeave={() =>
+            setHoverFocusKey((h) => (h === "birthday" ? null : h))
+          }
         >
           <img src={img.birthdayParty} alt="Birthday party" />
         </figure>
@@ -526,7 +583,18 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
               }
               className="bullet-line"
             >
-              {showIntroHint ? (
+              {isBirthdayActive ? (
+                <span
+                  style={{
+                    "--bullet-grad-1": activeGradient[0],
+                    "--bullet-grad-2": activeGradient[1],
+                    "--bullet-grad-3": activeGradient[2],
+                    "--bullet-grad-4": activeGradient[3],
+                  }}
+                >
+                  My amazing friends
+                </span>
+              ) : showIntroHint ? (
                 <span className="interaction-hint-text">
                   <span>Scroll to explore</span>
                   <span>Click images for more details</span>
@@ -568,7 +636,8 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           <span className="figma-made-badge__label">Made with</span>
           <img src={img.figmaMadeBadge} alt="Figma" width={1000} height={478} decoding="async" />
         </div>
-        </main>
+          </main>
+        </div>
       </div>
       <CursorGlow />
       </div>

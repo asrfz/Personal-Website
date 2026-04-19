@@ -4,11 +4,22 @@ import { useLayoutEffect, useState } from "react";
 export const DESIGN_W = 2002;
 export const DESIGN_H = 1040;
 
+/** Viewports this wide or narrower use a slightly higher floor scale so taps stay usable */
+const MOBILE_LAYOUT_MAX_WIDTH = 896;
+/** Prevents the scaled hero from shrinking so much that controls are ~sub-40px on screen */
+const MOBILE_MIN_SCALE = 0.26;
+
 function readViewportSize() {
+  const wInner = window.innerWidth;
+  const hInner = window.innerHeight;
+  const isNarrow = wInner <= MOBILE_LAYOUT_MAX_WIDTH;
+  if (!isNarrow) {
+    return { w: Math.max(1, wInner), h: Math.max(1, hInner) };
+  }
   const vv = window.visualViewport;
-  const w = vv?.width ?? window.innerWidth;
-  const h = vv?.height ?? window.innerHeight;
-  return { w: Math.max(1, w), h: Math.max(1, h) };
+  const w = Math.max(1, vv?.width ?? wInner);
+  const h = Math.max(1, vv?.height ?? hInner);
+  return { w, h };
 }
 
 export function useViewportScale() {
@@ -17,7 +28,9 @@ export function useViewportScale() {
   useLayoutEffect(() => {
     function update() {
       const { w, h } = readViewportSize();
-      setScale(Math.min(w / DESIGN_W, h / DESIGN_H));
+      const raw = Math.min(w / DESIGN_W, h / DESIGN_H);
+      const isMobileLayout = w <= MOBILE_LAYOUT_MAX_WIDTH;
+      setScale(isMobileLayout ? Math.max(raw, MOBILE_MIN_SCALE) : raw);
     }
 
     update();
