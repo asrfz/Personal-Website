@@ -154,6 +154,9 @@ export default function App() {
   const isInternshipDetail = selectedDetailKey === "wsp" || selectedDetailKey === "womens";
   const isPolyglotDetail = selectedDetailKey === "greece";
   const isVolunteeringDetail = selectedDetailKey === "physio";
+  const isPublicationsDetail = selectedDetailKey === "asme";
+  const isCfesDetail = selectedDetailKey === "cfes";
+  const isAthleteDetail = selectedDetailKey === "basketballRight";
   /** Line breaks match reference layout */
   const wspInternshipLines = [
     "Before entering university, I spent my last summer break working as an intern at WSP.",
@@ -217,6 +220,30 @@ that I'm working in research for drug discovery. Full circle moment!`,
 and work towards improving health outcomes.`,
     `During my co-op term at Women's College Hospital, I was able to shadow 2 primary care physicians.
 It was a surreal experience, and I learned about the behind-the-scenes of clinical care.`,
+  ];
+  /** Line breaks match reference slide (seven lines). */
+  const publicationsSummaryLines = [
+    "After finishing my paper on 5G communications at WSP, my team decided to submit the paper to",
+    "present at the 2025 ASME ICE Forward Conference and Rail Symposium in Milwaukee, WI.",
+    "We got accepted, and my co-authors and I were able to present our paper at the conference.",
+    "I made tons of connections within the American Society of Mechanical Engineers (ASME) and",
+    "became an official member of the society as well.",
+    "I am currently working on 2 other publications as well:",
+    "A scoping review for digital health solutions, and a conference submission discussing AI clinical tools.",
+  ];
+  /** Paragraph spacing + line break after “potential” match reference slide. */
+  const cfesSummaryLines = [
+    "In March 2026, I attended my first Canadian Federation of Engineering Students conference.",
+    "I enjoyed it so much, that I decided to join the CFES as a commissioner.",
+    "In my role as Corporate Relations Commissioner, I am expected to reach out to various sponsors and potential\nfuture sponsors for the CFES to expand engineering students' opportunities in the engineering industry.",
+  ];
+  const athleteSummaryLines = [
+    "Sports are my life.",
+    "And not just one sport. In fact, I played 7 varsity sports in high school.",
+    "Sports taught me leadership and communication.",
+    "I have won several awards for leadership in various different sports (Leadership, MVP, Most Influential Player) and won various regional tournaments as well.",
+    "I played high-level rep basketball from age 13 and on.",
+    "My other favourite sports are table tennis and tennis. I actually met Karen Khachanov last year.",
   ];
   const sickkidsTools = [
     "Python",
@@ -534,7 +561,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isPublicationsDetail ? " details-section--publications" : ""}${isCfesDetail ? " details-section--cfes" : ""}${isAthleteDetail ? " details-section--athlete" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -658,6 +685,59 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
               <figure className="polyglot-panel__map" aria-label="Countries and regions visited">
                 <img src={img.polyglotMap} alt="World map highlighting countries and US states visited" />
               </figure>
+            </div>
+          ) : isPublicationsDetail ? (
+            <div className="publications-panel" aria-label="Publications">
+              <h2 className="publications-panel__title">PUBLICATIONS</h2>
+              <div className="publications-panel__copy" aria-label="Publications summary">
+                {publicationsSummaryLines.map((line, i) => (
+                  <p key={`pub-${i}`} className="publications-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <figure className="publications-panel__badge" aria-label="Conference author badge">
+                <img
+                  src={img.publicationsBadge}
+                  alt="ICEF RTS 2025 conference badge with Student and Author ribbons"
+                />
+              </figure>
+            </div>
+          ) : isCfesDetail ? (
+            <div className="cfes-panel" aria-label="CFES">
+              <h2 className="cfes-panel__title">CFES</h2>
+              <div className="cfes-panel__copy" aria-label="CFES summary">
+                {cfesSummaryLines.map((line, i) => (
+                  <p key={`cfes-${i}`} className="cfes-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <figure className="cfes-panel__photo" aria-label="CFES conference photo">
+                <img
+                  src={img.cfesPanelPhoto}
+                  alt="Three people at a CFES event holding a large ceremonial wrench"
+                />
+              </figure>
+            </div>
+          ) : isAthleteDetail ? (
+            <div className="athlete-panel" aria-label="Athlete">
+              <h2 className="athlete-panel__title">ATHLETE</h2>
+              <div className="athlete-panel__copy" aria-label="Athlete summary">
+                {athleteSummaryLines.map((line, i) => (
+                  <p key={`athlete-${i}`} className="athlete-panel__line">
+                    {line}
+                  </p>
+                ))}
+              </div>
+              <div className="athlete-panel__photos" aria-label="Tennis and basketball photos">
+                <figure className="athlete-panel__photo athlete-panel__photo--left">
+                  <img src={img.athletePhotoTennis} alt="On a tennis court with a friend" />
+                </figure>
+                <figure className="athlete-panel__photo athlete-panel__photo--right">
+                  <img src={img.athletePhotoBasketball} alt="Jumping for a rebound in a basketball game" />
+                </figure>
+              </div>
             </div>
           ) : isVolunteeringDetail ? (
             <div className="volunteering-panel" aria-label="Volunteering">

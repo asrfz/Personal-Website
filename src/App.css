@@ -904,6 +904,239 @@ body {
   border-radius: 16px;
 }
 
+.details-section--publications .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
+.details-section--publications {
+  min-height: 100vh;
+  padding: 34px 28px 56px;
+}
+
+.publications-panel {
+  max-width: min(1680px, 94vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.publications-panel h2.publications-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.publications-panel__copy {
+  width: 100%;
+  max-width: min(1580px, 100%);
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
+
+.publications-panel p.publications-panel__line {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.48;
+  text-align: center;
+  white-space: normal;
+}
+
+.publications-panel p.publications-panel__line + p.publications-panel__line {
+  margin-top: 8px;
+}
+
+.publications-panel__badge {
+  display: flex;
+  justify-content: center;
+  margin: clamp(18px, 3.5vw, 32px) auto 0;
+  max-width: min(560px, 92vw);
+  width: 100%;
+  border: none;
+  padding: 0;
+}
+
+.publications-panel__badge img {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 40px;
+  object-fit: contain;
+  transform: translateY(-10px);
+}
+
+.details-section--cfes .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
+.details-section--cfes {
+  min-height: 100vh;
+  padding: 34px 28px 56px;
+}
+
+.cfes-panel {
+  max-width: min(1680px, 94vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cfes-panel h2.cfes-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.cfes-panel__copy {
+  width: 100%;
+  max-width: min(1580px, 100%);
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
+
+.cfes-panel p.cfes-panel__line {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.55;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.cfes-panel p.cfes-panel__line + p.cfes-panel__line {
+  margin-top: clamp(22px, 3.5vh, 40px);
+}
+
+.cfes-panel__photo {
+  display: flex;
+  justify-content: center;
+  margin: clamp(28px, 5vw, 44px) auto 0;
+  max-width: min(640px, 88vw);
+  width: 100%;
+  border: none;
+  padding: 0;
+}
+
+.cfes-panel__photo img {
+  display: block;
+  width: 100%;
+  max-width: min(560px, 85vw);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 40px;
+  object-fit: contain;
+}
+
+.details-section--athlete .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
+.details-section--athlete {
+  /* Taller than viewport — avoid clipping photos at the bottom */
+  min-height: 100vh;
+  overflow: visible;
+  padding: 34px 28px clamp(72px, 12vh, 120px);
+}
+
+.athlete-panel {
+  max-width: min(1680px, 94vw);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.athlete-panel h2.athlete-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.athlete-panel__copy {
+  width: 100%;
+  max-width: min(1580px, 100%);
+  margin: 0 auto;
+  padding-bottom: 8px;
+}
+
+.athlete-panel p.athlete-panel__line {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.42;
+  text-align: center;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.athlete-panel p.athlete-panel__line + p.athlete-panel__line {
+  margin-top: clamp(8px, 1.2vh, 16px);
+}
+
+.athlete-panel__photos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: clamp(28px, 6vw, 72px);
+  row-gap: 20px;
+  margin-top: clamp(6px, 1.8vw, 16px);
+}
+
+.athlete-panel__photo {
+  margin: 0;
+  width: min(38%, 320px);
+  max-width: 320px;
+  border-radius: 40px;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+}
+
+.athlete-panel__photo--left {
+  margin-top: 0;
+}
+
+.athlete-panel__photo--right {
+  margin-top: 0;
+}
+
+.athlete-panel__photo img {
+  display: block;
+  width: 100%;
+  max-height: min(48vh, 420px);
+  height: auto;
+  object-fit: contain;
+}
+
 .details-section--volunteering .details-section__inner {
   max-width: min(1720px, 96vw);
 }
@@ -1186,6 +1419,12 @@ body {
 .hackathons-panel p.hackathons-panel__line,
 .polyglot-panel h2.polyglot-panel__title,
 .polyglot-panel p.polyglot-panel__line,
+.publications-panel h2.publications-panel__title,
+.publications-panel p.publications-panel__line,
+.cfes-panel h2.cfes-panel__title,
+.cfes-panel p.cfes-panel__line,
+.athlete-panel h2.athlete-panel__title,
+.athlete-panel p.athlete-panel__line,
 .volunteering-panel h2.volunteering-panel__title,
 .volunteering-panel p.volunteering-panel__stanza {
   background: linear-gradient(

@@ -10,6 +10,8 @@ export const img = {
   hackathonPhotoRight: "/hackathon-workshop.png",
   /** Polyglot slide — travelled map (`public/polyglot-map.png`) */
   polyglotMap: "/polyglot-map.png",
+  /** Publications slide — conference badge (`public/publications-badge.png`) */
+  publicationsBadge: "/publications-badge.png",
   physio: "https://www.figma.com/api/mcp/asset/cf60cce6-8167-4018-9390-2d0aaeafb766",
   womens: "https://www.figma.com/api/mcp/asset/a2ae4f81-d01d-440f-b9d3-165b0596a6b8",
   waterloo: "https://www.figma.com/api/mcp/asset/560efb0f-ce94-4df2-8441-2e863572764e",
@@ -18,6 +20,11 @@ export const img = {
   coOp: "https://www.figma.com/api/mcp/asset/d088ad18-1152-449b-8eb3-f4844b82877e",
   birthdayParty: "https://www.figma.com/api/mcp/asset/97583f86-c955-4a5a-86ee-7f0d0ac2d7d5",
   cfes: "https://www.figma.com/api/mcp/asset/9a23f763-1eb0-4103-9066-1b1b5ea15935",
+  /** CFES slide — panel photo (`public/cfes-panel-photo.png`) */
+  cfesPanelPhoto: "/cfes-panel-photo.png",
+  /** Athlete slide — tennis and basketball (`public/athlete-tennis.png`, `public/athlete-basketball.png`) */
+  athletePhotoTennis: "/athlete-tennis.png",
+  athletePhotoBasketball: "/athlete-basketball.png",
   iconResume: "https://www.figma.com/api/mcp/asset/4cca241e-3288-4c48-82bd-bd31baf97fd6",
   iconEmail: "https://www.figma.com/api/mcp/asset/b2e309d9-6c06-4c23-8c83-2d4bbc5856de",
   iconLinkedin: "https://www.figma.com/api/mcp/asset/8776a9f0-a675-41d2-930f-619150c481cf",
