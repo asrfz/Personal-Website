@@ -564,6 +564,10 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
         <h1 className="name" data-node-id="111:89">
           Aiden Sarrafzadeh
         </h1>
+        <div className="figma-made-badge">
+          <span className="figma-made-badge__label">Made with</span>
+          <img src={img.figmaMadeBadge} alt="Figma" width={1000} height={478} decoding="async" />
+        </div>
         </main>
       </div>
       <CursorGlow />

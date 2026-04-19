@@ -621,6 +621,33 @@ body {
   color: rgba(222, 232, 255, 0.92);
 }
 
+/* All detail slides — same title size, line box (2 lines), gap before body */
+.education-panel h2.education-panel__title,
+.sickkids-panel h2.sickkids-panel__title,
+.internship-panel h2.internship-panel__title,
+.hackathons-panel h2.hackathons-panel__title,
+.polyglot-panel h2.polyglot-panel__title,
+.publications-panel h2.publications-panel__title,
+.cfes-panel h2.cfes-panel__title,
+.athlete-panel h2.athlete-panel__title,
+.coop-panel h2.coop-panel__title,
+.volunteering-panel h2.volunteering-panel__title {
+  margin: clamp(14px, 2.2vh, 32px) 0 12px;
+  padding: 0;
+  width: 100%;
+  min-height: 2em;
+  box-sizing: border-box;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: balance;
+  text-align: center;
+}
+
 .details-section--waterloo .details-section__inner {
   max-width: 1120px;
 }
@@ -635,7 +662,7 @@ body {
 
 .details-section--waterloo {
   min-height: 100vh;
-  padding: 34px 30px 32px;
+  padding: 34px 28px 56px;
   overflow: hidden;
 }
 
@@ -646,7 +673,7 @@ body {
 
 .details-section--internship {
   min-height: 100vh;
-  padding: 48px 28px 72px;
+  padding: 34px 28px 56px;
 }
 
 .internship-panel {
@@ -657,19 +684,6 @@ body {
 
 .internship-panel__block + .internship-panel__block {
   margin-top: 72px;
-}
-
-/* Match SickKids section title */
-.internship-panel h2.internship-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .internship-panel__copy {
@@ -710,18 +724,6 @@ body {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
-}
-
-.hackathons-panel h2.hackathons-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .hackathons-panel__copy {
@@ -846,18 +848,6 @@ body {
   text-align: center;
 }
 
-.polyglot-panel h2.polyglot-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
-}
-
 .polyglot-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
@@ -917,18 +907,6 @@ body {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
-}
-
-.publications-panel h2.publications-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .publications-panel__copy {
@@ -991,18 +969,6 @@ body {
   text-align: center;
 }
 
-.cfes-panel h2.cfes-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
-}
-
 .cfes-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
@@ -1062,18 +1028,6 @@ body {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
-}
-
-.athlete-panel h2.athlete-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .athlete-panel__copy {
@@ -1173,18 +1127,6 @@ body {
   max-width: none;
   margin: 0 auto;
   text-align: center;
-}
-
-.coop-panel h2.coop-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .details-section--coop .coop-panel p.coop-panel__intro {
@@ -1442,23 +1384,10 @@ body {
   align-items: center;
 }
 
-.volunteering-panel h2.volunteering-panel__title {
-  margin: 0 0 8px;
-  width: 100%;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
-}
-
 .volunteering-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
-  margin: clamp(56px, 11vh, 120px) auto 0;
+  margin: 0 auto;
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
@@ -1487,19 +1416,6 @@ body {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
   text-align: center;
-}
-
-/* Match Education title scale (Bebas) — beats `.details-section h2` via parent + element */
-.sickkids-panel h2.sickkids-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
-  text-wrap: wrap;
 }
 
 .sickkids-panel__copy {
@@ -1575,18 +1491,6 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-}
-
-/* Beat `.details-section h2` — scoped to panel, not section modifier */
-.education-panel h2.education-panel__title {
-  margin: 0 0 8px;
-  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  letter-spacing: 8%;
-  font-weight: 400;
-  font-size: clamp(58px, 6.4vw, 82px);
-  line-height: 1;
 }
 
 /* Beat `.details-section p` */
@@ -1806,6 +1710,43 @@ body {
   color: #fff;
   z-index: 12;
   pointer-events: none;
+}
+
+/* Top-right credit — same vertical band as `.name`, not interactive */
+.figma-made-badge {
+  position: absolute;
+  top: calc(104px + 12px - (85px * 1.4) / 2);
+  right: clamp(28px, 3.6vw, 56px);
+  z-index: 16;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  height: calc(85px * 1.4);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.figma-made-badge__label {
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(232, 238, 255, 0.58);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.figma-made-badge img {
+  display: block;
+  height: 26px;
+  width: auto;
+  max-width: min(104px, 16vw);
+  object-fit: contain;
+  pointer-events: none;
+  flex-shrink: 0;
+  filter: grayscale(0.35) brightness(1.12) contrast(0.92);
 }
 
 /* Cursor-following glow — lighter lilac / violet than backdrop, layered gradients */
