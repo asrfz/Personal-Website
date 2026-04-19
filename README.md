@@ -1,6 +1,8 @@
 # Personal site
 
+Check out my personal website!
 
+I designed the entire site using Figma. Here is a sneak peek (and link) for the design: 
 
 React + Vite portfolio. Run it locally, then ship the `dist` folder from `npm run build`.
 
