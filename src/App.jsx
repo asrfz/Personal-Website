@@ -49,6 +49,8 @@ export default function App() {
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
   /** Last photo tile "selected" by hover — persists until a different tile is hovered. */
   const [stickyPhotoKey, setStickyPhotoKey] = useState(null);
+  /** Resume icon dodges on hover; reset when pointer leaves its hit zone. */
+  const [resumeIconOffset, setResumeIconOffset] = useState({ x: 0, y: 0 });
   const wheelLatchedRef = useRef(false);
   const wheelReadyForNewInputRef = useRef(true);
   const wheelLastAbsDeltaRef = useRef(0);
@@ -272,6 +274,21 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     "RDkit",
     "NumPy",
   ];
+  const resetResumeIconOffset = useCallback(() => {
+    setResumeIconOffset({ x: 0, y: 0 });
+  }, []);
+
+  const dodgeResumeIcon = useCallback(() => {
+    const min = 56;
+    const max = 128;
+    const dist = min + Math.random() * (max - min);
+    const angle = Math.random() * Math.PI * 2;
+    setResumeIconOffset({
+      x: Math.round(Math.cos(angle) * dist),
+      y: Math.round(Math.sin(angle) * dist),
+    });
+  }, []);
+
   const handleImageClick = useCallback((key) => {
     setSelectedDetailKey(key);
     const coarse =
@@ -462,9 +479,24 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
             onMouseLeave={() => setHoverFocusKey(null)}
           >
           <nav className="socials" aria-label="Links">
-            <a className="icon-link" href="#" aria-label="Resume">
-              <IconResume />
-            </a>
+            <span
+              className="socials__resume-dodge-wrap"
+              onMouseLeave={resetResumeIconOffset}
+            >
+              <a
+                className="icon-link icon-link--resume"
+                href="#"
+                aria-label="Resume"
+                style={{
+                  transform: `translate(${resumeIconOffset.x}px, ${resumeIconOffset.y}px)`,
+                }}
+                onMouseEnter={dodgeResumeIcon}
+                tabIndex={-1}
+                onClick={(e) => e.preventDefault()}
+              >
+                <IconResume />
+              </a>
+            </span>
             <a
               className="icon-link"
               href="mailto:asarrafz@uwaterloo.ca"
