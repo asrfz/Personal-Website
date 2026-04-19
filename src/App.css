@@ -1144,7 +1144,7 @@ body {
 .athlete-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
-  margin: -18px auto 0;
+  margin: -40px auto 0;
   padding-bottom: 0;
 }
 
