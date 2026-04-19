@@ -4,6 +4,7 @@ import { bulletPoints, img } from "./assets.js";
 import { CursorGlow } from "./CursorGlow.jsx";
 import { IconEmail, IconGithub, IconLinkedin, IconResume } from "./SocialNavIcons.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
+import { Analytics } from "@vercel/analytics/react";
 
 const DEVPOST_PORTFOLIO_URL =
   "https://devpost.com/asarrafz?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav";
@@ -927,6 +928,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           )}
         </div>
       </section>
+      <Analytics />
     </div>
   );
 }
