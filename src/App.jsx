@@ -48,11 +48,9 @@ export default function App() {
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
   /** Last photo tile "selected" by hover — persists until a different tile is hovered. */
   const [stickyPhotoKey, setStickyPhotoKey] = useState(null);
-  const wheelAccumulatorRef = useRef(0);
-  const lastStepAtRef = useRef(0);
-  const gestureDirectionRef = useRef(0);
-  const gestureSteppedRef = useRef(false);
-  const lastWheelEventAtRef = useRef(0);
+  const wheelLatchedRef = useRef(false);
+  const wheelReadyForNewInputRef = useRef(true);
+  const wheelLastAbsDeltaRef = useRef(0);
   /** Row index in highlightByBullet / bulletGradients; slot 2 is unused (removed WAT.ai). */
   const bulletToHighlightRow = (bulletIdx) =>
     bulletIdx < 2 ? bulletIdx : bulletIdx + 1;
@@ -291,27 +289,13 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     }
   }, []);
 
-  /** Shared with wheel + ArrowUp/ArrowDown: one index step, same rules as trackpad. */
+  /** Shared with wheel + ArrowUp/ArrowDown: one index step. */
   const stepHeroBullet = useCallback(
-    (direction, { fromWheel = false } = {}) => {
+    (direction) => {
       if (direction !== 1 && direction !== -1) return;
 
-      if (hoverFocusKey != null || stickyPhotoKey != null) {
-        setHoverFocusKey(null);
-        setStickyPhotoKey(null);
-        wheelAccumulatorRef.current = 0;
-        gestureDirectionRef.current = 0;
-        gestureSteppedRef.current = false;
-        return;
-      }
-
-      if (!fromWheel) {
-        const now = performance.now();
-        lastWheelEventAtRef.current = now;
-        wheelAccumulatorRef.current = 0;
-        gestureDirectionRef.current = 0;
-        gestureSteppedRef.current = false;
-      }
+      if (hoverFocusKey != null) setHoverFocusKey(null);
+      if (stickyPhotoKey != null) setStickyPhotoKey(null);
 
       if (!hasStarted) {
         setHasStarted(true);
@@ -321,80 +305,56 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       setActiveBulletIndex((current) =>
         Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
       );
-      setStickyPhotoKey(null);
-      setHoverFocusKey(null);
     },
     [hasStarted, hoverFocusKey, stickyPhotoKey],
   );
 
   const onViewportWheel = useCallback((event) => {
-    if (hoverFocusKey != null || stickyPhotoKey != null) {
-      setHoverFocusKey(null);
-      setStickyPhotoKey(null);
-      wheelAccumulatorRef.current = 0;
-      gestureDirectionRef.current = 0;
-      gestureSteppedRef.current = false;
-      event.preventDefault();
-      return;
-    }
-
-    const now = performance.now();
-    const motionDirection = Math.sign(event.deltaY);
-    if (motionDirection === 0) {
-      return;
-    }
-
-    /* Shorter idle = quicker re-arm for the next “one bullet” swipe (still one step per gesture). */
-    const idleGapMs = 165;
-    if (now - lastWheelEventAtRef.current > idleGapMs) {
-      gestureDirectionRef.current = 0;
-      gestureSteppedRef.current = false;
-      wheelAccumulatorRef.current = 0;
-    }
-    lastWheelEventAtRef.current = now;
-
-    if (gestureDirectionRef.current === 0) {
-      gestureDirectionRef.current = motionDirection;
-    } else if (gestureDirectionRef.current !== motionDirection) {
-      /* Direction flip = new gesture */
-      gestureDirectionRef.current = motionDirection;
-      gestureSteppedRef.current = false;
-      wheelAccumulatorRef.current = 0;
-    }
-
-    if (gestureSteppedRef.current) {
-      event.preventDefault();
-      return;
-    }
-
-    /* Normalize wheel deltas: touchpads are usually pixels; some mice report lines. */
     let delta = event.deltaY;
-    if (event.deltaMode === 1) {
-      delta *= 22;
-    } else if (event.deltaMode === 2) {
-      delta *= 480;
-    }
-    wheelAccumulatorRef.current += delta;
-    const progress = activeBulletIndex / (bulletPoints.length - 1 || 1);
-    /* Lower threshold than before so trackpads need less travel; still one index per gesture. */
-    const deltaThreshold = 48 + progress * 72;
-    const stepCooldownMs = 72;
+    if (delta === 0) return;
 
-    if (Math.abs(wheelAccumulatorRef.current) < deltaThreshold) {
-      return;
-    }
-    if (now - lastStepAtRef.current < stepCooldownMs) {
-      return;
-    }
-
-    const direction = wheelAccumulatorRef.current > 0 ? 1 : -1;
-    wheelAccumulatorRef.current = 0;
-    lastStepAtRef.current = now;
-    gestureSteppedRef.current = true;
-
-    stepHeroBullet(direction, { fromWheel: true });
     event.preventDefault();
-  }, [activeBulletIndex, hasStarted, hoverFocusKey, stickyPhotoKey, stepHeroBullet]);
+
+    if (event.deltaMode === 1) delta *= 16;
+    if (event.deltaMode === 2) delta *= window.innerHeight;
+
+    const direction = Math.sign(delta);
+    const absDelta = Math.abs(delta);
+
+    const triggerThreshold = 55;
+    const settleThreshold = 10;
+    const reflickThreshold = 38;
+
+    if (wheelLatchedRef.current) {
+      if (absDelta <= settleThreshold) {
+        wheelReadyForNewInputRef.current = true;
+        wheelLastAbsDeltaRef.current = absDelta;
+        return;
+      }
+
+      if (
+        wheelReadyForNewInputRef.current &&
+        absDelta >= reflickThreshold &&
+        absDelta > wheelLastAbsDeltaRef.current
+      ) {
+        wheelLatchedRef.current = false;
+        wheelReadyForNewInputRef.current = false;
+      } else {
+        wheelLastAbsDeltaRef.current = absDelta;
+        return;
+      }
+    }
+
+    if (absDelta >= triggerThreshold) {
+      wheelLatchedRef.current = true;
+      wheelReadyForNewInputRef.current = false;
+      wheelLastAbsDeltaRef.current = absDelta;
+      stepHeroBullet(direction);
+      return;
+    }
+
+    wheelLastAbsDeltaRef.current = absDelta;
+  }, [stepHeroBullet]);
 
   const heroKeyboardNavActiveRef = useRef(true);
   useEffect(() => {
@@ -425,7 +385,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       }
       event.preventDefault();
       const direction = event.key === "ArrowDown" ? 1 : -1;
-      stepHeroBullet(direction, { fromWheel: false });
+      stepHeroBullet(direction);
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);

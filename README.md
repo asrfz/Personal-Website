@@ -1,5 +1,9 @@
 # Personal site
 
+
+...cooler README will be made soon.
+
+
 Check out my personal website!
 
 I designed the whole thing with Figma, and here is a sneak peek...click the image or the link to open the full file:

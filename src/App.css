@@ -1030,7 +1030,7 @@ body {
 .publications-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
-  margin: -10px auto 0;
+  margin: -50px auto 0;
   padding-bottom: 6px;
 }
 
@@ -1094,7 +1094,7 @@ body {
 }
 
 .cfes-panel p.cfes-panel__line {
-  margin: 0;
+  margin: -25px;
   width: 100%;
   max-width: none;
   font-family: Manrope, Inter, system-ui, sans-serif;
@@ -1113,7 +1113,8 @@ body {
 .cfes-panel__photo {
   display: flex;
   justify-content: center;
-  margin: clamp(28px, 5vw, 44px) auto 0;
+  /*margin: clamp(28px, 5vw, 44px) auto 0;*/
+  margin: 90px auto 0;
   max-width: min(640px, 88vw);
   width: 100%;
   border: none;
@@ -1150,12 +1151,12 @@ body {
 .athlete-panel__copy {
   width: 100%;
   max-width: min(1580px, 100%);
-  margin: -40px auto 0;
+  margin: -55px auto 0;
   padding-bottom: 0;
 }
 
 .athlete-panel p.athlete-panel__line {
-  margin: -10px;
+  margin: -5px;
   width: 100%;
   max-width: none;
   font-family: Manrope, Inter, system-ui, sans-serif;
