@@ -25,6 +25,11 @@ export const img = {
   /** Athlete slide — tennis and basketball (`public/athlete-tennis.png`, `public/athlete-basketball.png`) */
   athletePhotoTennis: "/athlete-tennis.png",
   athletePhotoBasketball: "/athlete-basketball.png",
+  /** Co-op slide — link tiles (`public/coop-bme.png`, `public/coop-*.jpg`) */
+  coopLinkBme: "/coop-bme.png",
+  coopLinkResearch: "/coop-research.jpg",
+  coopLinkHonour: "/coop-honour.jpg",
+  coopYoutubeCard: "/coop-youtube-card.jpg",
   iconResume: "https://www.figma.com/api/mcp/asset/4cca241e-3288-4c48-82bd-bd31baf97fd6",
   iconEmail: "https://www.figma.com/api/mcp/asset/b2e309d9-6c06-4c23-8c83-2d4bbc5856de",
   iconLinkedin: "https://www.figma.com/api/mcp/asset/8776a9f0-a675-41d2-930f-619150c481cf",

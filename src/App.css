@@ -1149,6 +1149,25 @@ body {
   overflow: visible;
 }
 
+/* Soft corner glow + slow pulse (stacked over default `::after`) */
+@keyframes coop-ambient-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
+.details-section--coop::after {
+  background:
+    radial-gradient(ellipse 92% 72% at 96% 88%, rgba(110, 50, 200, 0.42) 0%, transparent 52%),
+    radial-gradient(ellipse 78% 58% at 4% 12%, rgba(160, 40, 120, 0.34) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 38%, rgba(0, 0, 0, 0.2) 100%);
+  animation: coop-ambient-pulse 6.8s ease-in-out infinite;
+}
+
 .coop-panel {
   width: 100%;
   max-width: none;
@@ -1184,100 +1203,135 @@ body {
 .coop-panel__grid {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(16px, 2.4vw, 26px);
+  column-gap: clamp(22px, 3.2vw, 44px);
+  row-gap: clamp(18px, 2.8vh, 32px);
   width: 100%;
-  max-width: min(1240px, 100%);
+  max-width: min(1420px, calc(100% - 8px));
   margin-top: clamp(24px, 3.8vh, 44px);
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: clamp(48px, 8vh, 100px);
   align-items: start;
   overflow: visible;
 }
 
-/* Sharp-corner white blocks (reference comps — not pills) */
+/* Image tiles (exported graphics) — scale on the link so img pulse keeps working */
 .coop-panel__pill {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  position: relative;
+  display: block;
   box-sizing: border-box;
   width: fit-content;
   max-width: 100%;
-  text-align: left;
-  text-decoration: none;
-  color: #0a0a0a;
-  background: #fff;
-  border: 1px solid #0a0a0a;
+  padding: 0;
+  border: none;
   border-radius: 0;
-  padding: 12px clamp(16px, 2.2vw, 26px);
-  font-family: Manrope, Inter, system-ui, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  font-size: clamp(13px, 1.22vw, 17px);
-  line-height: 1.18;
+  background: transparent;
+  line-height: 0;
+  text-decoration: none;
+  color: inherit;
+  transform: scale(1.16);
+  transform-origin: center center;
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
-  box-shadow: none;
+    transform 0.22s ease,
+    filter 0.22s ease;
+}
+
+.coop-panel__pill img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+  transform: translate3d(0, 0, 0);
+  animation: photo-drift-pulse 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.coop-panel__pill:focus-visible {
+  outline: 2px solid rgba(180, 220, 255, 0.95);
+  outline-offset: 4px;
 }
 
 .coop-panel__pill:hover {
-  transform: translateY(-1px);
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.18);
+  transform: scale(1.16) translateY(-3px);
+  filter: brightness(1.04);
 }
 
 .coop-panel__pill--bme {
   grid-column: 2;
   grid-row: 1;
   justify-self: end;
-  max-width: min(100%, 500px);
+  max-width: min(100%, 1040px);
+  /* Slight vertical offset so the top pair isn’t on one rigid baseline */
+  margin-top: clamp(6px, 1.2vh, 22px);
+  /* Stagger: sit in from the right column edge */
+  margin-right: clamp(12px, 3.5vw, 64px);
+}
+
+.coop-panel__pill--bme img {
+  animation-duration: 5.45s;
+  animation-delay: -0.45s;
 }
 
 .coop-panel__pill--research {
   grid-column: 1;
   grid-row: 2;
   justify-self: start;
-  max-width: min(100%, 560px);
-  margin-top: clamp(2px, 0.8vh, 10px);
+  max-width: min(100%, 1188px);
+  /* Stagger: sit in from the left column edge (different longitude than BME) */
+  margin-left: clamp(20px, 5vw, 88px);
+}
+
+.coop-panel__pill--research img {
+  animation-duration: 6.05s;
+  animation-delay: -2.05s;
 }
 
 .coop-panel__feature {
+  position: relative;
   grid-column: 1;
   grid-row: 3 / 5;
   justify-self: stretch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
   box-sizing: border-box;
   width: 100%;
-  max-width: min(100%, 520px);
-  text-align: center;
+  max-width: min(100%, 1188px);
+  padding: 0;
+  /* Sit higher under the white tiles; honour keeps a larger offset */
+  margin-top: clamp(20px, 4vh, 56px);
+  margin-left: clamp(0px, 1.5vw, 28px);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   text-decoration: none;
-  padding: clamp(28px, 4.2vw, 42px) clamp(20px, 3vw, 32px);
-  min-height: clamp(176px, 22vh, 236px);
-  margin-top: clamp(-8px, -1vw, 0px);
-  border-radius: 26px;
-  background: linear-gradient(135deg, #d35400 0%, #27ae60 38%, #2980b9 68%, #8e44ad 100%);
-  color: #fff;
-  font-family: Manrope, Inter, system-ui, sans-serif;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  font-size: clamp(17px, 1.85vw, 26px);
-  line-height: 1.12;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+  line-height: 0;
+  transform: scale(1.16);
+  transform-origin: center top;
   transition:
-    transform 0.18s ease,
-    filter 0.18s ease;
-  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
+    transform 0.22s ease,
+    filter 0.22s ease;
+}
+
+.coop-panel__feature img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+  transform: translate3d(0, 0, 0);
+  animation: photo-drift-pulse 5.72s ease-in-out infinite;
+  animation-delay: -1.35s;
+  will-change: transform;
+}
+
+.coop-panel__feature:focus-visible {
+  outline: 2px solid rgba(180, 220, 255, 0.95);
+  outline-offset: 4px;
 }
 
 .coop-panel__feature:hover {
-  transform: scale(1.01);
+  transform: scale(1.16) translateY(-3px);
   filter: brightness(1.05);
-}
-
-.coop-panel__feature-line {
-  display: block;
 }
 
 .coop-panel__pill--honour {
@@ -1285,16 +1339,22 @@ body {
   grid-row: 3;
   justify-self: end;
   align-self: start;
-  max-width: min(100%, 500px);
-  margin-top: clamp(6px, 1.2vw, 16px);
-  margin-left: clamp(-48px, -5vw, -16px);
-  position: relative;
-  z-index: 2;
+  max-width: min(100%, 1188px);
+  margin-top: clamp(72px, 13vh, 200px);
+  margin-right: clamp(8px, 2.5vw, 48px);
+}
+
+.coop-panel__pill--honour img {
+  animation-duration: 5.15s;
+  animation-delay: -2.95s;
 }
 
 @media (max-width: 720px) {
   .coop-panel__grid {
     grid-template-columns: 1fr;
+    row-gap: clamp(14px, 2.2vh, 24px);
+    padding-bottom: clamp(32px, 6vh, 64px);
+    max-width: 100%;
   }
 
   .coop-panel__pill--bme,
@@ -1307,21 +1367,52 @@ body {
     width: 100%;
     max-width: none;
     margin-left: 0;
+    margin-right: 0;
     margin-top: 0;
+    transform: scale(1.06);
+    transform-origin: center top;
   }
 
   .coop-panel__pill {
     width: 100%;
-    justify-content: center;
-    text-align: center;
+  }
+
+  .coop-panel__pill:hover {
+    transform: scale(1.06) translateY(-2px);
+  }
+
+  .coop-panel__feature:hover {
+    transform: scale(1.06) translateY(-2px);
+  }
+
+  .coop-panel__pill img,
+  .coop-panel__feature img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
   }
 
   .coop-panel__pill--research {
-    margin-top: 0;
+    margin-top: clamp(8px, 1.2vh, 16px);
   }
 
   .coop-panel__feature {
-    margin-top: 0;
+    margin-top: clamp(28px, 6vh, 72px);
+  }
+
+  .coop-panel__pill--honour {
+    margin-top: clamp(24px, 5vh, 56px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coop-panel__pill img,
+  .coop-panel__feature img {
+    animation: none;
+  }
+
+  .details-section--coop::after {
+    animation: none;
   }
 }
 

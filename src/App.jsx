@@ -762,16 +762,18 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                   href={COOP_LINK_BME}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="BME student named Engineering's 2025 Co-op Student of the Year (opens in new tab)"
                 >
-                  BME student named Engineering&apos;s 2025 Co-op Student of the Year
+                  <img src={img.coopLinkBme} alt="" width={892} height={208} decoding="async" />
                 </a>
                 <a
                   className="coop-panel__pill coop-panel__pill--research"
                   href={COOP_LINK_RESEARCH}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Turning clinical gaps into research-driven solutions (opens in new tab)"
                 >
-                  Turning clinical gaps into research‑driven solutions
+                  <img src={img.coopLinkResearch} alt="" width={1024} height={89} decoding="async" />
                 </a>
                 <a
                   className="coop-panel__feature"
@@ -780,17 +782,16 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                   rel="noopener noreferrer"
                   aria-label="Watch Meet Faculty of Engineering Co-op Student of the Year, Aiden Sarrafzadeh on YouTube (opens in new tab)"
                 >
-                  <span className="coop-panel__feature-line">Meet Faculty of Engineering</span>
-                  <span className="coop-panel__feature-line">Co-op Student of the Year,</span>
-                  <span className="coop-panel__feature-line">Aiden Sarrafzadeh</span>
+                  <img src={img.coopYoutubeCard} alt="" width={1024} height={457} decoding="async" />
                 </a>
                 <a
                   className="coop-panel__pill coop-panel__pill--honour"
                   href={COOP_LINK_ENGINEERING}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Biomedical engineering student earns top co-op honour (opens in new tab)"
                 >
-                  Biomedical engineering student earns top co-op honour
+                  <img src={img.coopLinkHonour} alt="" width={1024} height={86} decoding="async" />
                 </a>
               </div>
             </div>
