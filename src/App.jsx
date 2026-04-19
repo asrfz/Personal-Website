@@ -153,6 +153,7 @@ export default function App() {
   const isHackathonsDetail = selectedDetailKey === "cxc";
   const isInternshipDetail = selectedDetailKey === "wsp" || selectedDetailKey === "womens";
   const isPolyglotDetail = selectedDetailKey === "greece";
+  const isVolunteeringDetail = selectedDetailKey === "physio";
   /** Line breaks match reference layout */
   const wspInternshipLines = [
     "Before entering university, I spent my last summer break working as an intern at WSP.",
@@ -204,6 +205,18 @@ export default function App() {
     "The best practice is speaking. If you have nobody to practice with...talk to yourself!",
     "Travel to the countries where you can fully immerse yourself in the language you're learning.",
     "That last tip helped me a lot. I love travelling. Here's a map of the 19 countries (and US states) I've been to:",
+  ];
+  /** Line breaks match reference slide (three stanzas, eight visual lines). */
+  const volunteeringStanzas = [
+    `Before Grade 11, I worked as a physiotherapy assistant.
+I learned how to perform Ultrasounds and electrotherapy, and learned lots about these devices.
+
+Before Grade 12, I worked as a pharmacy assistant and learned a lot about drugs, which is funny now
+that I'm working in research for drug discovery. Full circle moment!`,
+    `These 2 experiences made me realize that I really want to work in healthcare
+and work towards improving health outcomes.`,
+    `During my co-op term at Women's College Hospital, I was able to shadow 2 primary care physicians.
+It was a surreal experience, and I learned about the behind-the-scenes of clinical care.`,
   ];
   const sickkidsTools = [
     "Python",
@@ -521,7 +534,7 @@ export default function App() {
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -645,6 +658,17 @@ export default function App() {
               <figure className="polyglot-panel__map" aria-label="Countries and regions visited">
                 <img src={img.polyglotMap} alt="World map highlighting countries and US states visited" />
               </figure>
+            </div>
+          ) : isVolunteeringDetail ? (
+            <div className="volunteering-panel" aria-label="Volunteering">
+              <h2 className="volunteering-panel__title">VOLUNTEERING</h2>
+              <div className="volunteering-panel__copy" aria-label="Volunteering summary">
+                {volunteeringStanzas.map((stanza, i) => (
+                  <p key={`volunteering-stanza-${i}`} className="volunteering-panel__stanza">
+                    {stanza}
+                  </p>
+                ))}
+              </div>
             </div>
           ) : (
             <>

@@ -904,6 +904,73 @@ body {
   border-radius: 16px;
 }
 
+.details-section--volunteering .details-section__inner {
+  max-width: min(1720px, 96vw);
+}
+
+.details-section--volunteering {
+  min-height: 100vh;
+  /* Same vertical band as Hackathons / SickKids / Polyglot */
+  padding: 34px 28px 56px;
+}
+
+/* Extra top-left magenta glow (reference slide) — layers over default details overlay */
+.details-section--volunteering::after {
+  background:
+    radial-gradient(ellipse 95% 70% at 0% 0%, rgba(74, 0, 42, 0.72) 0%, transparent 52%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12) 36%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+.volunteering-panel {
+  max-width: min(1680px, 94vw);
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.volunteering-panel h2.volunteering-panel__title {
+  margin: 0 0 8px;
+  width: 100%;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.volunteering-panel__copy {
+  width: 100%;
+  max-width: min(1580px, 100%);
+  margin: clamp(56px, 11vh, 120px) auto 0;
+  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Same body stack as SickKids / Hackathons / Polyglot — gradient applied in shared rule below */
+.volunteering-panel p.volunteering-panel__stanza {
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.48;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.volunteering-panel p.volunteering-panel__stanza + p.volunteering-panel__stanza {
+  margin-top: clamp(18px, 2.4vh, 28px);
+}
+
 .sickkids-panel {
   max-width: min(1680px, 94vw);
   margin: 0 auto;
@@ -1118,7 +1185,9 @@ body {
 .hackathons-panel h2.hackathons-panel__title,
 .hackathons-panel p.hackathons-panel__line,
 .polyglot-panel h2.polyglot-panel__title,
-.polyglot-panel p.polyglot-panel__line {
+.polyglot-panel p.polyglot-panel__line,
+.volunteering-panel h2.volunteering-panel__title,
+.volunteering-panel p.volunteering-panel__stanza {
   background: linear-gradient(
     102deg,
     #eef3ff 0%,
