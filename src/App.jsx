@@ -7,6 +7,14 @@ import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
 const DEVPOST_PORTFOLIO_URL =
   "https://devpost.com/asarrafz?ref_content=user-portfolio&ref_feature=portfolio&ref_medium=global-nav";
 
+const COOP_LINK_BME =
+  "https://uwaterloo.ca/biomedical-engineering/news/bme-student-named-engineerings-2025-co-op-student-year";
+const COOP_LINK_RESEARCH =
+  "https://uwaterloo.ca/co-operative-education/blog/research-driven-solutions";
+const COOP_LINK_ENGINEERING =
+  "https://uwaterloo.ca/engineering/news/biomedical-engineering-student-earns-top-co-op-honour";
+const COOP_LINK_VIDEO = "https://www.youtube.com/watch?v=VItdp3Ayr1Y";
+
 const HOVER_PHOTO_TO_BULLET = {
   waterloo: 0,
   sickkids: 1,
@@ -157,6 +165,7 @@ export default function App() {
   const isPublicationsDetail = selectedDetailKey === "asme";
   const isCfesDetail = selectedDetailKey === "cfes";
   const isAthleteDetail = selectedDetailKey === "basketballRight";
+  const isCoopDetail = selectedDetailKey === "coop";
   /** Line breaks match reference layout */
   const wspInternshipLines = [
     "Before entering university, I spent my last summer break working as an intern at WSP.",
@@ -561,7 +570,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isPublicationsDetail ? " details-section--publications" : ""}${isCfesDetail ? " details-section--cfes" : ""}${isAthleteDetail ? " details-section--athlete" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isPublicationsDetail ? " details-section--publications" : ""}${isCfesDetail ? " details-section--cfes" : ""}${isAthleteDetail ? " details-section--athlete" : ""}${isCoopDetail ? " details-section--coop" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -737,6 +746,52 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 <figure className="athlete-panel__photo athlete-panel__photo--right">
                   <img src={img.athletePhotoBasketball} alt="Jumping for a rebound in a basketball game" />
                 </figure>
+              </div>
+            </div>
+          ) : isCoopDetail ? (
+            <div className="coop-panel" aria-label="Co-op Student of the Year">
+              <h2 className="coop-panel__title">CO-OP STUDENT OF THE YEAR</h2>
+              <p className="coop-panel__intro">
+                In March 2026, I was honoured to be named the University of Waterloo&apos;s
+                <br />
+                Faculty of Engineering Co-Op Student of the year, chosen out of my entire faculty (9000 students).
+              </p>
+              <div className="coop-panel__grid" aria-label="News and video links">
+                <a
+                  className="coop-panel__pill coop-panel__pill--bme"
+                  href={COOP_LINK_BME}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  BME student named Engineering&apos;s 2025 Co-op Student of the Year
+                </a>
+                <a
+                  className="coop-panel__pill coop-panel__pill--research"
+                  href={COOP_LINK_RESEARCH}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Turning clinical gaps into research‑driven solutions
+                </a>
+                <a
+                  className="coop-panel__feature"
+                  href={COOP_LINK_VIDEO}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Watch Meet Faculty of Engineering Co-op Student of the Year, Aiden Sarrafzadeh on YouTube (opens in new tab)"
+                >
+                  <span className="coop-panel__feature-line">Meet Faculty of Engineering</span>
+                  <span className="coop-panel__feature-line">Co-op Student of the Year,</span>
+                  <span className="coop-panel__feature-line">Aiden Sarrafzadeh</span>
+                </a>
+                <a
+                  className="coop-panel__pill coop-panel__pill--honour"
+                  href={COOP_LINK_ENGINEERING}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Biomedical engineering student earns top co-op honour
+                </a>
               </div>
             </div>
           ) : isVolunteeringDetail ? (

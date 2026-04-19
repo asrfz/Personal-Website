@@ -1137,6 +1137,194 @@ body {
   object-fit: contain;
 }
 
+.details-section--coop .details-section__inner {
+  /* Use almost the full viewport so long intro lines stay on two rows */
+  max-width: min(1920px, calc(100vw - 56px));
+  width: 100%;
+}
+
+.details-section--coop {
+  min-height: 100vh;
+  padding: 34px 28px 56px;
+  overflow: visible;
+}
+
+.coop-panel {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.coop-panel h2.coop-panel__title {
+  margin: 0 0 8px;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  letter-spacing: 8%;
+  font-weight: 400;
+  font-size: clamp(58px, 6.4vw, 82px);
+  line-height: 1;
+  text-wrap: wrap;
+}
+
+.details-section--coop .coop-panel p.coop-panel__intro {
+  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-size: clamp(18px, 1.72vw, 28px);
+  line-height: 1.48;
+  text-align: center;
+  overflow: visible;
+}
+
+.coop-panel__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(16px, 2.4vw, 26px);
+  width: 100%;
+  max-width: min(1240px, 100%);
+  margin-top: clamp(24px, 3.8vh, 44px);
+  margin-left: auto;
+  margin-right: auto;
+  align-items: start;
+  overflow: visible;
+}
+
+/* Sharp-corner white blocks (reference comps — not pills) */
+.coop-panel__pill {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
+  text-decoration: none;
+  color: #0a0a0a;
+  background: #fff;
+  border: 1px solid #0a0a0a;
+  border-radius: 0;
+  padding: 12px clamp(16px, 2.2vw, 26px);
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-size: clamp(13px, 1.22vw, 17px);
+  line-height: 1.18;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  box-shadow: none;
+}
+
+.coop-panel__pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.18);
+}
+
+.coop-panel__pill--bme {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  max-width: min(100%, 500px);
+}
+
+.coop-panel__pill--research {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: start;
+  max-width: min(100%, 560px);
+  margin-top: clamp(2px, 0.8vh, 10px);
+}
+
+.coop-panel__feature {
+  grid-column: 1;
+  grid-row: 3 / 5;
+  justify-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(100%, 520px);
+  text-align: center;
+  text-decoration: none;
+  padding: clamp(28px, 4.2vw, 42px) clamp(20px, 3vw, 32px);
+  min-height: clamp(176px, 22vh, 236px);
+  margin-top: clamp(-8px, -1vw, 0px);
+  border-radius: 26px;
+  background: linear-gradient(135deg, #d35400 0%, #27ae60 38%, #2980b9 68%, #8e44ad 100%);
+  color: #fff;
+  font-family: Manrope, Inter, system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-size: clamp(17px, 1.85vw, 26px);
+  line-height: 1.12;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.18s ease,
+    filter 0.18s ease;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.35);
+}
+
+.coop-panel__feature:hover {
+  transform: scale(1.01);
+  filter: brightness(1.05);
+}
+
+.coop-panel__feature-line {
+  display: block;
+}
+
+.coop-panel__pill--honour {
+  grid-column: 2;
+  grid-row: 3;
+  justify-self: end;
+  align-self: start;
+  max-width: min(100%, 500px);
+  margin-top: clamp(6px, 1.2vw, 16px);
+  margin-left: clamp(-48px, -5vw, -16px);
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 720px) {
+  .coop-panel__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coop-panel__pill--bme,
+  .coop-panel__pill--research,
+  .coop-panel__feature,
+  .coop-panel__pill--honour {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .coop-panel__pill {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .coop-panel__pill--research {
+    margin-top: 0;
+  }
+
+  .coop-panel__feature {
+    margin-top: 0;
+  }
+}
+
 .details-section--volunteering .details-section__inner {
   max-width: min(1720px, 96vw);
 }
@@ -1425,6 +1613,8 @@ body {
 .cfes-panel p.cfes-panel__line,
 .athlete-panel h2.athlete-panel__title,
 .athlete-panel p.athlete-panel__line,
+.coop-panel h2.coop-panel__title,
+.coop-panel p.coop-panel__intro,
 .volunteering-panel h2.volunteering-panel__title,
 .volunteering-panel p.volunteering-panel__stanza {
   background: linear-gradient(
