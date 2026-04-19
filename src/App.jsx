@@ -16,6 +16,9 @@ const COOP_LINK_ENGINEERING =
   "https://uwaterloo.ca/engineering/news/biomedical-engineering-student-earns-top-co-op-honour";
 const COOP_LINK_VIDEO = "https://www.youtube.com/watch?v=VItdp3Ayr1Y";
 
+const FIGMA_DESIGN_FILE_URL =
+  "https://www.figma.com/design/pVmwPzL6tI1ZWcKQiLZ56K/AidenSarrafzadeh.com?node-id=0-1&t=G5ItTf6uNyf54wLL-1";
+
 const MOBILE_WARNING_MQ = "(max-width: 896px)";
 const MOBILE_WARNING_DISMISS_KEY = "personal-site-mobile-banner-dismiss";
 
@@ -632,10 +635,16 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
         <h1 className="name" data-node-id="111:89">
           Aiden Sarrafzadeh
         </h1>
-        <div className="figma-made-badge">
+        <a
+          className="figma-made-badge"
+          href={FIGMA_DESIGN_FILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open full site design in Figma (Made with Figma)"
+        >
           <span className="figma-made-badge__label">Made with</span>
           <img src={img.figmaMadeBadge} alt="Figma" width={1000} height={478} decoding="async" />
-        </div>
+        </a>
           </main>
         </div>
       </div>

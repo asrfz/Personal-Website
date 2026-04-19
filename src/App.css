@@ -1767,8 +1767,8 @@ body {
   pointer-events: none;
 }
 
-/* Top-right credit — same vertical band as `.name`, not interactive */
-.figma-made-badge {
+/* Top-right — links to full Figma file */
+a.figma-made-badge {
   position: absolute;
   top: calc(104px + 12px - (85px * 1.4) / 2);
   right: clamp(28px, 3.6vw, 56px);
@@ -1778,7 +1778,19 @@ body {
   gap: 9px;
   height: calc(85px * 1.4);
   opacity: 0.55;
-  pointer-events: none;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 0.2s ease,
+    transform 0.18s ease;
+}
+
+a.figma-made-badge:hover {
+  opacity: 0.75;
+  transform: translateY(-3px);
 }
 
 .figma-made-badge__label {
@@ -1802,6 +1814,13 @@ body {
   pointer-events: none;
   flex-shrink: 0;
   filter: grayscale(0.35) brightness(1.12) contrast(0.92);
+}
+
+a.figma-made-badge:focus-visible {
+  outline: 2px solid rgba(160, 210, 255, 0.95);
+  outline-offset: 4px;
+  opacity: 0.9;
+  transform: translateY(0);
 }
 
 /* Cursor-following glow — concentric circles read round (ellipses skewed the silhouette) */
@@ -1934,6 +1953,11 @@ body {
 
   .lang-switch {
     top: 800px;
+  }
+
+  a.figma-made-badge {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Hackathon + athlete photo rows — single column */
