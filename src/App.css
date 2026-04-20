@@ -436,8 +436,8 @@ body {
 }
 
 /*
- * WSP exports often include a rounded “card” on a square canvas — zoom slightly so the
- * tile’s own radius clips past the outer black, and match radius on imgs to avoid gaps.
+ * WSP idle: authored PNG (dim + framing baked in) — no extra CSS dim or zoom.
+ * Highlight layer: keep slight scale if the bright export still has letterboxing.
  */
 .photo--5 img.photo--5__layer {
   position: absolute;
@@ -445,13 +445,9 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
   border-radius: inherit;
   display: block;
-  filter: none !important;
-  -webkit-filter: none !important;
-  transform: scale(1.14);
-  transform-origin: center center;
+  object-position: center center;
   transition:
     opacity 0.3s ease,
     transform 0.3s ease,
@@ -461,11 +457,19 @@ body {
 .photo--5 img.photo--5__layer--idle {
   opacity: 1 !important;
   z-index: 0;
+  filter: none !important;
+  -webkit-filter: none !important;
+  transform: scale(1);
+  transform-origin: center center;
 }
 
 .photo--5 img.photo--5__layer--bright {
   opacity: 0 !important;
   z-index: 1;
+  filter: none !important;
+  -webkit-filter: none !important;
+  transform: scale(1.14);
+  transform-origin: center center;
 }
 
 .photo--5:hover img.photo--5__layer--idle,
@@ -477,6 +481,9 @@ body {
 .photo--5.is-highlighted img.photo--5__layer--bright {
   opacity: 1 !important;
   filter: brightness(1.2) contrast(1.1) saturate(1.18) !important;
+  -webkit-filter: brightness(1.2) contrast(1.1) saturate(1.18) !important;
+  transform: scale(1.14);
+  transform-origin: center center;
 }
 
 .photo--5::after {
