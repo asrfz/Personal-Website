@@ -58,6 +58,7 @@ export default function App() {
   const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [isNarrowForMobileHero, setIsNarrowForMobileHero] = useState(false);
   const [mobileHeroInView, setMobileHeroInView] = useState(true);
+  const [detailsInView, setDetailsInView] = useState(false);
   /** When true, unmount the unscaled hero overlay so it cannot paint over detail slides after navigation. */
   const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -518,6 +519,20 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     io.observe(root);
     return () => io.disconnect();
   }, [isNarrowForMobileHero]);
+
+  useEffect(() => {
+    const root = detailsSectionRef.current;
+    if (!root) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setDetailsInView(Boolean(entry?.isIntersecting && (entry?.intersectionRatio ?? 0) >= 0.2));
+      },
+      { threshold: [0, 0.08, 0.2, 0.35, 0.55, 1] },
+    );
+    io.observe(root);
+    return () => io.disconnect();
+  }, []);
 
   /** Narrow: hide hero overlay + collage while details dominate the screen; restore when user scrolls back to hero. */
   useEffect(() => {
@@ -1092,18 +1107,44 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
               </p>
 
               <p className="education-panel__tag">Relevant Coursework</p>
-              <div className="education-panel__pill-grid" role="list" aria-label="Relevant coursework">
-                {waterlooCoursework.map((course) => (
-                  <span key={course} className="education-panel__pill" role="listitem">
+              <div
+                className={`education-panel__pill-grid pill-launch-grid${isWaterlooDetail && detailsInView ? " is-spread" : ""}`}
+                role="list"
+                aria-label="Relevant coursework"
+              >
+                {waterlooCoursework.map((course, index) => (
+                  <span
+                    key={course}
+                    className="education-panel__pill pill-launch-item"
+                    role="listitem"
+                    style={{
+                      "--pill-col": index % 4,
+                      "--pill-row": Math.floor(index / 4),
+                      "--pill-order": index,
+                    }}
+                  >
                     {course}
                   </span>
                 ))}
               </div>
 
               <p className="education-panel__tag education-panel__tag--secondary">Extracurriculars</p>
-              <div className="education-panel__pill-grid" role="list" aria-label="Extracurriculars">
-                {waterlooExtracurriculars.map((item) => (
-                  <span key={item} className="education-panel__pill" role="listitem">
+              <div
+                className={`education-panel__pill-grid pill-launch-grid${isWaterlooDetail && detailsInView ? " is-spread" : ""}`}
+                role="list"
+                aria-label="Extracurriculars"
+              >
+                {waterlooExtracurriculars.map((item, index) => (
+                  <span
+                    key={item}
+                    className="education-panel__pill pill-launch-item"
+                    role="listitem"
+                    style={{
+                      "--pill-col": index % 4,
+                      "--pill-row": Math.floor(index / 4),
+                      "--pill-order": index,
+                    }}
+                  >
                     {item}
                   </span>
                 ))}
@@ -1120,9 +1161,22 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 ))}
               </div>
               <p className="sickkids-panel__tag">Stack &amp; Tools</p>
-              <div className="sickkids-panel__pill-grid" role="list" aria-label="SickKids stack and tools">
-                {sickkidsTools.map((tool) => (
-                  <span key={tool} className="sickkids-panel__pill" role="listitem">
+              <div
+                className={`sickkids-panel__pill-grid pill-launch-grid${isSickkidsDetail && detailsInView ? " is-spread" : ""}`}
+                role="list"
+                aria-label="SickKids stack and tools"
+              >
+                {sickkidsTools.map((tool, index) => (
+                  <span
+                    key={tool}
+                    className="sickkids-panel__pill pill-launch-item"
+                    role="listitem"
+                    style={{
+                      "--pill-col": index % 4,
+                      "--pill-row": Math.floor(index / 4),
+                      "--pill-order": index,
+                    }}
+                  >
                     {tool}
                   </span>
                 ))}

@@ -2046,6 +2046,24 @@ body {
   text-align: center;
 }
 
+.pill-launch-grid .pill-launch-item {
+  opacity: 0.12;
+  transform: translate(
+      calc((1.5 - var(--pill-col, 0)) * 132px),
+      calc((0.5 - var(--pill-row, 0)) * 74px)
+    )
+    scale(0.88);
+  transition:
+    transform 520ms cubic-bezier(0.2, 0.9, 0.22, 1),
+    opacity 460ms ease;
+  transition-delay: calc(var(--pill-order, 0) * 34ms);
+}
+
+.pill-launch-grid.is-spread .pill-launch-item {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
 .education-panel {
   display: flex;
   flex-direction: column;
@@ -2802,6 +2820,14 @@ a.figma-made-badge:focus-visible {
     -webkit-tap-highlight-color: transparent;
   }
 
+  .pill-launch-grid .pill-launch-item {
+    transform: translate(0, -20px) scale(0.94);
+  }
+
+  .pill-launch-grid.is-spread .pill-launch-item {
+    transform: translate(0, 0) scale(1);
+  }
+
   .hackathons-panel__cta {
     margin-top: 28px;
   }
@@ -3046,5 +3072,14 @@ a.figma-made-badge:focus-visible {
     color: transparent;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 1px 14px rgba(120, 190, 255, 0.28));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-launch-grid .pill-launch-item,
+  .pill-launch-grid.is-spread .pill-launch-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
