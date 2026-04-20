@@ -2,8 +2,8 @@
  * Main hero collage uses files in `public/` — Figma MCP `/api/mcp/asset/...` URLs expire and show as black tiles.
  */
 export const img = {
-  /** Full-viewport background — `public/gradient.png` (export from Figma frame) */
-  gradient: "/gradient.png",
+  /** Global background for hero + details */
+  gradient: "/starsandconstellations.png",
   /** Hero — Figma wordmark for “Made with” credit (`public/figma-made-badge.png`) */
   figmaMadeBadge: "/figma-made-badge.png",
   /** Hero collage WSP — dim idle + bright hover */
