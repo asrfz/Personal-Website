@@ -155,9 +155,9 @@ body {
   overflow: hidden;
   pointer-events: none;
   background-repeat: no-repeat;
-  /* Nudged so a bright star sits under the "I" in the hero title area. */
-  --star-base-x: 47.8%;
-  --star-base-y: 49.4%;
+  /* Slightly offset to keep bright stars away from the title baseline. */
+  --star-base-x: 50.6%;
+  --star-base-y: 50.1%;
   background-position: var(--star-base-x) var(--star-base-y);
   background-size: cover;
   animation: starfield-drift 24s ease-in-out infinite alternate;
@@ -171,12 +171,6 @@ body {
   z-index: 1;
   pointer-events: none;
   background: radial-gradient(
-      circle at 30.4% 16.2%,
-      rgba(2, 4, 12, 0.9) 0%,
-      rgba(2, 4, 12, 0.82) 1.6%,
-      rgba(2, 4, 12, 0) 3.2%
-    ),
-    radial-gradient(
     ellipse 118% 105% at 98% 0%,
     rgba(148, 252, 255, 0.42) 0%,
     rgba(110, 232, 242, 0.28) 12%,
@@ -2354,21 +2348,21 @@ p.education-panel__tag.education-panel__tag--secondary + .education-panel__pill-
   pointer-events: none;
 }
 
+/* Surgical cover only under the "I" in "AIDEN" */
 .name::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 54%;
-  width: 124%;
-  height: 106%;
+  left: 14.8%;
+  top: 50.5%;
+  width: 74px;
+  height: 86px;
   transform: translate(-50%, -50%);
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(
     ellipse at center,
-    rgba(2, 4, 12, 0.97) 0%,
-    rgba(2, 4, 12, 0.86) 38%,
-    rgba(2, 4, 12, 0.52) 68%,
+    rgba(2, 4, 12, 0.94) 0%,
+    rgba(2, 4, 12, 0.78) 42%,
     rgba(2, 4, 12, 0) 100%
   );
 }
