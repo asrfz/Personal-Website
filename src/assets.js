@@ -1,12 +1,23 @@
-/** Figma MCP asset URLs — replace with local `/public` files before deploy. */
+/**
+ * Main hero collage uses files in `public/` — Figma MCP `/api/mcp/asset/...` URLs expire and show as black tiles.
+ */
 export const img = {
   /** Full-viewport background — `public/gradient.png` (export from Figma frame) */
   gradient: "/gradient.png",
   /** Hero — Figma wordmark for “Made with” credit (`public/figma-made-badge.png`) */
   figmaMadeBadge: "/figma-made-badge.png",
-  wsp: "https://www.figma.com/api/mcp/asset/351e1d32-89c3-4179-ad4d-731fc44c0425",
-  mAndR: "https://www.figma.com/api/mcp/asset/fdcf69cb-de6c-4fca-8d94-c5585b6c4270",
-  cxc: "https://www.figma.com/api/mcp/asset/1ed0bf15-eafb-477b-b88e-af73ca597106",
+  /** Hero collage WSP — dim idle + bright hover */
+  wspIdle: "/wsp-idle.png",
+  wspHighlight: "/wsp-highlight.png",
+  wsp: "/wsp-highlight.png",
+  /** Hero collage athlete — dim idle + bright hover */
+  mAndRIdle: "/m-and-r-idle.png",
+  mAndRHighlight: "/m-and-r-highlight.png",
+  mAndR: "/m-and-r-highlight.png",
+  /** Hero collage CXC / hackathons — dim idle + bright hover */
+  cxcIdle: "/cxc-idle.png",
+  cxcHighlight: "/cxc-highlight.png",
+  cxc: "/cxc-highlight.png",
   /** Hackathons slide — `public/hackathon-team.png`, `public/hackathon-workshop.png` */
   hackathonPhotoLeft: "/hackathon-team.png",
   hackathonPhotoRight: "/hackathon-workshop.png",
@@ -14,16 +25,38 @@ export const img = {
   polyglotMap: "/polyglot-map.png",
   /** Publications slide — conference badge (`public/publications-badge.png`) */
   publicationsBadge: "/publications-badge.png",
-  physio: "https://www.figma.com/api/mcp/asset/cf60cce6-8167-4018-9390-2d0aaeafb766",
-  womens: "https://www.figma.com/api/mcp/asset/a2ae4f81-d01d-440f-b9d3-165b0596a6b8",
-  waterloo: "https://www.figma.com/api/mcp/asset/560efb0f-ce94-4df2-8441-2e863572764e",
+  /** Hero collage physio / volunteering — dim idle + bright hover */
+  physioIdle: "/physio-idle.png",
+  physioHighlight: "/physio-highlight.png",
+  physio: "/physio-highlight.png",
+  /** Hero collage Women's — dim idle + bright hover */
+  womensIdle: "/womens-idle.png",
+  womensHighlight: "/womens-highlight.png",
+  womens: "/womens-highlight.png",
+  /** Hero collage Waterloo — dim idle + bright hover (two files) */
+  waterlooIdle: "/waterloo-idle.png",
+  waterlooHighlight: "/waterloo-highlight.png",
+  /** Mobile carousel + any single `img.waterloo` consumer — use bright variant */
+  waterloo: "/waterloo-highlight.png",
   sickKids: "/sickkids-replacement.png",
-  asme: "https://www.figma.com/api/mcp/asset/3f64ad0e-78c5-4696-8714-391f5074b4fb",
-  coOp: "https://www.figma.com/api/mcp/asset/d088ad18-1152-449b-8eb3-f4844b82877e",
-  birthdayParty: "https://www.figma.com/api/mcp/asset/97583f86-c955-4a5a-86ee-7f0d0ac2d7d5",
-  cfes: "https://www.figma.com/api/mcp/asset/9a23f763-1eb0-4103-9066-1b1b5ea15935",
-  /** CFES slide — panel photo (`public/cfes-panel-photo.png`) */
-  cfesPanelPhoto: "/cfes-panel-photo.png",
+  /** Hero collage ASME — dim idle + bright hover */
+  asmeIdle: "/asme-idle.png",
+  asmeHighlight: "/asme-highlight.png",
+  asme: "/asme-highlight.png",
+  /** Hero collage co-op portrait — dim idle + bright hover */
+  coOpIdle: "/coop-tile-idle.png",
+  coOpHighlight: "/coop-tile-highlight.png",
+  coOp: "/coop-tile-highlight.png",
+  /** Hero birthday strip — dim idle + bright on hover (idle = 2nd asset, highlight = 1st) */
+  birthdayIdle: "/birthday-idle.png",
+  birthdayHighlight: "/birthday-highlight.png",
+  birthdayParty: "/birthday-highlight.png",
+  /** Hero collage CFES — dim idle + bright hover */
+  cfesIdle: "/cfes-idle.png",
+  cfesHighlight: "/cfes-highlight.png",
+  cfes: "/cfes-highlight.png",
+  /** CFES detail panel — match highlight photo */
+  cfesPanelPhoto: "/cfes-highlight.png",
   /** Athlete slide — tennis and basketball (`public/athlete-tennis.png`, `public/athlete-basketball.png`) */
   athletePhotoTennis: "/athlete-tennis.png",
   athletePhotoBasketball: "/athlete-basketball.png",
@@ -33,10 +66,10 @@ export const img = {
   coopLinkHonour: "/coop-honour.jpg",
   coopYoutubeCard: "/coop-youtube-card.jpg",
   languagesPhoto: "/languages-replacement.png",
-  langFr: "https://www.figma.com/api/mcp/asset/f234467f-00db-4703-900c-1390b0e3829b",
-  langEn: "https://www.figma.com/api/mcp/asset/938dce0a-925d-41d1-9402-8a14fc27b22d",
-  langEs: "https://www.figma.com/api/mcp/asset/56045e65-de16-45b6-912f-dc20966d8c52",
-  langAr: "https://www.figma.com/api/mcp/asset/c204c79f-8f1d-4418-abb4-f7b9e41e0010",
+  langFr: "/languages-replacement.png",
+  langEn: "/languages-replacement.png",
+  langEs: "/languages-replacement.png",
+  langAr: "/languages-replacement.png",
 };
 
 export const bulletPoints = [

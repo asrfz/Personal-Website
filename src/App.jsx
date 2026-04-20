@@ -683,7 +683,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("wsp")}
         >
-          <img src={img.wsp} alt="WSP" />
+          <img
+            className="photo--5__layer photo--5__layer--idle"
+            src={img.wspIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--5__layer photo--5__layer--bright"
+            src={img.wspHighlight}
+            alt="WSP"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--1${isHighlighted("basketballRight") ? " is-highlighted" : ""}`}
@@ -693,7 +705,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("basketballRight")}
         >
-          <img src={img.mAndR} alt="M&amp;R" />
+          <img
+            className="photo--1__layer photo--1__layer--idle"
+            src={img.mAndRIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--1__layer photo--1__layer--bright"
+            src={img.mAndRHighlight}
+            alt="Athletics"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--10${isHighlighted("cxc") ? " is-highlighted" : ""}`}
@@ -703,7 +727,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("cxc")}
         >
-          <img src={img.cxc} alt="CXC" />
+          <img
+            className="photo--10__layer photo--10__layer--idle"
+            src={img.cxcIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--10__layer photo--10__layer--bright"
+            src={img.cxcHighlight}
+            alt="CXC"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--8${isHighlighted("physio") ? " is-highlighted" : ""}`}
@@ -713,7 +749,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("physio")}
         >
-          <img src={img.physio} alt="Physio" />
+          <img
+            className="photo--8__layer photo--8__layer--idle"
+            src={img.physioIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--8__layer photo--8__layer--bright"
+            src={img.physioHighlight}
+            alt="Clinical volunteering"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--11${isHighlighted("womens") ? " is-highlighted" : ""}`}
@@ -723,7 +771,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("womens")}
         >
-          <img src={img.womens} alt="Women's College Hospital" />
+          <img
+            className="photo--11__layer photo--11__layer--idle"
+            src={img.womensIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--11__layer photo--11__layer--bright"
+            src={img.womensHighlight}
+            alt="Women's College Hospital"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--2${isHighlighted("waterloo") ? " is-highlighted" : ""}`}
@@ -733,7 +793,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("waterloo")}
         >
-          <img src={img.waterloo} alt="Waterloo Engineering" />
+          <img
+            className="photo--2__layer photo--2__layer--idle"
+            src={img.waterlooIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--2__layer photo--2__layer--bright"
+            src={img.waterlooHighlight}
+            alt="Waterloo Engineering"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--sickkids${isHighlighted("sickkids") ? " is-highlighted" : ""}`}
@@ -753,7 +825,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("asme")}
         >
-          <img src={img.asme} alt="ASME" />
+          <img
+            className="photo--asme__layer photo--asme__layer--idle"
+            src={img.asmeIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--asme__layer photo--asme__layer--bright"
+            src={img.asmeHighlight}
+            alt="ASME"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--9${isHighlighted("coop") ? " is-highlighted" : ""}`}
@@ -763,7 +847,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("coop")}
         >
-          <img src={img.coOp} alt="Co-Op" />
+          <img
+            className="photo--9__layer photo--9__layer--idle"
+            src={img.coOpIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--9__layer photo--9__layer--bright"
+            src={img.coOpHighlight}
+            alt="Co-Op"
+            decoding="async"
+          />
         </figure>
         <figure
           className="photo photo--12 photo--12--hover-only"
@@ -773,7 +869,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
             setHoverFocusKey((h) => (h === "birthday" ? null : h))
           }
         >
-          <img src={img.birthdayParty} alt="Birthday party" />
+          <img
+            className="photo--12__layer photo--12__layer--idle"
+            src={img.birthdayIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--12__layer photo--12__layer--bright"
+            src={img.birthdayHighlight}
+            alt="Birthday party"
+            decoding="async"
+          />
         </figure>
         <figure
           className={`photo photo--13${isHighlighted("cfes") ? " is-highlighted" : ""}`}
@@ -783,7 +891,19 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           }}
           onClick={() => handleImageClick("cfes")}
         >
-          <img src={img.cfes} alt="CFES" />
+          <img
+            className="photo--13__layer photo--13__layer--idle"
+            src={img.cfesIdle}
+            alt=""
+            decoding="async"
+            aria-hidden="true"
+          />
+          <img
+            className="photo--13__layer photo--13__layer--bright"
+            src={img.cfesHighlight}
+            alt="CFES"
+            decoding="async"
+          />
         </figure>
 
         <div className="bullets" data-node-id="113:39" aria-hidden={isNarrowForMobileHero || undefined}>
