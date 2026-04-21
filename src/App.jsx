@@ -51,6 +51,19 @@ const MOBILE_HERO_SLIDES = [
   { detailKey: "physio", src: img.physio, alt: "Clinical volunteering" },
 ];
 
+const HERO_SCROLL_REVEAL_STEPS = [
+  ["waterloo"],
+  ["sickkids"],
+  ["coop"],
+  ["cfes"],
+  ["asme"],
+  ["cxc"],
+  ["wsp", "womens"],
+  ["basketballRight"],
+  ["greece"],
+  ["physio"],
+];
+
 export default function App() {
   const scale = useViewportScale();
   const heroSectionRef = useRef(null);
@@ -63,6 +76,7 @@ export default function App() {
   const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
+  const [birthdayRevealReady, setBirthdayRevealReady] = useState(false);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
   /** Which photo tile the pointer is currently over (transient). */
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
@@ -137,6 +151,18 @@ export default function App() {
     !hasStarted &&
     hoverFocusKey == null &&
     stickyPhotoKey == null;
+  const revealedHeroPhotoCount =
+    isNarrowForMobileHero || !hasStarted
+      ? 0
+      : Math.min(HERO_SCROLL_REVEAL_STEPS.length, activeBulletIndex + 1);
+  const revealedHeroPhotoKeys = new Set(
+    HERO_SCROLL_REVEAL_STEPS.slice(0, revealedHeroPhotoCount).flat(),
+  );
+  if (birthdayRevealReady) {
+    revealedHeroPhotoKeys.add("birthday");
+  }
+  const getHeroRevealClass = (key) =>
+    isNarrowForMobileHero || revealedHeroPhotoKeys.has(key) ? "" : " is-scroll-hidden";
   const detailCopyByKey = {
     waterloo: {
       title: "Biomedical Engineering @ Waterloo",
@@ -453,6 +479,64 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   }, []);
 
   useEffect(() => {
+    const targets = Array.from(
+      document.querySelectorAll(
+        [
+          ".photo",
+          ".lang-switch",
+          ".education-panel__pill",
+          ".sickkids-panel__pill",
+          ".coop-panel__pill",
+          ".coop-panel__feature",
+          ".hackathons-panel__photo",
+          ".athlete-panel__photo",
+        ].join(", "),
+      ),
+    );
+    if (targets.length === 0) return;
+
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    targets.forEach((node) => node.classList.add("reveal-on-scroll-box"));
+
+    if (reduce) {
+      targets.forEach((node) => node.classList.add("is-revealed"));
+      return () => {
+        targets.forEach((node) =>
+          node.classList.remove("reveal-on-scroll-box", "is-revealed"),
+        );
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.22,
+        root: null,
+        rootMargin: "0px 0px -10% 0px",
+      },
+    );
+
+    targets.forEach((node) => observer.observe(node));
+
+    return () => {
+      observer.disconnect();
+      targets.forEach((node) =>
+        node.classList.remove("reveal-on-scroll-box", "is-revealed"),
+      );
+    };
+  }, [selectedDetailKey]);
+
+  useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
       if (!heroKeyboardNavActiveRef.current) return;
@@ -582,6 +666,21 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     return () => clearInterval(id);
   }, [isNarrowForMobileHero, mobileHeroInView]);
 
+  useEffect(() => {
+    if (isNarrowForMobileHero) {
+      setBirthdayRevealReady(true);
+      return;
+    }
+    if (!hasStarted || activeBulletIndex < 9) {
+      setBirthdayRevealReady(false);
+      return;
+    }
+    const id = window.setTimeout(() => {
+      setBirthdayRevealReady(true);
+    }, 500);
+    return () => window.clearTimeout(id);
+  }, [isNarrowForMobileHero, hasStarted, activeBulletIndex]);
+
   const dismissMobileWarning = useCallback(() => {
     try {
       sessionStorage.setItem(MOBILE_WARNING_DISMISS_KEY, "1");
@@ -691,7 +790,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           </nav>
 
         <figure
-          className={`photo photo--5${isHighlighted("wsp") ? " is-highlighted" : ""}`}
+          className={`photo photo--5${isHighlighted("wsp") ? " is-highlighted" : ""}${getHeroRevealClass("wsp")}`}
           onMouseEnter={() => {
             setHoverFocusKey("wsp");
             setStickyPhotoKey("wsp");
@@ -713,7 +812,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--1${isHighlighted("basketballRight") ? " is-highlighted" : ""}`}
+          className={`photo photo--1${isHighlighted("basketballRight") ? " is-highlighted" : ""}${getHeroRevealClass("basketballRight")}`}
           onMouseEnter={() => {
             setHoverFocusKey("basketballRight");
             setStickyPhotoKey("basketballRight");
@@ -735,7 +834,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--10${isHighlighted("cxc") ? " is-highlighted" : ""}`}
+          className={`photo photo--10${isHighlighted("cxc") ? " is-highlighted" : ""}${getHeroRevealClass("cxc")}`}
           onMouseEnter={() => {
             setHoverFocusKey("cxc");
             setStickyPhotoKey("cxc");
@@ -757,7 +856,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--8${isHighlighted("physio") ? " is-highlighted" : ""}`}
+          className={`photo photo--8${isHighlighted("physio") ? " is-highlighted" : ""}${getHeroRevealClass("physio")}`}
           onMouseEnter={() => {
             setHoverFocusKey("physio");
             setStickyPhotoKey("physio");
@@ -779,7 +878,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--11${isHighlighted("womens") ? " is-highlighted" : ""}`}
+          className={`photo photo--11${isHighlighted("womens") ? " is-highlighted" : ""}${getHeroRevealClass("womens")}`}
           onMouseEnter={() => {
             setHoverFocusKey("womens");
             setStickyPhotoKey("womens");
@@ -801,7 +900,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--2${isHighlighted("waterloo") ? " is-highlighted" : ""}`}
+          className={`photo photo--2${isHighlighted("waterloo") ? " is-highlighted" : ""}${getHeroRevealClass("waterloo")}`}
           onMouseEnter={() => {
             setHoverFocusKey("waterloo");
             setStickyPhotoKey("waterloo");
@@ -823,7 +922,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--sickkids${isHighlighted("sickkids") ? " is-highlighted" : ""}`}
+          className={`photo photo--sickkids${isHighlighted("sickkids") ? " is-highlighted" : ""}${getHeroRevealClass("sickkids")}`}
           onMouseEnter={() => {
             setHoverFocusKey("sickkids");
             setStickyPhotoKey("sickkids");
@@ -833,7 +932,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           <img src={img.sickKids} alt="SickKids" />
         </figure>
         <figure
-          className={`photo photo--asme${isHighlighted("asme") ? " is-highlighted" : ""}`}
+          className={`photo photo--asme${isHighlighted("asme") ? " is-highlighted" : ""}${getHeroRevealClass("asme")}`}
           onMouseEnter={() => {
             setHoverFocusKey("asme");
             setStickyPhotoKey("asme");
@@ -855,7 +954,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--9${isHighlighted("coop") ? " is-highlighted" : ""}`}
+          className={`photo photo--9${isHighlighted("coop") ? " is-highlighted" : ""}${getHeroRevealClass("coop")}`}
           onMouseEnter={() => {
             setHoverFocusKey("coop");
             setStickyPhotoKey("coop");
@@ -877,7 +976,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className="photo photo--12 photo--12--hover-only"
+          className={`photo photo--12 photo--12--hover-only${getHeroRevealClass("birthday")}`}
           aria-label="Birthday — hover to read message"
           onMouseEnter={() => setHoverFocusKey("birthday")}
           onMouseLeave={() =>
@@ -899,7 +998,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--13${isHighlighted("cfes") ? " is-highlighted" : ""}`}
+          className={`photo photo--13${isHighlighted("cfes") ? " is-highlighted" : ""}${getHeroRevealClass("cfes")}`}
           onMouseEnter={() => {
             setHoverFocusKey("cfes");
             setStickyPhotoKey("cfes");
@@ -967,7 +1066,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
         </div>
 
         <figure
-          className={`lang-switch${isHighlighted("greece") ? " is-highlighted" : ""}`}
+          className={`lang-switch${isHighlighted("greece") ? " is-highlighted" : ""}${getHeroRevealClass("greece")}`}
           data-node-id="111:204"
           aria-label="Language photo"
           onMouseEnter={() => {
