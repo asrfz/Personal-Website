@@ -76,6 +76,7 @@ export default function App() {
   const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
+  const [maxHeroRevealStepCount, setMaxHeroRevealStepCount] = useState(0);
   const [birthdayRevealReady, setBirthdayRevealReady] = useState(false);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
   /** Which photo tile the pointer is currently over (transient). */
@@ -151,10 +152,14 @@ export default function App() {
     !hasStarted &&
     hoverFocusKey == null &&
     stickyPhotoKey == null;
-  const revealedHeroPhotoCount =
+  const currentHeroRevealStepCount =
     isNarrowForMobileHero || !hasStarted
       ? 0
       : Math.min(HERO_SCROLL_REVEAL_STEPS.length, activeBulletIndex + 1);
+  const revealedHeroPhotoCount = Math.max(
+    currentHeroRevealStepCount,
+    maxHeroRevealStepCount,
+  );
   const revealedHeroPhotoKeys = new Set(
     HERO_SCROLL_REVEAL_STEPS.slice(0, revealedHeroPhotoCount).flat(),
   );
@@ -667,19 +672,26 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   }, [isNarrowForMobileHero, mobileHeroInView]);
 
   useEffect(() => {
-    if (isNarrowForMobileHero) {
+    if (isNarrowForMobileHero || birthdayRevealReady) {
       setBirthdayRevealReady(true);
       return;
     }
     if (!hasStarted || activeBulletIndex < 9) {
-      setBirthdayRevealReady(false);
       return;
     }
     const id = window.setTimeout(() => {
       setBirthdayRevealReady(true);
     }, 500);
     return () => window.clearTimeout(id);
-  }, [isNarrowForMobileHero, hasStarted, activeBulletIndex]);
+  }, [isNarrowForMobileHero, hasStarted, activeBulletIndex, birthdayRevealReady]);
+
+  useEffect(() => {
+    if (isNarrowForMobileHero) return;
+    if (!hasStarted) return;
+    setMaxHeroRevealStepCount((currentMax) =>
+      Math.max(currentMax, currentHeroRevealStepCount),
+    );
+  }, [isNarrowForMobileHero, hasStarted, currentHeroRevealStepCount]);
 
   const dismissMobileWarning = useCallback(() => {
     try {
