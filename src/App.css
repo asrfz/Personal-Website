@@ -690,13 +690,15 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 46%;
   display: block;
   filter: none !important;
   -webkit-filter: none !important;
+  transform: scale(1.08);
   transition:
     opacity 0.3s ease,
-    filter 0.3s ease;
+    filter 0.3s ease,
+    transform 0.3s ease;
 }
 
 .photo--8 img.photo--8__layer--idle {
@@ -718,6 +720,7 @@ body {
 .photo--8.is-highlighted img.photo--8__layer--bright {
   opacity: 1 !important;
   filter: brightness(1.14) contrast(1.06) saturate(1.1) !important;
+  transform: scale(1.08);
 }
 
 .photo--8::after {
@@ -919,14 +922,16 @@ body {
   height: 100%;
   object-fit: cover;
   /* Keep head + hair in frame — center crop was trimming the top of the portrait */
-  object-position: center top;
+  object-position: center 38%;
   border-radius: inherit;
   display: block;
   filter: none !important;
   -webkit-filter: none !important;
+  transform: scale(1.1);
   transition:
     opacity 0.3s ease,
-    filter 0.3s ease;
+    filter 0.3s ease,
+    transform 0.3s ease;
 }
 
 .photo--9 img.photo--9__layer--idle {
@@ -948,6 +953,7 @@ body {
 .photo--9.is-highlighted img.photo--9__layer--bright {
   opacity: 1 !important;
   filter: brightness(1.2) contrast(1.08) saturate(1.12) !important;
+  transform: scale(1.1);
 }
 
 .photo--9::after {
@@ -1029,13 +1035,15 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 44%;
   display: block;
   filter: none !important;
   -webkit-filter: none !important;
+  transform: scale(1.09);
   transition:
     opacity 0.3s ease,
-    filter 0.3s ease;
+    filter 0.3s ease,
+    transform 0.3s ease;
 }
 
 .photo--13 img.photo--13__layer--idle {
@@ -1057,6 +1065,7 @@ body {
 .photo--13.is-highlighted img.photo--13__layer--bright {
   opacity: 1 !important;
   filter: brightness(1.12) contrast(1.05) saturate(1.08) !important;
+  transform: scale(1.09);
 }
 
 .photo--13::after {
@@ -2480,6 +2489,10 @@ a.figma-made-badge:focus-visible {
 /* Mobile / narrow viewports — desktop rules above stay default from 897px+ */
 /* -------------------------------------------------------------------------- */
 @media (max-width: 896px) {
+  :root {
+    --mobile-image-radius: 24px;
+  }
+
   .canvas-hero-nudge {
     transform: translateY(-28px);
   }
@@ -2560,14 +2573,38 @@ a.figma-made-badge:focus-visible {
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* Keep mobile image cards visually consistent and prevent clipped/cut corners. */
+  .photo,
+  .lang-switch,
+  .mobile-hero-viewport-layer__spotlight,
+  .hackathons-panel__photo,
+  .athlete-panel__photo,
+  .publications-panel__badge img,
+  .cfes-panel__photo img,
+  .polyglot-panel__map img {
+    border-radius: var(--mobile-image-radius) !important;
+    overflow: hidden;
+  }
+
+  .photo img,
+  .lang-switch__photo,
+  .mobile-hero-viewport-layer__spotlight img,
+  .hackathons-panel__photo img,
+  .athlete-panel__photo img,
+  .publications-panel__badge img,
+  .cfes-panel__photo img,
+  .polyglot-panel__map img {
+    border-radius: inherit;
+  }
+
   .details-section {
     touch-action: pan-y;
-    /* At least one full viewport of gradient; content defines taller height (no flex shrink clipping). */
+    /* At least one full viewport of gradient; content defines taller height. */
     min-height: 100dvh;
     min-height: 100lvh;
+    min-height: 100dvh;
     position: relative;
     z-index: 6;
-    /* `overflow-x: hidden` pairs with visible-y and forces y to compute to `auto`, which clips tall slides. */
     overflow-x: clip;
     overflow-y: visible;
     box-sizing: border-box;
@@ -2597,6 +2634,11 @@ a.figma-made-badge:focus-visible {
     overflow: visible;
   }
 
+  .details-section__inner {
+    max-width: 100%;
+    width: 100%;
+  }
+
   /* Education + SickKids: shorter title band, tighter tag spacing = more pill rows above the fold; overflow-y stays scrollable */
   .details-section--waterloo,
   .details-section--sickkids {
@@ -2608,7 +2650,11 @@ a.figma-made-badge:focus-visible {
   }
 
   .details-section--sickkids {
-    padding-bottom: max(100px, calc(72px + env(safe-area-inset-bottom, 0px)));
+    padding-top: max(10px, calc(6px + env(safe-area-inset-top, 0px)));
+    padding-bottom: max(8px, calc(6px + env(safe-area-inset-bottom, 0px)));
+    height: 100dvh;
+    height: 100lvh;
+    overflow: hidden;
   }
 
   .details-section--waterloo .education-panel,
@@ -2616,6 +2662,7 @@ a.figma-made-badge:focus-visible {
     flex-shrink: 0;
     min-height: min-content;
     width: 100%;
+    transform: translateY(0);
   }
 
   .details-section--waterloo .education-panel__pill-grid,
@@ -2647,12 +2694,13 @@ a.figma-made-badge:focus-visible {
   }
 
   .details-section--sickkids .sickkids-panel__tag {
-    margin-top: 24px;
-    margin-bottom: 14px;
+    margin-top: 22px;
+    margin-bottom: 6px;
   }
 
   .details-section--sickkids .sickkids-panel__copy {
-    padding-bottom: 10px;
+    margin-top: -6px;
+    padding-bottom: 2px;
   }
 
   .details-section--waterloo .education-panel__title,
@@ -2661,8 +2709,24 @@ a.figma-made-badge:focus-visible {
     min-height: 0;
   }
 
+  .details-section--sickkids .sickkids-panel__title {
+    margin-top: 0;
+    margin-bottom: 2px;
+  }
+
   .details-section--sickkids .sickkids-panel__pill-grid {
-    padding-bottom: max(28px, calc(12px + env(safe-area-inset-bottom, 0px)));
+    padding-bottom: max(2px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .details-section--sickkids .sickkids-panel p.sickkids-panel__line {
+    font-size: clamp(13px, 3.9vw, 19px);
+    line-height: 1.35;
+  }
+
+  .details-section--sickkids .sickkids-panel__pill {
+    min-height: 42px;
+    padding: 10px 12px;
+    font-size: clamp(12px, 3.4vw, 15px);
   }
 
   /* Hero — social links in a vertical column, shifted up the artboard */
@@ -2722,23 +2786,27 @@ a.figma-made-badge:focus-visible {
   .hackathons-panel__photo--left,
   .hackathons-panel__photo--right {
     margin-top: 0;
-    width: min(100%, 320px);
+    width: min(100%, 340px);
     max-width: 100%;
   }
 
   .hackathons-panel__photo img {
-    max-height: min(30vh, 260px);
+    max-height: none;
+    height: auto;
+    object-fit: contain;
   }
 
   .athlete-panel__photos {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    row-gap: 18px;
-    margin-top: 12px;
+    column-gap: 12px;
+    row-gap: 0;
+    margin-top: 16px;
   }
 
   .athlete-panel__photo {
-    width: min(100%, 300px);
+    width: min(46%, 150px);
     max-width: 100%;
   }
 
@@ -2747,8 +2815,14 @@ a.figma-made-badge:focus-visible {
     margin-top: 0;
   }
 
+  .athlete-panel__photo--right {
+    margin-top: 0;
+  }
+
   .athlete-panel__photo img {
-    max-height: min(30vh, 260px);
+    max-height: none;
+    height: auto;
+    object-fit: contain;
   }
 
   .internship-panel {
@@ -2790,20 +2864,51 @@ a.figma-made-badge:focus-visible {
     align-items: center;
   }
 
+  .details-section--cfes .cfes-panel__copy {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 4px;
+  }
+
+  .details-section--cfes .cfes-panel p.cfes-panel__line {
+    margin: 0;
+    font-size: clamp(15px, 4.6vw, 22px);
+    line-height: 1.42;
+    text-align: center;
+  }
+
+  .details-section--cfes .cfes-panel p.cfes-panel__line + p.cfes-panel__line {
+    margin-top: 12px;
+  }
+
   .publications-panel__badge,
   .cfes-panel__photo {
     margin-top: clamp(4px, 1.4vw, 14px);
     max-width: 100%;
   }
 
+  .details-section--cfes .cfes-panel__photo {
+    margin-top: clamp(18px, 3.2vh, 28px);
+  }
+
   .publications-panel__badge img,
   .cfes-panel__photo img {
-    width: 100%;
-    max-width: min(360px, 100%);
-    max-height: min(30vh, 260px);
+    width: auto;
+    max-width: 100%;
+    max-height: none;
     height: auto;
     margin: 0 auto;
     display: block;
+    object-fit: contain;
+  }
+
+  .publications-panel__badge img {
+    max-width: min(360px, 100%);
+  }
+
+  .cfes-panel__photo img {
+    max-width: min(360px, 100%);
   }
 
   .hackathons-panel,
@@ -2814,6 +2919,27 @@ a.figma-made-badge:focus-visible {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  /* Ensure copy appears above media on mobile. */
+  .hackathons-panel__copy,
+  .athlete-panel__copy,
+  .polyglot-panel__copy,
+  .publications-panel__copy,
+  .cfes-panel__copy {
+    order: 2;
+  }
+
+  .hackathons-panel__cta {
+    order: 3;
+  }
+
+  .hackathons-panel__photos,
+  .athlete-panel__photos,
+  .polyglot-panel__map,
+  .publications-panel__badge,
+  .cfes-panel__photo {
+    order: 4;
   }
 
   .coop-panel__grid {
@@ -2827,6 +2953,22 @@ a.figma-made-badge:focus-visible {
 
   .details-section--coop .details-section__inner {
     max-width: 100%;
+  }
+
+  .details-section--coop {
+    height: 100dvh;
+    height: 100lvh;
+    overflow: hidden;
+    padding-top: max(14px, calc(10px + env(safe-area-inset-top, 0px)));
+    padding-bottom: max(8px, calc(6px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  .details-section--coop .coop-panel h2.coop-panel__title {
+    margin-top: 10px;
+  }
+
+  .details-section--coop .coop-panel p.coop-panel__intro {
+    margin-top: 8px;
   }
 
   /* Slide panels — purple tags, course/tool pills, Hackathons CTA */
@@ -2880,7 +3022,7 @@ a.figma-made-badge:focus-visible {
 
   .education-panel__pill-grid,
   .sickkids-panel__pill-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     max-width: 100%;
   }
@@ -2915,6 +3057,13 @@ a.figma-made-badge:focus-visible {
     row-gap: clamp(14px, 2.2vh, 24px);
     padding-bottom: clamp(32px, 6vh, 64px);
     max-width: 100%;
+  }
+
+  .details-section--coop .coop-panel__grid {
+    margin-top: 10px;
+    row-gap: clamp(10px, 1.8vh, 16px);
+    padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+    transform: translateY(10px);
   }
 
   .coop-panel__pill--bme,
@@ -2977,8 +3126,35 @@ a.figma-made-badge:focus-visible {
     margin-bottom: 14px;
   }
 
+  .details-section--internship .internship-panel__block + .internship-panel__block h2.internship-panel__title {
+    margin-top: -6px;
+    margin-bottom: 18px;
+  }
+
+  .details-section--cfes .cfes-panel {
+    transform: translateY(26px);
+  }
+
+  .details-section--cfes .cfes-panel h2.cfes-panel__title {
+    margin-top: 56px;
+    margin-bottom: 10px;
+  }
+
+  .details-section--cfes .cfes-panel__copy {
+    margin-top: 6px;
+  }
+
+  .details-section--cfes .cfes-panel p.cfes-panel__line {
+    font-size: clamp(13px, 4vw, 18px);
+    line-height: 1.34;
+  }
+
   .internship-panel__copy {
     margin-top: 0;
+  }
+
+  .details-section--internship .internship-panel__block + .internship-panel__block .internship-panel__copy {
+    margin-top: 8px;
   }
 
   .publications-panel__copy {
@@ -2989,12 +3165,29 @@ a.figma-made-badge:focus-visible {
     margin-top: 10px;
   }
 
+  .polyglot-panel__map {
+    margin-top: 18px;
+  }
+
   .athlete-panel__copy {
-    margin-top: 12px;
+    margin-top: -14px;
   }
 
   .athlete-panel p.athlete-panel__line {
     margin: 0;
+    font-size: clamp(13px, 3.8vw, 18px);
+    line-height: 1.34;
+  }
+
+  .details-section--athlete {
+    height: 100dvh;
+    height: 100lvh;
+    overflow: hidden;
+    padding-bottom: max(8px, calc(6px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  .details-section--hackathons .hackathons-panel__photo--right {
+    display: none;
   }
 
   .hackathons-panel,
@@ -3094,7 +3287,7 @@ a.figma-made-badge:focus-visible {
     max-height: 78vw;
     border: none;
     padding: 0;
-    border-radius: clamp(22px, 5.5vw, 40px);
+    border-radius: var(--mobile-image-radius);
     overflow: hidden;
     background: #0a0a12;
     cursor: pointer;
@@ -3107,10 +3300,46 @@ a.figma-made-badge:focus-visible {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center center;
+    border-radius: inherit;
     display: block;
     opacity: 1;
     filter: brightness(0.98) contrast(0.98) saturate(0.98);
     animation: mobile-hero-spotlight-reveal 0.68s cubic-bezier(0.22, 1, 0.32, 1) both;
+  }
+
+  /* These source assets have edge/corner artifacts; crop in slightly on mobile spotlight. */
+  .mobile-hero-viewport-layer__spotlight-image--coop {
+    transform: scale(1.16);
+    object-position: center 34%;
+  }
+
+  .mobile-hero-viewport-layer__spotlight-image--cfes {
+    transform: scale(1.14);
+    object-position: center 42%;
+  }
+
+  .mobile-hero-viewport-layer__spotlight-image--physio {
+    transform: scale(1.07);
+    object-position: center 46%;
+  }
+
+  /* Hero collage cards on mobile: crop away dark source edges and keep corner clipping exact. */
+  .photo--9,
+  .photo--13 {
+    overflow: hidden !important;
+  }
+
+  .photo--9 img.photo--9__layer {
+    transform: scale(1.14) !important;
+    object-position: center 34% !important;
+    border-radius: inherit !important;
+  }
+
+  .photo--13 img.photo--13__layer {
+    transform: scale(1.12) !important;
+    object-position: center 42% !important;
+    border-radius: inherit !important;
   }
 
   .mobile-hero-viewport-layer__spotlight:focus-visible {

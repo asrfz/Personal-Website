@@ -1167,6 +1167,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 key={activeBulletIndex}
                 src={mobileHeroSlide.src}
                 alt={mobileHeroSlide.alt}
+                className={`mobile-hero-viewport-layer__spotlight-image mobile-hero-viewport-layer__spotlight-image--${mobileHeroSlide.detailKey}`}
                 decoding="async"
               />
             </button>
