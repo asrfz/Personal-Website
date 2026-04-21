@@ -1277,6 +1277,10 @@ body {
   text-align: center;
 }
 
+.details-section__back-to-main {
+  display: none;
+}
+
 .details-section__kicker {
   margin: 0 0 6px;
   font-size: 13px;
@@ -2637,6 +2641,46 @@ a.figma-made-badge:focus-visible {
   .details-section__inner {
     max-width: 100%;
     width: 100%;
+  }
+
+  .details-section__back-to-main {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 14px auto 16px;
+    padding: 11px 22px;
+    border: 1px solid rgba(160, 200, 255, 0.44);
+    border-radius: 999px;
+    background: rgba(16, 26, 58, 0.66);
+    color: rgba(237, 243, 255, 0.96);
+    font-family: Manrope, Inter, system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Keep button clear of title above and content below on all slides. */
+  .education-panel > .details-section__back-to-main + *,
+  .sickkids-panel > .details-section__back-to-main + *,
+  .hackathons-panel > .details-section__back-to-main + *,
+  .internship-panel__block > .details-section__back-to-main + *,
+  .polyglot-panel > .details-section__back-to-main + *,
+  .publications-panel > .details-section__back-to-main + *,
+  .cfes-panel > .details-section__back-to-main + *,
+  .athlete-panel > .details-section__back-to-main + *,
+  .coop-panel > .details-section__back-to-main + *,
+  .volunteering-panel > .details-section__back-to-main + *,
+  .details-section__inner > .details-section__back-to-main + * {
+    margin-top: 0 !important;
+  }
+
+  .details-section__back-to-main:focus-visible {
+    outline: 2px solid rgba(180, 220, 255, 0.95);
+    outline-offset: 3px;
   }
 
   /* Education + SickKids: shorter title band, tighter tag spacing = more pill rows above the fold; overflow-y stays scrollable */

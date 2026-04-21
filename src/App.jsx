@@ -370,11 +370,15 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   }, []);
   const onDetailsWheel = useCallback((event) => {
     if (event.deltaY < 0) {
-      event.preventDefault();
       const narrow =
         typeof window !== "undefined" &&
         window.matchMedia &&
         window.matchMedia(MOBILE_WARNING_MQ).matches;
+      if (narrow) {
+        event.preventDefault();
+        return;
+      }
+      event.preventDefault();
       if (narrow) {
         setMobileHeroOverlayDismissed(false);
       }
@@ -702,10 +706,31 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     setShowMobileWarning(false);
   }, []);
 
+  const returnToMainPage = useCallback(() => {
+    const narrow =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia(MOBILE_WARNING_MQ).matches;
+    if (narrow) {
+      setMobileHeroOverlayDismissed(false);
+    }
+    heroSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   const mobileHeroSlide =
     MOBILE_HERO_SLIDES[
       Math.max(0, Math.min(activeBulletIndex, MOBILE_HERO_SLIDES.length - 1))
     ] ?? MOBILE_HERO_SLIDES[0];
+  const backToMainButton = (
+    <button
+      type="button"
+      className="details-section__back-to-main"
+      onClick={returnToMainPage}
+      aria-label="Back to main page"
+    >
+      ↑ Back to main
+    </button>
+  );
 
   return (
     <div className="page-shell">
@@ -1205,6 +1230,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           {isWaterlooDetail ? (
             <div className="education-panel" aria-label="Waterloo education details">
               <h2 className="education-panel__title">Education</h2>
+              {backToMainButton}
               <div className="education-panel__school-block">
                 <p className="education-panel__line">
                   University of Waterloo - Bachelor of Applied Science
@@ -1265,6 +1291,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isSickkidsDetail ? (
             <div className="sickkids-panel" aria-label="SickKids details">
               <h2 className="sickkids-panel__title">SICKKIDS</h2>
+              {backToMainButton}
               <div className="sickkids-panel__copy" aria-label="SickKids summary">
                 {sickkidsSummaryLines.map((line) => (
                   <p key={line} className="sickkids-panel__line">
@@ -1297,6 +1324,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isHackathonsDetail ? (
             <div className="hackathons-panel" aria-label="Hackathons">
               <h2 className="hackathons-panel__title">HACKATHONS</h2>
+              {backToMainButton}
               <div className="hackathons-panel__copy" aria-label="Hackathons summary">
                 {hackathonsSummaryLines.map((line, i) => (
                   <p key={`hack-${i}`} className="hackathons-panel__line">
@@ -1328,6 +1356,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 <h2 id="internship-wsp-heading" className="internship-panel__title">
                   WSP
                 </h2>
+                {backToMainButton}
                 <div className="internship-panel__copy" aria-label="WSP summary">
                   {wspInternshipLines.map((line, i) => (
                     <p key={`wsp-${i}`} className="internship-panel__line">
@@ -1352,6 +1381,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isPolyglotDetail ? (
             <div className="polyglot-panel" aria-label="Polyglot">
               <h2 className="polyglot-panel__title">POLYGLOT</h2>
+              {backToMainButton}
               <div className="polyglot-panel__copy" aria-label="Polyglot summary">
                 {polyglotSummaryLines.map((line, i) => (
                   <p key={`polyglot-${i}`} className="polyglot-panel__line">
@@ -1366,6 +1396,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isPublicationsDetail ? (
             <div className="publications-panel" aria-label="Publications">
               <h2 className="publications-panel__title">PUBLICATIONS</h2>
+              {backToMainButton}
               <div className="publications-panel__copy" aria-label="Publications summary">
                 {publicationsSummaryLines.map((line, i) => (
                   <p key={`pub-${i}`} className="publications-panel__line">
@@ -1383,6 +1414,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isCfesDetail ? (
             <div className="cfes-panel" aria-label="CFES">
               <h2 className="cfes-panel__title">CFES</h2>
+              {backToMainButton}
               <div className="cfes-panel__copy" aria-label="CFES summary">
                 {cfesSummaryLines.map((line, i) => (
                   <p key={`cfes-${i}`} className="cfes-panel__line">
@@ -1400,6 +1432,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isAthleteDetail ? (
             <div className="athlete-panel" aria-label="Athlete">
               <h2 className="athlete-panel__title">ATHLETE</h2>
+              {backToMainButton}
               <div className="athlete-panel__copy" aria-label="Athlete summary">
                 {athleteSummaryLines.map((line, i) => (
                   <p key={`athlete-${i}`} className="athlete-panel__line">
@@ -1419,6 +1452,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isCoopDetail ? (
             <div className="coop-panel" aria-label="Co-op Student of the Year">
               <h2 className="coop-panel__title">CO-OP STUDENT OF THE YEAR</h2>
+              {backToMainButton}
               <p className="coop-panel__intro">
                 In March 2026, I was honoured to be named the University of Waterloo&apos;s
                 <br />
@@ -1466,6 +1500,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           ) : isVolunteeringDetail ? (
             <div className="volunteering-panel" aria-label="Volunteering">
               <h2 className="volunteering-panel__title">VOLUNTEERING</h2>
+              {backToMainButton}
               <div className="volunteering-panel__copy" aria-label="Volunteering summary">
                 {volunteeringStanzas.map((stanza, i) => (
                   <p key={`volunteering-stanza-${i}`} className="volunteering-panel__stanza">
@@ -1478,6 +1513,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
             <>
               <p className="details-section__kicker">See More</p>
               <h2>{selectedDetail.title}</h2>
+              {backToMainButton}
               <p>{selectedDetail.body}</p>
             </>
           )}
