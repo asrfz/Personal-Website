@@ -462,6 +462,33 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     wheelLastAbsDeltaRef.current = absDelta;
   }, [stepHeroBullet]);
 
+  /**
+   * Firefox/Safari can leak trackpad momentum to page scroll despite React's onWheel
+   * preventDefault. A native non-passive listener on the hero viewport keeps wheel
+   * handling contained to bullet stepping.
+   */
+  useEffect(() => {
+    if (isNarrowForMobileHero) return;
+    const root = heroSectionRef.current;
+    if (!root) return;
+
+    const handleNativeWheel = (event) => {
+      event.preventDefault();
+      onViewportWheel(event);
+    };
+
+    root.addEventListener("wheel", handleNativeWheel, {
+      passive: false,
+      capture: true,
+    });
+
+    return () => {
+      root.removeEventListener("wheel", handleNativeWheel, {
+        capture: true,
+      });
+    };
+  }, [isNarrowForMobileHero, onViewportWheel]);
+
   useEffect(() => {
     return () => {
       if (wheelReleaseTimerRef.current) {
@@ -757,7 +784,6 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       <div
         ref={heroSectionRef}
         className={`viewport${isNarrowForMobileHero && mobileHeroOverlayDismissed ? " viewport--mobile-details-open" : ""}`}
-        onWheel={isNarrowForMobileHero ? undefined : onViewportWheel}
       >
       <div
         className="viewport-fill"
