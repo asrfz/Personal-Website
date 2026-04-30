@@ -64,7 +64,7 @@ export const img = {
   coopLinkBme: "/coop-bme.png",
   coopLinkResearch: "/coop-research.jpg",
   coopLinkHonour: "/coop-honour.jpg",
-  coopYoutubeCard: "/coop-youtube-card.jpg",
+  coopYoutubeCard: "/coop-youtube-card.png",
   languagesPhoto: "/languages-replacement.png",
   langFr: "/languages-replacement.png",
   langEn: "/languages-replacement.png",
