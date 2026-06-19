@@ -1114,6 +1114,7 @@ body {
 .interaction-hint-text {
   display: inline-flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   min-height: 48px;
   font-size: 20px;
@@ -1122,10 +1123,88 @@ body {
   letter-spacing: 0.014em;
   color: rgba(224, 233, 255, 0.88);
   text-shadow: 0 0 14px rgba(120, 178, 255, 0.16);
+  gap: 4px;
 }
 
 .interaction-hint-text > span {
   display: block;
+  text-align: center;
+}
+
+.arrow-key-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.arrow-key-row {
+  display: flex;
+  gap: 4px;
+}
+
+.arrow-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(180, 205, 255, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(180, 210, 255, 0.18);
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* ↑ illuminates first, then ↓ — 3.2s total loop */
+.arrow-key--up {
+  animation: key-illuminate 3.2s ease-in-out infinite;
+}
+
+.arrow-key--down {
+  animation: key-illuminate 3.2s ease-in-out 1.6s infinite;
+}
+
+@keyframes key-illuminate {
+  /* dim rest */
+  0%, 12%, 52%, 100% {
+    color: rgba(180, 205, 255, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(180, 210, 255, 0.18);
+    box-shadow:
+      0 3px 0 rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(0);
+  }
+  /* press */
+  17%, 21% {
+    color: rgba(220, 240, 255, 1);
+    background: rgba(100, 170, 255, 0.28);
+    border-color: rgba(155, 210, 255, 0.7);
+    box-shadow:
+      0 0px 0 rgba(0, 0, 0, 0.55),
+      0 0 14px rgba(120, 185, 255, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(3px);
+  }
+  /* lit release */
+  28%, 38% {
+    color: rgba(205, 230, 255, 0.9);
+    background: rgba(85, 155, 255, 0.13);
+    border-color: rgba(150, 205, 255, 0.35);
+    box-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.5),
+      0 0 18px rgba(120, 185, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+  }
 }
 
 .bullets .bullet-line > span {

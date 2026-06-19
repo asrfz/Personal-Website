@@ -1108,7 +1108,17 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 </span>
               ) : showIntroHint ? (
                 <span className="interaction-hint-text">
-                  <span>Scroll to explore</span>
+                  <span className="arrow-key-cluster" aria-hidden="true">
+                    <span className="arrow-key-row">
+                      <span className="arrow-key arrow-key--up">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1.5L11.5 10H0.5L6 1.5Z"/></svg>
+                      </span>
+                      <span className="arrow-key arrow-key--down">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 10.5L0.5 2H11.5L6 10.5Z"/></svg>
+                      </span>
+                    </span>
+                  </span>
+                  <span>Arrow keys to explore</span>
                   <span>Click images for more details</span>
                 </span>
               ) : null}
