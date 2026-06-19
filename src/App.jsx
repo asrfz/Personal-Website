@@ -72,6 +72,7 @@ export default function App() {
   const [isNarrowForMobileHero, setIsNarrowForMobileHero] = useState(false);
   const [mobileHeroInView, setMobileHeroInView] = useState(true);
   const [detailsInView, setDetailsInView] = useState(false);
+  const detailsInViewRef = useRef(false);
   /** When true, unmount the unscaled hero overlay so it cannot paint over detail slides after navigation. */
   const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -575,7 +576,6 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-      if (!heroKeyboardNavActiveRef.current) return;
       if (typeof window !== "undefined" && window.matchMedia(MOBILE_WARNING_MQ).matches) {
         return;
       }
@@ -585,9 +585,15 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           return;
         }
       }
-      event.preventDefault();
-      const direction = event.key === "ArrowDown" ? 1 : -1;
-      stepHeroBullet(direction);
+      if (heroKeyboardNavActiveRef.current) {
+        event.preventDefault();
+        stepHeroBullet(event.key === "ArrowDown" ? 1 : -1);
+        return;
+      }
+      if (event.key === "ArrowUp" && detailsInViewRef.current) {
+        event.preventDefault();
+        heroSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -646,7 +652,9 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     const io = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        setDetailsInView(Boolean(entry?.isIntersecting && (entry?.intersectionRatio ?? 0) >= 0.2));
+        const inView = Boolean(entry?.isIntersecting && (entry?.intersectionRatio ?? 0) >= 0.2);
+        setDetailsInView(inView);
+        detailsInViewRef.current = inView;
       },
       { threshold: [0, 0.08, 0.2, 0.35, 0.55, 1] },
     );
