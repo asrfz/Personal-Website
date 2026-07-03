@@ -84,6 +84,8 @@ export default function App() {
   const activeBulletIndexRef = useRef(0);
   const [maxHeroRevealStepCount, setMaxHeroRevealStepCount] = useState(0);
   const [birthdayRevealReady, setBirthdayRevealReady] = useState(false);
+  const [birthdayHighlighted, setBirthdayHighlighted] = useState(false);
+  const birthdayHighlightedRef = useRef(false);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
   /** Which photo tile the pointer is currently over (transient). */
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
@@ -96,6 +98,7 @@ export default function App() {
   activeBulletIndexRef.current = activeBulletIndex;
   hoverFocusKeyRef.current = hoverFocusKey;
   stickyPhotoKeyRef.current = stickyPhotoKey;
+  birthdayHighlightedRef.current = birthdayHighlighted;
   /** Resume icon dodges on hover; reset when pointer leaves its hit zone. */
   const [resumeIconOffset, setResumeIconOffset] = useState({ x: 0, y: 0 });
   const wheelLatchedRef = useRef(false);
@@ -134,13 +137,14 @@ export default function App() {
     ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
   ];
   const baseBulletIndex = hasStarted ? activeBulletIndex : null;
-  const isBirthdayActive = hoverFocusKey === "birthday";
+  const isBirthdayActive = hoverFocusKey === "birthday" || birthdayHighlighted;
   const displayBulletIndex = (() => {
     if (isNarrowForMobileHero) {
       return activeBulletIndex;
     }
     const transient = hoverFocusKey;
     if (transient === "birthday") return null;
+    if (birthdayHighlighted) return null;
     if (transient != null) {
       return HOVER_PHOTO_TO_BULLET[transient] ?? baseBulletIndex;
     }
@@ -420,9 +424,17 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
         return;
       }
 
-      // Only reveal birthday tile on an extra down-press past the last bullet
       if (direction === 1 && activeBulletIndexRef.current >= bulletPoints.length - 1) {
+        // Extra press past last bullet: highlight + reveal birthday together
+        setBirthdayHighlighted(true);
         setBirthdayRevealReady(true);
+        return;
+      }
+
+      if (direction === -1 && birthdayHighlightedRef.current) {
+        // Arrow up from birthday: step back to last regular bullet
+        setBirthdayHighlighted(false);
+        return;
       }
 
       setActiveBulletIndex((current) =>
@@ -1130,7 +1142,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--12 photo--12--hover-only${isBirthdayActive || (hasStarted && activeBulletIndex >= bulletPoints.length - 1) ? " is-highlighted" : ""}${getHeroRevealClass("birthday")}`}
+          className={`photo photo--12 photo--12--hover-only${isBirthdayActive ? " is-highlighted" : ""}${getHeroRevealClass("birthday")}`}
           aria-label="Birthday — hover to read message"
           onMouseEnter={() => setHoverFocusKey("birthday")}
           onMouseLeave={() =>
