@@ -1001,11 +1001,13 @@ body {
   z-index: 1;
 }
 
-.photo--12:hover img.photo--12__layer--idle {
+.photo--12:hover img.photo--12__layer--idle,
+.photo--12.is-highlighted img.photo--12__layer--idle {
   opacity: 0 !important;
 }
 
-.photo--12:hover img.photo--12__layer--bright {
+.photo--12:hover img.photo--12__layer--bright,
+.photo--12.is-highlighted img.photo--12__layer--bright {
   opacity: 1 !important;
 }
 
@@ -1013,7 +1015,8 @@ body {
   opacity: 0 !important;
 }
 
-.photo--12:hover {
+.photo--12:hover,
+.photo--12.is-highlighted {
   z-index: 55;
 }
 

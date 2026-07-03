@@ -420,6 +420,11 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
         return;
       }
 
+      // Only reveal birthday tile on an extra down-press past the last bullet
+      if (direction === 1 && activeBulletIndexRef.current >= bulletPoints.length - 1) {
+        setBirthdayRevealReady(true);
+      }
+
       setActiveBulletIndex((current) =>
         Math.min(bulletPoints.length - 1, Math.max(0, current + direction)),
       );
@@ -783,18 +788,10 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   }, [isNarrowForMobileHero, mobileHeroInView]);
 
   useEffect(() => {
-    if (isNarrowForMobileHero || birthdayRevealReady) {
+    if (isNarrowForMobileHero) {
       setBirthdayRevealReady(true);
-      return;
     }
-    if (!hasStarted || activeBulletIndex < 10) {
-      return;
-    }
-    const id = window.setTimeout(() => {
-      setBirthdayRevealReady(true);
-    }, 500);
-    return () => window.clearTimeout(id);
-  }, [isNarrowForMobileHero, hasStarted, activeBulletIndex, birthdayRevealReady]);
+  }, [isNarrowForMobileHero]);
 
   useEffect(() => {
     if (isNarrowForMobileHero) return;
@@ -1133,7 +1130,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
-          className={`photo photo--12 photo--12--hover-only${getHeroRevealClass("birthday")}`}
+          className={`photo photo--12 photo--12--hover-only${isBirthdayActive || (hasStarted && activeBulletIndex >= bulletPoints.length - 1) ? " is-highlighted" : ""}${getHeroRevealClass("birthday")}`}
           aria-label="Birthday — hover to read message"
           onMouseEnter={() => setHoverFocusKey("birthday")}
           onMouseLeave={() =>
