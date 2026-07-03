@@ -1078,6 +1078,91 @@ body {
   z-index: 55;
 }
 
+/* Shopify — small tile, in the gap between WSP, hackathon, and athlete */
+.photo--shopify {
+  position: absolute;
+  left: 1368px;
+  top: 502px;
+  width: 196px;
+  height: 116px;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  animation-duration: 5.4s;
+  animation-delay: -2.8s;
+}
+
+.photo--shopify img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: inherit;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.photo--shopify:hover img,
+.photo--shopify.is-highlighted img {
+  transform: scale(1.06);
+  filter: brightness(1.08);
+}
+
+.photo--shopify:hover,
+.photo--shopify.is-highlighted {
+  z-index: 55;
+}
+
+/* Shopify detail panel */
+.details-section--shopify {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.details-section--shopify .details-section__inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: min(1720px, 96vw);
+}
+
+.shopify-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: center;
+}
+
+.shopify-panel__title {
+  margin: var(--detail-title-band-top) 0 4px;
+  padding: 0;
+  width: 100%;
+  min-height: 2em;
+  box-sizing: border-box;
+  font-family: "Bebas Neue", Impact, system-ui, sans-serif;
+  font-size: clamp(58px, 6.4vw, 82px);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 400;
+  line-height: 1;
+  text-wrap: balance;
+  text-align: center;
+  color: #eef3ff;
+  text-shadow:
+    0 0 18px rgba(120, 200, 255, 0.55),
+    0 0 48px rgba(120, 160, 255, 0.28);
+}
+
+.shopify-panel p.shopify-panel__body {
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.6;
+  color: rgba(222, 232, 255, 0.92);
+  margin: clamp(120px, 16vh, 200px) auto 0;
+  max-width: 560px;
+}
+
 .bullets {
   position: absolute;
   left: calc((2002px - 823px) / 2);
@@ -1319,6 +1404,11 @@ body {
   overflow-y: visible;
   isolation: isolate;
   color: #eef3ff;
+}
+
+.details-section--shopify {
+  --detail-title-band-top: 0px;
+  padding: clamp(50px, 7vh, 90px) 28px 40px;
 }
 
 .details-section::before {

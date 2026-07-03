@@ -27,14 +27,15 @@ const HOVER_PHOTO_TO_BULLET = {
   waterloo: 0,
   sickkids: 1,
   coop: 2,
-  cfes: 3,
-  asme: 4,
-  cxc: 5,
-  wsp: 6,
-  womens: 6,
-  basketballRight: 7,
-  greece: 8,
-  physio: 9,
+  shopify: 3,
+  cfes: 4,
+  asme: 5,
+  cxc: 6,
+  wsp: 7,
+  womens: 7,
+  basketballRight: 8,
+  greece: 9,
+  physio: 10,
 };
 
 /** One slide per `bulletPoints` entry — narrow / mobile hero carousel only. */
@@ -42,6 +43,7 @@ const MOBILE_HERO_SLIDES = [
   { detailKey: "waterloo", src: img.waterloo, alt: "Waterloo Engineering" },
   { detailKey: "sickkids", src: img.sickKids, alt: "SickKids" },
   { detailKey: "coop", src: img.coOp, alt: "Co-operative education" },
+  { detailKey: "shopify", src: img.shopify, alt: "Shopify" },
   { detailKey: "cfes", src: img.cfes, alt: "CFES" },
   { detailKey: "asme", src: img.asme, alt: "ASME" },
   { detailKey: "cxc", src: img.cxc, alt: "Hackathons" },
@@ -55,6 +57,7 @@ const HERO_SCROLL_REVEAL_STEPS = [
   ["waterloo"],
   ["sickkids"],
   ["coop"],
+  ["shopify"],
   ["cfes"],
   ["asme"],
   ["cxc"],
@@ -107,6 +110,7 @@ export default function App() {
     ["sickkids"],
     [],
     ["coop"],
+    ["shopify"],
     ["cfes"],
     ["asme"],
     ["cxc"],
@@ -120,6 +124,7 @@ export default function App() {
     ["#ffffff", "#7fd8ff", "#6bf0d2", "#8aa4ff"],
     ["#ffffff", "#8fc2ff", "#78a3ff", "#9e8cff"],
     ["#ffffff", "#95d3ff", "#7eb8ff", "#8f96ff"],
+    ["#ffffff", "#7fffb2", "#4ddc82", "#a8f5c0"],
     ["#ffffff", "#d7a6ff", "#a3b4ff", "#96f0ff"],
     ["#ffffff", "#ffb8d6", "#c6b1ff", "#8dc2ff"],
     ["#ffffff", "#ffc189", "#ff9ec2", "#9cc2ff"],
@@ -223,6 +228,10 @@ export default function App() {
       title: "Clinical Volunteer & Shadower",
       body: "Direct exposure to patient-centered environments and clinical workflows.",
     },
+    shopify: {
+      title: "Incoming Machine Learning Engineer @ Shopify",
+      body: "Working at Shopify this fall at the Montreal Office.",
+    },
     birthday: {
       title: "Personal Moments",
       body: "A reminder to stay grounded, celebrate milestones, and enjoy the journey.",
@@ -239,6 +248,7 @@ export default function App() {
   const isCfesDetail = selectedDetailKey === "cfes";
   const isAthleteDetail = selectedDetailKey === "basketballRight";
   const isCoopDetail = selectedDetailKey === "coop";
+  const isShopifyDetail = selectedDetailKey === "shopify";
   /** Line breaks match reference layout */
   const wspInternshipLines = [
     "Before entering university, I spent my last summer break working as an intern at WSP.",
@@ -777,7 +787,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       setBirthdayRevealReady(true);
       return;
     }
-    if (!hasStarted || activeBulletIndex < 9) {
+    if (!hasStarted || activeBulletIndex < 10) {
       return;
     }
     const id = window.setTimeout(() => {
@@ -1109,6 +1119,20 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
           />
         </figure>
         <figure
+          className={`photo photo--shopify${isHighlighted("shopify") ? " is-highlighted" : ""}${getHeroRevealClass("shopify")}`}
+          onMouseEnter={() => {
+            setHoverFocusKey("shopify");
+            setStickyPhotoKey("shopify");
+          }}
+          onClick={() => handleImageClick("shopify")}
+        >
+          <img
+            src={img.shopify}
+            alt="Shopify"
+            decoding="async"
+          />
+        </figure>
+        <figure
           className={`photo photo--12 photo--12--hover-only${getHeroRevealClass("birthday")}`}
           aria-label="Birthday — hover to read message"
           onMouseEnter={() => setHoverFocusKey("birthday")}
@@ -1328,7 +1352,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
       </div>
       <section
         ref={detailsSectionRef}
-        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isPublicationsDetail ? " details-section--publications" : ""}${isCfesDetail ? " details-section--cfes" : ""}${isAthleteDetail ? " details-section--athlete" : ""}${isCoopDetail ? " details-section--coop" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}`}
+        className={`details-section${isWaterlooDetail ? " details-section--waterloo" : ""}${isSickkidsDetail ? " details-section--sickkids" : ""}${isHackathonsDetail ? " details-section--hackathons" : ""}${isInternshipDetail ? " details-section--internship" : ""}${isPolyglotDetail ? " details-section--polyglot" : ""}${isPublicationsDetail ? " details-section--publications" : ""}${isCfesDetail ? " details-section--cfes" : ""}${isAthleteDetail ? " details-section--athlete" : ""}${isCoopDetail ? " details-section--coop" : ""}${isVolunteeringDetail ? " details-section--volunteering" : ""}${isShopifyDetail ? " details-section--shopify" : ""}`}
         style={{ "--details-bg": `url(${img.gradient})` }}
         onWheel={onDetailsWheel}
       >
@@ -1554,6 +1578,14 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                   <img src={img.athletePhotoBasketball} alt="Jumping for a rebound in a basketball game" />
                 </figure>
               </div>
+            </div>
+          ) : isShopifyDetail ? (
+            <div className="shopify-panel" aria-label="Shopify">
+              <h2 className="shopify-panel__title">SHOPIFY</h2>
+              {backToMainButton}
+              <p className="shopify-panel__body">
+                Working at Shopify this fall at the Montreal Office.
+              </p>
             </div>
           ) : isCoopDetail ? (
             <div className="coop-panel" aria-label="Co-op Student of the Year">

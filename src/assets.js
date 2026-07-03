@@ -70,12 +70,14 @@ export const img = {
   langEn: "/languages-replacement.png",
   langEs: "/languages-replacement.png",
   langAr: "/languages-replacement.png",
+  shopify: "/shopify.png",
 };
 
 export const bulletPoints = [
   "Biomedical Engineering student @ uWaterloo",
   "Machine Learning Research Intern @ SickKids",
   "uWaterloo Engineering Co-Op Student of the Year",
+  "Incoming Machine Learning Engineer @ Shopify",
   "CFES Corporate Relations Commissioner",
   "Published Author + Conference Presenter",
   "3x Hackathon Winner",
