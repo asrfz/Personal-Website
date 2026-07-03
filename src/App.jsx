@@ -137,17 +137,17 @@ export default function App() {
     ["#ffffff", "#9be5c0", "#9fd8ff", "#b8b8ff"],
   ];
   const baseBulletIndex = hasStarted ? activeBulletIndex : null;
-  const isBirthdayActive = hoverFocusKey === "birthday" || birthdayHighlighted;
+  const isBirthdayActive = hoverFocusKey === "birthday" || (birthdayHighlighted && hoverFocusKey == null);
   const displayBulletIndex = (() => {
     if (isNarrowForMobileHero) {
       return activeBulletIndex;
     }
     const transient = hoverFocusKey;
     if (transient === "birthday") return null;
-    if (birthdayHighlighted) return null;
     if (transient != null) {
       return HOVER_PHOTO_TO_BULLET[transient] ?? baseBulletIndex;
     }
+    if (birthdayHighlighted) return null;
     if (stickyPhotoKey != null) {
       return HOVER_PHOTO_TO_BULLET[stickyPhotoKey] ?? baseBulletIndex;
     }
