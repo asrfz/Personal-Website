@@ -76,14 +76,23 @@ export default function App() {
   /** When true, unmount the unscaled hero overlay so it cannot paint over detail slides after navigation. */
   const [mobileHeroOverlayDismissed, setMobileHeroOverlayDismissed] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const hasStartedRef = useRef(false);
   const [activeBulletIndex, setActiveBulletIndex] = useState(0);
+  const activeBulletIndexRef = useRef(0);
   const [maxHeroRevealStepCount, setMaxHeroRevealStepCount] = useState(0);
   const [birthdayRevealReady, setBirthdayRevealReady] = useState(false);
   const [selectedDetailKey, setSelectedDetailKey] = useState("waterloo");
   /** Which photo tile the pointer is currently over (transient). */
   const [hoverFocusKey, setHoverFocusKey] = useState(null);
+  const hoverFocusKeyRef = useRef(null);
   /** Last photo tile "selected" by hover — persists until a different tile is hovered. */
   const [stickyPhotoKey, setStickyPhotoKey] = useState(null);
+  const stickyPhotoKeyRef = useRef(null);
+  // Keep refs in sync with state so keydown handlers always have fresh values.
+  hasStartedRef.current = hasStarted;
+  activeBulletIndexRef.current = activeBulletIndex;
+  hoverFocusKeyRef.current = hoverFocusKey;
+  stickyPhotoKeyRef.current = stickyPhotoKey;
   /** Resume icon dodges on hover; reset when pointer leaves its hit zone. */
   const [resumeIconOffset, setResumeIconOffset] = useState({ x: 0, y: 0 });
   const wheelLatchedRef = useRef(false);
@@ -370,6 +379,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     });
   }, []);
   const onDetailsWheel = useCallback((event) => {
+    if (event.ctrlKey || event.metaKey) return;
     if (event.deltaY < 0) {
       const narrow =
         typeof window !== "undefined" &&
@@ -408,6 +418,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
   );
 
   const onViewportWheel = useCallback((event) => {
+    if (event.ctrlKey || event.metaKey) return;
     let delta = event.deltaY;
     if (delta === 0) return;
 
@@ -474,6 +485,11 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     if (!root) return;
 
     const handleNativeWheel = (event) => {
+      /* Always block zoom (Ctrl+scroll / pinch) on the hero. */
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        return;
+      }
       event.preventDefault();
       onViewportWheel(event);
     };
@@ -598,6 +614,52 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [stepHeroBullet]);
+
+  /* Block Ctrl+± / Ctrl+0 keyboard zoom on the hero page only. */
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (!heroKeyboardNavActiveRef.current) return;
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === "+" || e.key === "-" || e.key === "=" || e.key === "0") {
+          e.preventDefault();
+        }
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  /* Enter = click whichever photo is highlighted (hover takes priority over arrow-key selection). */
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key !== "Enter") return;
+      if (!heroKeyboardNavActiveRef.current) return;
+      if (window.matchMedia(MOBILE_WARNING_MQ).matches) return;
+
+      let key = null;
+
+      const hover = hoverFocusKeyRef.current;
+      if (hover != null && hover !== "birthday") {
+        key = hover;
+      } else {
+        const sticky = stickyPhotoKeyRef.current;
+        if (sticky != null && sticky !== "birthday") {
+          key = sticky;
+        } else if (hasStartedRef.current) {
+          const idx = activeBulletIndexRef.current;
+          const row = idx < 2 ? idx : idx + 1;
+          key = (highlightByBullet[row] ?? [])[0] ?? null;
+        }
+      }
+
+      if (key) {
+        e.preventDefault();
+        handleImageClick(key);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleImageClick]);
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_WARNING_MQ);
