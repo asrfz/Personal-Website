@@ -1,6 +1,14 @@
 import "./App.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { bulletPoints, img } from "./assets.js";
+
+// Repeat the list 5× so the mobile lyrics track can scroll forward indefinitely
+// without ever needing to reset. Start position = bulletPoints.length (middle copy).
+const EXTENDED_BULLETS = [
+  ...bulletPoints, ...bulletPoints, ...bulletPoints,
+  ...bulletPoints, ...bulletPoints,
+];
+const MOBILE_LYRICS_START = bulletPoints.length; // index into EXTENDED where first item lives
 import { CursorGlow } from "./CursorGlow.jsx";
 import { IconEmail, IconGithub, IconLinkedin, IconResume } from "./SocialNavIcons.jsx";
 import { DESIGN_H, DESIGN_W, useViewportScale } from "./useViewportScale.js";
@@ -101,6 +109,8 @@ export default function App() {
   birthdayHighlightedRef.current = birthdayHighlighted;
   /** Resume icon dodges on hover; reset when pointer leaves its hit zone. */
   const [resumeIconOffset, setResumeIconOffset] = useState({ x: 0, y: 0 });
+  const [mobileTrackPos, setMobileTrackPos] = useState(MOBILE_LYRICS_START);
+  const mobileLyricsTouchStartY = useRef(null);
   const wheelLatchedRef = useRef(false);
   const wheelReadyForNewInputRef = useRef(true);
   const wheelLastAbsDeltaRef = useRef(0);
@@ -795,6 +805,7 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
     const intervalMs = reduce ? 8000 : 2000;
     const id = window.setInterval(() => {
       setActiveBulletIndex((i) => (i + 1) % bulletPoints.length);
+      setMobileTrackPos((p) => Math.min(EXTENDED_BULLETS.length - 5, p + 1));
     }, intervalMs);
     return () => clearInterval(id);
   }, [isNarrowForMobileHero, mobileHeroInView]);
@@ -1321,39 +1332,59 @@ It was a surreal experience, and I learned about the behind-the-scenes of clinic
                 </span>
               </a>
             </nav>
-            <button
-              type="button"
-              className="mobile-hero-viewport-layer__spotlight"
-              onClick={() => handleImageClick(mobileHeroSlide.detailKey)}
-              aria-label={`Open details: ${detailCopyByKey[mobileHeroSlide.detailKey]?.title ?? "Details"}`}
-            >
-              <img
-                key={activeBulletIndex}
-                src={mobileHeroSlide.src}
-                alt={mobileHeroSlide.alt}
-                className={`mobile-hero-viewport-layer__spotlight-image mobile-hero-viewport-layer__spotlight-image--${mobileHeroSlide.detailKey}`}
-                decoding="async"
-              />
-            </button>
             <div
-              className="mobile-hero-viewport-layer__caption"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
+              className="mobile-lyrics-scroll"
+              role="region"
+              aria-label="About me"
+              onTouchStart={(e) => { mobileLyricsTouchStartY.current = e.touches[0].clientY; }}
+              onTouchEnd={(e) => {
+                if (mobileLyricsTouchStartY.current == null) return;
+                const dy = mobileLyricsTouchStartY.current - e.changedTouches[0].clientY;
+                mobileLyricsTouchStartY.current = null;
+                if (Math.abs(dy) < 36) return;
+                if (dy > 0) {
+                  // Swipe up → advance
+                  setActiveBulletIndex((i) => (i + 1) % bulletPoints.length);
+                  setMobileTrackPos((p) => Math.min(EXTENDED_BULLETS.length - 5, p + 1));
+                } else {
+                  // Swipe down → go back
+                  setActiveBulletIndex((i) => (i - 1 + bulletPoints.length) % bulletPoints.length);
+                  setMobileTrackPos((p) => Math.max(0, p - 1));
+                }
+              }}
             >
-              <span
-                key={activeBulletIndex}
-                className="mobile-hero-viewport-layer__caption-text"
-                style={{
-                  "--bullet-grad-1": activeGradient[0],
-                  "--bullet-grad-2": activeGradient[1],
-                  "--bullet-grad-3": activeGradient[2],
-                  "--bullet-grad-4": activeGradient[3],
-                }}
+              <div
+                className="mobile-lyrics-track"
+                style={{ "--active-idx": mobileTrackPos }}
+                aria-live="polite"
+                aria-atomic="true"
               >
-                {bulletPoints[activeBulletIndex]}
-              </span>
+                {EXTENDED_BULLETS.map((text, i) => {
+                  const diff = i - mobileTrackPos;
+                  const isActive = diff === 0;
+                  const clampedRel = Math.max(-2, Math.min(5, diff));
+                  return (
+                    <p
+                      key={i}
+                      className={`mobile-lyrics-item${isActive ? " mobile-lyrics-item--active" : ""}`}
+                      data-rel={clampedRel}
+                      style={isActive ? {
+                        "--bullet-grad-1": activeGradient[0],
+                        "--bullet-grad-2": activeGradient[1],
+                        "--bullet-grad-3": activeGradient[2],
+                        "--bullet-grad-4": activeGradient[3],
+                      } : undefined}
+                      aria-hidden={!isActive || undefined}
+                    >
+                      {text}
+                    </p>
+                  );
+                })}
+              </div>
             </div>
+            <p className="mobile-lyrics-desktop-hint">
+              Open on a computer to explore each section
+            </p>
           </div>
         </div>
       ) : null}

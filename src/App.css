@@ -3597,6 +3597,97 @@ a.figma-made-badge:focus-visible {
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 1px 14px rgba(120, 190, 255, 0.28));
   }
+
+  /* ── Mobile lyrics scroll ── */
+  .mobile-lyrics-scroll {
+    margin-top: 20px;
+    width: 100%;
+    height: 58dvh;
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 13%,
+      black 66%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 13%,
+      black 66%,
+      transparent 100%
+    );
+  }
+
+  .mobile-lyrics-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* 6rem matches the fixed item height; +8rem offsets active to ~30% from top */
+    transform: translateY(calc((0 - var(--active-idx, 0)) * 6rem + 8rem));
+    transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 0 0 8rem;
+  }
+
+  .mobile-lyrics-item {
+    width: 100%;
+    max-width: min(96vw, 580px);
+    height: 6rem;
+    overflow: visible;
+    padding: 0.5rem 20px;
+    box-sizing: border-box;
+    margin: 0;
+    font-family: Manrope, Inter, system-ui, sans-serif;
+    font-weight: 700;
+    /* Same size for ALL items — prevents line-break shifts when becoming active */
+    font-size: clamp(1.28rem, 5.5vw, 1.85rem);
+    line-height: 1.38;
+    letter-spacing: 0.01em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Dim items by distance from active */
+  .mobile-lyrics-item[data-rel="-2"] { opacity: 0;    color: rgba(180, 205, 255, 0.4); }
+  .mobile-lyrics-item[data-rel="-1"] { opacity: 0.2;  color: rgba(180, 205, 255, 0.55); }
+  .mobile-lyrics-item[data-rel="1"]  { opacity: 0.42; color: rgba(180, 205, 255, 0.7); }
+  .mobile-lyrics-item[data-rel="2"]  { opacity: 0.22; color: rgba(180, 205, 255, 0.55); }
+  .mobile-lyrics-item[data-rel="3"]  { opacity: 0.1;  color: rgba(180, 205, 255, 0.4); }
+  .mobile-lyrics-item[data-rel="4"],
+  .mobile-lyrics-item[data-rel="5"]  { opacity: 0; }
+
+  .mobile-lyrics-item--active {
+    background: linear-gradient(
+      102deg,
+      var(--bullet-grad-1, #eef3ff) 0%,
+      var(--bullet-grad-2, #d5e6ff) 34%,
+      var(--bullet-grad-3, #a6f3ff) 62%,
+      var(--bullet-grad-4, #c7b9ff) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 1px 18px rgba(120, 190, 255, 0.35));
+  }
+
+  .mobile-lyrics-desktop-hint {
+    margin: 14px auto 0;
+    padding: 0 20px;
+    font-family: Manrope, Inter, system-ui, sans-serif;
+    font-size: clamp(0.72rem, 3.2vw, 0.88rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-align: center;
+    color: rgba(160, 185, 255, 0.45);
+    text-transform: uppercase;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
